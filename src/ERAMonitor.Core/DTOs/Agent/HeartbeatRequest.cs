@@ -7,6 +7,7 @@ public class HeartbeatRequest
     public List<DiskInfoDto> Disks { get; set; } = new();
     public List<ServiceInfoDto> Services { get; set; } = new();
     public NetworkInfoDto? Network { get; set; }
+    public List<EventLogInfoDto>? EventLogs { get; set; }
     public string AgentVersion { get; set; } = string.Empty;
 }
 

@@ -17,6 +17,7 @@ public class HeartbeatService : IHeartbeatService
     private readonly IHostDiskRepository _diskRepository;
     private readonly IServiceRepository _serviceRepository;
     private readonly IServiceStatusHistoryRepository _statusHistoryRepository;
+    private readonly IEventLogRepository _eventLogRepository;
     private readonly IIncidentService _incidentService;
     private readonly INotificationService _notificationService;
     private readonly IRealTimeService _realTimeService;
@@ -32,6 +33,7 @@ public class HeartbeatService : IHeartbeatService
         IHostDiskRepository diskRepository,
         IServiceRepository serviceRepository,
         IServiceStatusHistoryRepository statusHistoryRepository,
+        IEventLogRepository eventLogRepository,
         IIncidentService incidentService,
         INotificationService notificationService,
         IRealTimeService realTimeService,
@@ -43,6 +45,7 @@ public class HeartbeatService : IHeartbeatService
         _diskRepository = diskRepository;
         _serviceRepository = serviceRepository;
         _statusHistoryRepository = statusHistoryRepository;
+        _eventLogRepository = eventLogRepository;
         _incidentService = incidentService;
         _notificationService = notificationService;
         _realTimeService = realTimeService;
@@ -117,6 +120,12 @@ public class HeartbeatService : IHeartbeatService
         
         // 5. Update/Insert services
         await UpdateHostServicesAsync(host.Id, request.Services);
+        
+        // 5.5. Process event logs (if present)
+        if (request.EventLogs != null && request.EventLogs.Any())
+        {
+            await UpdateHostEventLogsAsync(host.Id, request.EventLogs);
+        }
         
         // 6. Store metrics (time series)
         await StoreMetricsAsync(host.Id, request);
@@ -442,6 +451,33 @@ public class HeartbeatService : IHeartbeatService
         }
         
         await _statusHistoryRepository.SaveChangesAsync();
+    }
+    
+    private async Task UpdateHostEventLogsAsync(Guid hostId, List<EventLogInfoDto> eventLogs)
+    {
+        // Apply retention policy first - keep last 30 days
+        await _eventLogRepository.DeleteOlderThanAsync(30);
+        
+        // Map and insert new event logs
+        foreach (var el in eventLogs)
+        {
+            var eventLogEntity = new ERAMonitor.Core.Entities.EventLog
+            {
+                HostId = hostId,
+                LogName = el.LogName,
+                EventId = el.EventId,
+                Level = el.Level,
+                Source = el.Source,
+                Category = el.Category,
+                Message = el.Message,
+                TimeCreated = el.TimeCreated,
+                RecordedAt = DateTime.UtcNow
+            };
+            
+            await _eventLogRepository.AddAsync(eventLogEntity);
+        }
+        
+        _logger.LogDebug("Stored {Count} event logs for host {HostId}", eventLogs.Count, hostId);
     }
     
     private async Task StoreMetricsAsync(Guid hostId, HeartbeatRequest request)

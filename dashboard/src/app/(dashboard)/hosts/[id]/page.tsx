@@ -5,9 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import { hostsApi } from '@/lib/api/hosts';
 import { HostHeader } from '@/components/hosts/host-header';
 import { HostMetrics } from '@/components/hosts/host-metrics';
-import { ServiceList } from '@/components/services/service-list';
 import { DiskList } from '@/components/hosts/host-disks';
 import { HostSettingsForm } from '@/components/hosts/host-settings-form';
+import { HostApplications } from '@/components/hosts/host-applications';
+import { HostEventLogs } from '@/components/hosts/host-event-logs';
+import { ServiceList } from '@/components/services/service-list';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -54,6 +56,8 @@ export default function HostPage({ params }: HostPageProps) {
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="metrics">Metrics</TabsTrigger>
                     <TabsTrigger value="services">Services</TabsTrigger>
+                    <TabsTrigger value="applications">Applications</TabsTrigger>
+                    <TabsTrigger value="eventlogs">Event Logs</TabsTrigger>
                     <TabsTrigger value="disks">Disks</TabsTrigger>
                     <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
@@ -124,6 +128,14 @@ export default function HostPage({ params }: HostPageProps) {
                             <ServiceList hostId={host.id} />
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                <TabsContent value="applications">
+                    <HostApplications services={host.services} />
+                </TabsContent>
+
+                <TabsContent value="eventlogs">
+                    <HostEventLogs hostId={host.id} />
                 </TabsContent>
 
                 <TabsContent value="disks">

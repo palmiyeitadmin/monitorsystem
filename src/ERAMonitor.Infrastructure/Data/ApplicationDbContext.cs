@@ -22,6 +22,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<HostDisk> HostDisks => Set<HostDisk>();
     public DbSet<HostMetric> HostMetrics => Set<HostMetric>();
+    public DbSet<ERAMonitor.Core.Entities.EventLog> EventLogs => Set<ERAMonitor.Core.Entities.EventLog>();
     public DbSet<ServiceStatusHistory> ServiceStatusHistories => Set<ServiceStatusHistory>();
     public DbSet<CheckResult> CheckResults => Set<CheckResult>();
     public DbSet<IncidentTimeline> IncidentTimelines => Set<IncidentTimeline>();

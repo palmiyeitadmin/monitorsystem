@@ -38,11 +38,12 @@ type CollectorsConfig struct {
 }
 
 type SystemCollectorConfig struct {
-	Enabled bool `mapstructure:"enabled"`
-	CPU     bool `mapstructure:"cpu"`
-	RAM     bool `mapstructure:"ram"`
-	Disk    bool `mapstructure:"disk"`
-	Network bool `mapstructure:"network"`
+	Enabled  bool `mapstructure:"enabled"`
+	CPU      bool `mapstructure:"cpu"`
+	RAM      bool `mapstructure:"ram"`
+	Disk     bool `mapstructure:"disk"`
+	Network  bool `mapstructure:"network"`
+	EventLog bool `mapstructure:"eventLog"`
 }
 
 type ServicesConfig struct {

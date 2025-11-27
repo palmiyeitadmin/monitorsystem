@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     Table,
@@ -30,14 +30,16 @@ interface ServiceListProps {
 
 export function ServiceList({ hostId }: ServiceListProps) {
     const [search, setSearch] = useState('');
+    const [page, setPage] = useState(1);
+    const pageSize = 25;
     const debouncedSearch = useDebounce(search, 500);
     const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery({
-        queryKey: ['services', hostId, debouncedSearch],
+        queryKey: ['services', hostId, debouncedSearch, page],
         queryFn: () => servicesApi.getAll({
-            pageNumber: 1,
-            pageSize: 50,
+            pageNumber: page,
+            pageSize,
             hostId,
             search: debouncedSearch
         }),
@@ -55,9 +57,16 @@ export function ServiceList({ hostId }: ServiceListProps) {
         },
     });
 
+    // Reset to page 1 when search changes
+    React.useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch]);
+
     if (isLoading) {
         return <div>Loading services...</div>;
     }
+
+    const totalPages = data ? Math.ceil(data.totalCount / pageSize) : 0;
 
     return (
         <div className="space-y-4">
@@ -125,6 +134,36 @@ export function ServiceList({ hostId }: ServiceListProps) {
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Pagination Controls */}
+            {data && data.totalCount > pageSize && (
+                <div className="flex items-center justify-between px-2">
+                    <div className="text-sm text-muted-foreground">
+                        Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, data.totalCount)} of {data.totalCount} services
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                            disabled={page === 1}
+                        >
+                            Previous
+                        </Button>
+                        <div className="text-sm">
+                            Page {page} of {totalPages}
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                            disabled={page === totalPages}
+                        >
+                            Next
+                        </Button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -7,6 +7,7 @@ type HeartbeatRequest struct {
 	Disks       []DiskInfo     `json:"disks"`
 	Services    []ServiceInfo  `json:"services"`
 	NetworkInfo *NetworkInfo   `json:"network,omitempty"`
+	EventLogs   []EventLogInfo `json:"eventLogs,omitempty"`
 	Timestamp   time.Time      `json:"timestamp"`
 	AgentInfo   *AgentMetadata `json:"agent,omitempty"`
 }
@@ -65,4 +66,14 @@ type Command struct {
 	ID     string                 `json:"id"`
 	Type   string                 `json:"type"`
 	Params map[string]interface{} `json:"params,omitempty"`
+}
+
+type EventLogInfo struct {
+	LogName     string    `json:"logName"`
+	EventID     int       `json:"eventId"`
+	Level       string    `json:"level"`
+	Source      string    `json:"source"`
+	Message     string    `json:"message"`
+	TimeCreated time.Time `json:"timeCreated"`
+	Category    string    `json:"category"`
 }

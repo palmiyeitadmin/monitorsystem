@@ -123,6 +123,7 @@ builder.Services.AddScoped<IHostMetricRepository, HostMetricRepository>();
 builder.Services.AddScoped<IHostDiskRepository, HostDiskRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IServiceStatusHistoryRepository, ServiceStatusHistoryRepository>();
+builder.Services.AddScoped<IEventLogRepository, EventLogRepository>();
 builder.Services.AddScoped<ICheckRepository, CheckRepository>();
 builder.Services.AddScoped<ICheckResultRepository, CheckResultRepository>();
 builder.Services.AddScoped<IIncidentRepository, IncidentRepository>();
@@ -138,9 +139,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Phase 2 Services
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-// builder.Services.AddScoped<IUserService, UserService>(); // Not implemented yet
-// builder.Services.AddScoped<ICustomerService, CustomerService>(); // Not implemented yet
-// builder.Services.AddScoped<ILocationService, LocationService>(); // Not implemented yet
 
 // Phase 3 Services
 builder.Services.AddScoped<IAuditService, AuditService>();
