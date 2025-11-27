@@ -1,0 +1,30 @@
+{
+    "system": {
+        "hostname": "DESKTOP-TEST",
+        "osType": "Windows",
+        "osVersion": "10.0.19045",
+        "cpuPercent": 12.5,
+        "ramPercent": 45.2,
+        "ramUsedMb": 8192,
+        "ramTotalMb": 16384,
+        "uptimeSeconds": 3600,
+        "processCount": 150
+    },
+    "disks": [
+        {
+            "name": "C:",
+            "mountPoint": "C:\\",
+            "fileSystem": "NTFS",
+            "totalGb": 500.0,
+            "usedGb": 250.0,
+            "usedPercent": 50.0
+        }
+    ],
+    "services": [],
+    "timestamp": "2023-11-27T19:54:05.085+03:00",
+    "agent": {
+        "version": "1.0.0",
+        "buildHash": "abc1234",
+        "platform": "windows"
+    }
+}

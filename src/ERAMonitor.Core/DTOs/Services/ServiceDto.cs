@@ -10,6 +10,7 @@ public class ServiceDto
     public ServiceType ServiceType { get; set; }
     public string ServiceName { get; set; } = string.Empty;
     public string? DisplayName { get; set; }
+    public string? StartupType { get; set; }
     public StatusType CurrentStatus { get; set; }
     public DateTime? LastStatusChange { get; set; }
     public bool MonitoringEnabled { get; set; }

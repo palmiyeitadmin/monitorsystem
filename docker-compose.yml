@@ -32,7 +32,7 @@ services:
       - JwtSettings__Audience=ERAMonitorUsers
       - JwtSettings__ExpiryMinutes=60
       - Hangfire__DashboardPath=/hangfire
-      - CORS__AllowedOrigins=http://localhost:3000,http://dashboard:3000
+      - CORS__AllowedOrigins=http://localhost:3000,http://dashboard:3000,http://localhost:3008
       - Hangfire__ServerName=era-monitor-api
       - Hangfire__WorkerCount=10
     ports:
@@ -48,9 +48,12 @@ services:
     build:
       context: ./dashboard
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:5000
     container_name: era-monitor-dashboard
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - API_URL=http://api:8080
       - NODE_ENV=production
     ports:
       - "3008:3000"

@@ -359,6 +359,13 @@ public class HeartbeatService : IHeartbeatService
                 existing.Config = serviceDto.Config != null 
                     ? JsonSerializer.Serialize(serviceDto.Config) 
                     : existing.Config;
+                
+                // Extract StartupType from config
+                if (serviceDto.Config != null && serviceDto.Config.TryGetValue("start_type", out var startType))
+                {
+                    existing.StartupType = MapStartupType(startType);
+                }
+                
                 existing.UpdatedAt = DateTime.UtcNow;
                 
                 // Track status change
@@ -377,7 +384,8 @@ public class HeartbeatService : IHeartbeatService
                     {
                         ServiceId = existing.Id,
                         Status = newStatus,
-                        Message = $"Status changed from {previousStatus} to {newStatus}"
+                        Message = $"Status changed from {previousStatus} to {newStatus}",
+                        RecordedAt = DateTime.UtcNow
                     });
                     
                     // Handle service down
@@ -409,6 +417,12 @@ public class HeartbeatService : IHeartbeatService
                     AlertOnStop = true
                 };
                 
+                // Extract StartupType from config
+                if (serviceDto.Config != null && serviceDto.Config.TryGetValue("start_type", out var startType))
+                {
+                    newService.StartupType = MapStartupType(startType);
+                }
+                
                 if (newStatus == StatusType.Up)
                 {
                     newService.LastHealthyAt = DateTime.UtcNow;
@@ -421,7 +435,8 @@ public class HeartbeatService : IHeartbeatService
                 {
                     ServiceId = newService.Id,
                     Status = newStatus,
-                    Message = "Service discovered"
+                    Message = "Service discovered",
+                    RecordedAt = DateTime.UtcNow
                 });
             }
         }
@@ -591,6 +606,26 @@ public class HeartbeatService : IHeartbeatService
             "paused" => StatusType.Warning,
             "degraded" => StatusType.Degraded,
             _ => StatusType.Unknown
+        };
+    }
+    
+    private static string MapStartupType(object startType)
+    {
+        // Handle both string and numeric values
+        var typeStr = startType?.ToString() ?? "";
+        
+        // Windows Service StartType enum values
+        return typeStr switch
+        {
+            "0" => "Boot",
+            "1" => "System",
+            "2" => "Automatic",
+            "3" => "Manual",
+            "4" => "Disabled",
+            "Automatic" => "Automatic",
+            "Manual" => "Manual",
+            "Disabled" => "Disabled",
+            _ => typeStr
         };
     }
     

@@ -1,4 +1,6 @@
 using ERAMonitor.Core.Enums;
+using ERAMonitor.Core.DTOs.Services;
+using System.Text.Json.Serialization;
 
 namespace ERAMonitor.Core.DTOs.Hosts;
 
@@ -34,6 +36,10 @@ public class HostDetailDto
     
     // Disks
     public List<HostDiskDto> Disks { get; set; } = new();
+
+    // Services
+    [JsonPropertyName("services")]
+    public List<ServiceDto> Services { get; set; } = new();
     
     // Thresholds
     public HostThresholdsDto Thresholds { get; set; } = new();

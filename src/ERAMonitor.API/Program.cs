@@ -1,4 +1,6 @@
-﻿using System.Text;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ERAMonitor.Core.Configuration;
 using ERAMonitor.API.Middleware;
 using ERAMonitor.Core.Interfaces;
@@ -21,11 +23,18 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.OpenApi.Models;
+using ERAMonitor.Core.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
@@ -160,6 +169,18 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => 
+        policy.RequireRole(UserRole.SuperAdmin.ToString(), UserRole.Admin.ToString()));
+
+    options.AddPolicy("RequireOperatorRole", policy => 
+        policy.RequireRole(
+            UserRole.SuperAdmin.ToString(), 
+            UserRole.Admin.ToString(), 
+            UserRole.Operator.ToString()));
+});
+
 var app = builder.Build();
 
 // Run migrations and seed data
@@ -267,6 +288,28 @@ using (var scope = app.Services.CreateScope())
                         WHERE table_name = 'Hosts' AND column_name = '{colName}'
                     ) THEN
                         ALTER TABLE ""Hosts"" ADD COLUMN ""{colName}"" {colType};
+                    END IF;
+                END
+                $$;");
+        }
+
+        // Ensure all HostDisk columns exist
+        var hostDiskColumnsToCheck = new[]
+        {
+            ("FileSystem", "text NULL"),
+            ("Label", "text NULL")
+        };
+
+        foreach (var (colName, colType) in hostDiskColumnsToCheck)
+        {
+            await context.Database.ExecuteSqlRawAsync($@"
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (
+                        SELECT 1 FROM information_schema.columns
+                        WHERE table_name = 'HostDisks' AND column_name = '{colName}'
+                    ) THEN
+                        ALTER TABLE ""HostDisks"" ADD COLUMN ""{colName}"" {colType};
                     END IF;
                 END
                 $$;");

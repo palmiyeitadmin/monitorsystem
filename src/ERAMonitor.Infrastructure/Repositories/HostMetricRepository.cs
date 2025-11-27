@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ERAMonitor.Core.DTOs.Agent;
 using ERAMonitor.Core.DTOs.Hosts;
 using ERAMonitor.Core.Entities;
 using ERAMonitor.Core.Interfaces.Repositories;
@@ -55,6 +56,57 @@ public class HostMetricRepository : IHostMetricRepository
         // Downsample if too many points
         // ... implementation of downsampling logic would go here
         
+        // Calculate Max Disk Usage per point
+        var diskHistory = new List<MetricDataPoint>();
+        foreach (var m in metrics)
+        {
+            if (string.IsNullOrEmpty(m.DiskInfo)) continue;
+            
+            try 
+            {
+                var disks = System.Text.Json.JsonSerializer.Deserialize<List<DiskInfoDto>>(m.DiskInfo);
+                if (disks != null && disks.Any())
+                {
+                    var maxUsage = disks.Max(d => d.UsedPercent);
+                    diskHistory.Add(new MetricDataPoint 
+                    { 
+                        Timestamp = m.RecordedAt, 
+                        Value = maxUsage 
+                    });
+                }
+            }
+            catch { /* ignore parsing errors */ }
+        }
+
+        // Calculate Network Traffic Rate (MB/s)
+        var networkHistory = new List<MetricDataPoint>();
+        HostMetric? previous = null;
+        
+        foreach (var current in metrics.Where(m => m.NetworkInBytes.HasValue || m.NetworkOutBytes.HasValue))
+        {
+            if (previous != null)
+            {
+                var timeDiff = (current.RecordedAt - previous.RecordedAt).TotalSeconds;
+                if (timeDiff > 0)
+                {
+                    var bytesDiff = (current.NetworkInBytes ?? 0) + (current.NetworkOutBytes ?? 0) - 
+                                    ((previous.NetworkInBytes ?? 0) + (previous.NetworkOutBytes ?? 0));
+                    
+                    // Handle counter reset or negative diff
+                    if (bytesDiff >= 0)
+                    {
+                        var mbs = (decimal)(bytesDiff / timeDiff / 1024.0 / 1024.0);
+                        networkHistory.Add(new MetricDataPoint
+                        {
+                            Timestamp = current.RecordedAt,
+                            Value = Math.Round(mbs, 2)
+                        });
+                    }
+                }
+            }
+            previous = current;
+        }
+
         var dto = new HostMetricsDto
         {
             HostId = hostId,
@@ -72,14 +124,8 @@ public class HostMetricRepository : IHostMetricRepository
                     Timestamp = m.RecordedAt, 
                     Value = m.RamPercent!.Value 
                 }).ToList(),
-            NetworkHistory = metrics
-                .Where(m => m.NetworkInBytes.HasValue || m.NetworkOutBytes.HasValue)
-                .Select(m => new NetworkMetricDataPoint
-                {
-                    Timestamp = m.RecordedAt,
-                    InBytes = m.NetworkInBytes ?? 0,
-                    OutBytes = m.NetworkOutBytes ?? 0
-                }).ToList()
+            DiskHistory = diskHistory,
+            NetworkHistory = networkHistory
         };
         
         return dto;

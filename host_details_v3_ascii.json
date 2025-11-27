@@ -1,0 +1,106 @@
+{
+    "id":  "67f88f08-3537-4d97-9144-f68cbc8e58a7",
+    "name":  "Agent Test 2",
+    "hostname":  "localhost",
+    "description":  null,
+    "osType":  "Linux",
+    "osVersion":  "10.0.26200.7171 Build 26200.7171",
+    "category":  "VirtualMachine",
+    "tags":  [
+
+             ],
+    "primaryIp":  null,
+    "publicIp":  null,
+    "apiKey":  "006f18eb990a4e6081db773fabbbb0e13df5387c9ea14f88b5d6a843b9784cf1",
+    "agentVersion":  "",
+    "agentInstalledAt":  null,
+    "checkIntervalSeconds":  60,
+    "currentStatus":  "Warning",
+    "statusDisplay":  "Warning",
+    "lastSeenAt":  "2025-11-27T17:36:09.867673Z",
+    "statusChangedAt":  "2025-11-27T16:59:04.783324Z",
+    "metrics":  {
+                    "cpuPercent":  78.30065359477125,
+                    "ramPercent":  73,
+                    "ramUsedMb":  23925,
+                    "ramTotalMb":  32475,
+                    "uptimeSeconds":  5624,
+                    "processCount":  431,
+                    "uptimeDisplay":  "1h 33m"
+                },
+    "disks":  [
+                  {
+                      "id":  "687a045c-914a-4531-8025-a20ef85e4b0d",
+                      "name":  "C:",
+                      "mountPoint":  "C:",
+                      "fileSystem":  "NTFS",
+                      "totalGb":  475.97069931030273,
+                      "usedGb":  429.88566970825195,
+                      "freeGb":  46.08502960205078,
+                      "usedPercent":  90.3176750861283,
+                      "updatedAt":  "2025-11-27T17:36:09.868666Z"
+                  },
+                  {
+                      "id":  "7f459731-6057-4c79-a838-bda97dcce799",
+                      "name":  "D:",
+                      "mountPoint":  "D:",
+                      "fileSystem":  "NTFS",
+                      "totalGb":  953.8681602478027,
+                      "usedGb":  240.08102798461914,
+                      "freeGb":  713.78713226318356,
+                      "usedPercent":  25.169204507491806,
+                      "updatedAt":  "2025-11-27T17:36:09.868677Z"
+                  },
+                  {
+                      "id":  "b08a3c10-3325-4d19-9c9f-ef7ce8edc90e",
+                      "name":  "G:",
+                      "mountPoint":  "G:",
+                      "fileSystem":  "FAT32",
+                      "totalGb":  200,
+                      "usedGb":  193.54388046264648,
+                      "freeGb":  6.45611953735352,
+                      "usedPercent":  96.77194023132324,
+                      "updatedAt":  "2025-11-27T17:36:09.868677Z"
+                  }
+              ],
+    "services":  [
+
+                 ],
+    "thresholds":  {
+                       "cpuWarning":  80,
+                       "cpuCritical":  95,
+                       "ramWarning":  80,
+                       "ramCritical":  95,
+                       "diskWarning":  80,
+                       "diskCritical":  95
+                   },
+    "monitoringSettings":  {
+                               "monitoringEnabled":  true,
+                               "alertOnDown":  true,
+                               "alertDelaySeconds":  60,
+                               "alertOnHighCpu":  true,
+                               "alertOnHighRam":  true,
+                               "alertOnHighDisk":  true
+                           },
+    "maintenance":  {
+                        "inMaintenance":  false,
+                        "startAt":  null,
+                        "endAt":  null,
+                        "reason":  null
+                    },
+    "customer":  null,
+    "location":  null,
+    "statistics":  {
+                       "serviceCount":  0,
+                       "servicesUp":  0,
+                       "servicesDown":  0,
+                       "checkCount":  0,
+                       "openIncidentCount":  0,
+                       "uptime7d":  0,
+                       "uptime30d":  0
+                   },
+    "notes":  null,
+    "isActive":  true,
+    "createdAt":  "2025-11-27T16:53:00.82309Z",
+    "updatedAt":  "2025-11-27T16:53:00.82309Z"
+}

@@ -1,0 +1,16 @@
+  Geri y??klenecek projeler belirleniyor...
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ??nem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g??venlik a???????? var
+  Geri y??kleme i??in t??m projeler g??ncel.
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ??nem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g??venlik a???????? var
+  ERAMonitor.Core -> D:\era_monitor\monitorsystem\src\ERAMonitor.Core\bin\Debug\net8.0\ERAMonitor.Core.dll
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Repositories\HostRepository.cs(264,24): error CS0029: 'System.Collections.Generic.List<ERAMonitor.Core.DTOs.Services.ServiceDto>' t??r?? ??rt??l?? olarak 'System.Collections.Generic.List<ERAMonitor.Core.DTOs.ServiceDto>' t??r??ne d??n????t??r??lemez [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+
+Olu??turma BA??ARISIZ OLDU.
+
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ??nem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g??venlik a???????? var
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ??nem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g??venlik a???????? var
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Repositories\HostRepository.cs(264,24): error CS0029: 'System.Collections.Generic.List<ERAMonitor.Core.DTOs.Services.ServiceDto>' t??r?? ??rt??l?? olarak 'System.Collections.Generic.List<ERAMonitor.Core.DTOs.ServiceDto>' t??r??ne d??n????t??r??lemez [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+    2 Uyar??
+    1 Hata
+
+Ge??en S??re 00:00:02.35

@@ -2,7 +2,6 @@ package gui
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -16,7 +15,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/eracloud/era-monitor-agent/internal/agent"
 	"github.com/eracloud/era-monitor-agent/internal/config"
-	"github.com/go-resty/resty/v2"
 )
 
 type App struct {
@@ -166,29 +164,29 @@ func (a *App) updateStatusLoop() {
 
 	for range ticker.C {
 		status := a.agent.Status()
+		fyne.Do(func() {
+			if status.IsRunning {
+				a.statusLabel.SetText("Status: Running")
+			} else {
+				a.statusLabel.SetText("Status: Stopped")
+			}
 
-		if status.IsRunning {
-			a.statusLabel.SetText("Status: Running ✓")
-		} else {
-			a.statusLabel.SetText("Status: Stopped")
-		}
+			if status.LastMetrics != nil {
+				a.cpuLabel.SetText(fmt.Sprintf("CPU: %.1f%%", status.LastMetrics.SystemInfo.CPUPercent))
+				a.ramLabel.SetText(fmt.Sprintf("RAM: %.1f%%", status.LastMetrics.SystemInfo.RAMPercent))
+				a.servicesLabel.SetText(fmt.Sprintf("Services: %d", len(status.LastMetrics.Services)))
+			}
 
-		if status.LastMetrics != nil {
-			a.cpuLabel.SetText(fmt.Sprintf("CPU: %.1f%%", status.LastMetrics.SystemInfo.CPUPercent))
-			a.ramLabel.SetText(fmt.Sprintf("RAM: %.1f%%", status.LastMetrics.SystemInfo.RAMPercent))
-			a.servicesLabel.SetText(fmt.Sprintf("Services: %d", len(status.LastMetrics.Services)))
-		}
+			if !status.LastSentAt.IsZero() {
+				a.lastSentLabel.SetText(fmt.Sprintf("Last Heartbeat: %s", status.LastSentAt.Format("15:04:05")))
+			}
 
-		if !status.LastSentAt.IsZero() {
-			a.lastSentLabel.SetText(fmt.Sprintf("Last Heartbeat: %s", status.LastSentAt.Format("15:04:05")))
-		}
-
-		if status.LastError != nil {
-			a.statusLabel.SetText("Status: Error - " + status.LastError.Error())
-		}
+			if status.LastError != nil {
+				a.statusLabel.SetText("Status: Error - " + status.LastError.Error())
+			}
+		})
 	}
 }
-
 func maskAPIKey(key string) string {
 	if len(key) <= 8 {
 		return "****"
@@ -197,79 +195,19 @@ func maskAPIKey(key string) string {
 }
 
 func (a *App) showSettings() {
-	usernameEntry := widget.NewEntry()
-	usernameEntry.SetPlaceHolder("admin@example.com")
-
-	passwordEntry := widget.NewPasswordEntry()
-	passwordEntry.SetPlaceHolder("Enter password")
-
 	apiKeyEntry := widget.NewEntry()
 	apiKeyEntry.SetText(a.config.Server.APIKey)
-	apiKeyEntry.SetPlaceHolder("API Key will be auto-filled after login")
+	apiKeyEntry.SetPlaceHolder("Enter API Key from Dashboard")
 
 	apiEndpointEntry := widget.NewEntry()
 	apiEndpointEntry.SetText(a.config.Server.APIEndpoint)
 	apiEndpointEntry.SetPlaceHolder("http://localhost:5000/api")
 
-	loginStatusLabel := widget.NewLabel("")
-
-	loginBtn := widget.NewButton("Login & Get API Key", func() {
-		if usernameEntry.Text == "" || passwordEntry.Text == "" {
-			loginStatusLabel.SetText("❌ Please enter username and password")
-			return
-		}
-
-		loginStatusLabel.SetText("🔄 Logging in...")
-
-		go func() {
-			loginData := map[string]string{
-				"email":    usernameEntry.Text,
-				"password": passwordEntry.Text,
-			}
-
-			client := resty.New()
-			resp, err := client.R().
-				SetBody(loginData).
-				Post(apiEndpointEntry.Text + "/auth/login")
-
-			if err != nil {
-				loginStatusLabel.SetText("❌ Connection failed: " + err.Error())
-				return
-			}
-
-			if resp.IsError() {
-				loginStatusLabel.SetText("❌ Login failed: " + resp.Status())
-				return
-			}
-
-			var result map[string]interface{}
-			if err := json.Unmarshal(resp.Body(), &result); err != nil {
-				loginStatusLabel.SetText("❌ Failed to parse response")
-				return
-			}
-
-			if accessToken, ok := result["accessToken"].(string); ok {
-				apiKeyEntry.SetText(accessToken)
-				loginStatusLabel.SetText("✅ Login successful! API Key retrieved.")
-			} else {
-				loginStatusLabel.SetText("❌ No access token in response")
-			}
-		}()
-	})
-
-	loginTab := container.NewVBox(
-		widget.NewLabel("Login to automatically retrieve API Key:"),
+	connectionTab := container.NewVBox(
+		widget.NewLabel("Connection Settings:"),
 		widget.NewSeparator(),
 		widget.NewForm(
 			widget.NewFormItem("API Endpoint", apiEndpointEntry),
-			widget.NewFormItem("Username/Email", usernameEntry),
-			widget.NewFormItem("Password", passwordEntry),
-		),
-		loginBtn,
-		loginStatusLabel,
-		widget.NewSeparator(),
-		widget.NewLabel("Or manually enter API Key:"),
-		widget.NewForm(
 			widget.NewFormItem("API Key", apiKeyEntry),
 		),
 	)
@@ -296,7 +234,7 @@ func (a *App) showSettings() {
 	)
 
 	tabs := container.NewAppTabs(
-		container.NewTabItem("Connection", loginTab),
+		container.NewTabItem("Connection", connectionTab),
 		container.NewTabItem("Host Info", hostTab),
 	)
 

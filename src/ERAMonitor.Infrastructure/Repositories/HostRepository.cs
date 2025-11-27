@@ -6,6 +6,7 @@ using ERAMonitor.Core.Enums;
 using ERAMonitor.Core.Interfaces.Repositories;
 using ERAMonitor.Infrastructure.Data;
 using ERAMonitor.Infrastructure.Data.Repositories;
+using ERAMonitor.Core.DTOs.Services;
 
 namespace ERAMonitor.Infrastructure.Repositories;
 
@@ -260,6 +261,19 @@ public class HostRepository : Repository<Host>, IHostRepository
                 ServicesDown = host.Services.Count(s => s.CurrentStatus == StatusType.Down),
                 CheckCount = host.Checks.Count
             },
+            Services = host.Services.Select(s => new ServiceDto
+            {
+                Id = s.Id,
+                HostId = s.HostId,
+                HostName = host.Name,
+                ServiceType = s.ServiceType,
+                ServiceName = s.ServiceName,
+                DisplayName = s.DisplayName,
+                CurrentStatus = s.CurrentStatus,
+                LastStatusChange = s.LastStatusChange,
+                MonitoringEnabled = s.MonitoringEnabled,
+                CreatedAt = s.CreatedAt
+            }).ToList(),
             Notes = host.Notes,
             IsActive = host.IsActive,
             CreatedAt = host.CreatedAt,

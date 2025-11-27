@@ -2,8 +2,10 @@ using System.Security.Claims;
 using ERAMonitor.Core.DTOs.Common;
 using ERAMonitor.Core.DTOs.Dashboard;
 using ERAMonitor.Core.Interfaces;
+using ERAMonitor.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ERAMonitor.API.Extensions;
 
 namespace ERAMonitor.API.Controllers;
 
@@ -13,10 +15,47 @@ namespace ERAMonitor.API.Controllers;
 public class DashboardController : ControllerBase
 {
     private readonly IDashboardService _dashboardService;
+    private readonly IHostService _hostService;
 
-    public DashboardController(IDashboardService dashboardService)
+    public DashboardController(
+        IDashboardService dashboardService,
+        IHostService hostService)
     {
         _dashboardService = dashboardService;
+        _hostService = hostService;
+    }
+
+    [HttpGet("status-overview")]
+    public async Task<ActionResult<object>> GetStatusOverview()
+    {
+        var organizationId = User.GetOrganizationId();
+        
+        // Get host counts
+        var hostCounts = await _hostService.GetStatusCountsAsync(organizationId);
+        var totalHosts = hostCounts.Values.Sum();
+        var hostsUp = hostCounts.GetValueOrDefault(Core.Enums.StatusType.Up, 0);
+        var hostsDown = hostCounts.GetValueOrDefault(Core.Enums.StatusType.Down, 0);
+        var hostsWarning = hostCounts.GetValueOrDefault(Core.Enums.StatusType.Warning, 0) +
+                          hostCounts.GetValueOrDefault(Core.Enums.StatusType.Degraded, 0);
+
+        var overview = new
+        {
+            totalHosts,
+            hostsUp,
+            hostsDown,
+            hostsWarning,
+            totalServices = 0,
+            servicesUp = 0,
+            servicesDown = 0,
+            totalChecks = 0,
+            checksPassing = 0,
+            checksFailing = 0,
+            openIncidents = 0,
+            criticalIncidents = 0,
+            overallHealth = totalHosts > 0 ? (hostsUp * 100 / totalHosts) : 100
+        };
+
+        return Ok(overview);
     }
 
     [HttpGet]

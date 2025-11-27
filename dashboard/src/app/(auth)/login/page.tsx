@@ -1,157 +1,109 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useAuth } from '@/lib/auth-context'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/auth-store';
+import { Button } from '@/components/ui/button';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { apiClient } from '@/lib/api/client';
+
+const loginSchema = z.object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-    const { login } = useAuth()
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
-    const [rememberMe, setRememberMe] = useState(false)
+    const router = useRouter();
+    const { setAuth } = useAuthStore();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setLoading(true)
+    const form = useForm<LoginFormValues>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    });
 
+    async function onSubmit(data: LoginFormValues) {
+        setIsLoading(true);
         try {
-            await login(email, password)
-        } catch (err: any) {
-            setError(err?.message || 'Your password is incorrect. Please try again.')
-            setLoading(false)
+            const response = await apiClient.post<any>('/api/auth/login', data);
+
+            if (response.accessToken) {
+                setAuth(response.user, response.accessToken, response.refreshToken);
+                toast.success('Logged in successfully');
+                router.push('/');
+            } else {
+                toast.error('Login failed: No access token received');
+            }
+        } catch (error: any) {
+            toast.error(error.message || 'Login failed');
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
-            <div className="flex w-full max-w-md flex-col items-center gap-8 rounded-xl bg-slate-800 p-8 shadow-2xl">
-                {/* Logo */}
-                <div className="flex w-full flex-col items-center justify-center gap-2">
-                    <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-white">
-                        <span className="material-symbols-outlined text-2xl">monitor_heart</span>
-                    </div>
-                    <h1 className="text-xl font-bold text-slate-100">ERA Monitor</h1>
-                </div>
-
-                {/* Headline */}
-                <h2 className="text-slate-100 tracking-tight text-3xl font-bold leading-tight text-center">
-                    Welcome back
-                </h2>
-
-                {/* Form */}
-                <div className="flex w-full flex-col items-stretch gap-4">
-                    {/* Email Field */}
-                    <div className="flex w-full flex-col">
-                        <label className="flex flex-col flex-1">
-                            <p className="text-slate-400 text-sm font-medium leading-normal pb-2">
-                                Email
-                            </p>
-                            <input
-                                className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-100 focus:outline-0 border border-slate-600 bg-slate-700 focus:border-primary focus:ring-2 focus:ring-primary/40 h-12 placeholder:text-slate-400 px-4 text-base font-normal leading-normal"
-                                placeholder="Enter your email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                disabled={loading}
+        <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+            <Card className="w-full max-w-md">
+                <CardHeader className="space-y-1">
+                    <CardTitle className="text-2xl font-bold text-center">ERA Monitor</CardTitle>
+                    <CardDescription className="text-center">
+                        Enter your email and password to sign in
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="admin@example.com" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </label>
-                    </div>
-
-                    {/* Password Field */}
-                    <div className="flex w-full flex-col">
-                        <label className="flex flex-col flex-1">
-                            <p className="text-slate-400 text-sm font-medium leading-normal pb-2">
-                                Password
-                            </p>
-                            <div className="flex w-full flex-1 items-stretch rounded-lg">
-                                <input
-                                    className={`form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-100 focus:outline-0 border ${error ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/40' : 'border-slate-600 focus:border-primary focus:ring-2 focus:ring-primary/40'
-                                        } bg-slate-700 h-12 placeholder:text-slate-400 p-4 rounded-r-none border-r-0 text-base font-normal leading-normal`}
-                                    placeholder="Enter your password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    disabled={loading}
-                                />
-                                <div className="text-slate-400 flex border border-slate-600 bg-slate-700 items-center justify-center pr-4 rounded-r-lg border-l-0">
-                                    <button
-                                        type="button"
-                                        className="cursor-pointer hover:text-slate-300 transition-colors"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                    >
-                                        <span className="material-symbols-outlined">
-                                            {showPassword ? 'visibility' : 'visibility_off'}
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </label>
-                        {error && (
-                            <p className="text-red-400 text-sm pt-1.5">{error}</p>
-                        )}
-                    </div>
-
-                    {/* Remember me & Forgot Password */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <input
-                                className="form-checkbox h-4 w-4 rounded border-slate-600 bg-slate-700 text-primary checked:bg-primary focus:ring-2 focus:ring-offset-0 focus:ring-offset-slate-800 focus:ring-primary/40"
-                                id="remember-me"
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
-                                disabled={loading}
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input type="password" placeholder="••••••" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                            <label className="text-slate-400 text-sm font-normal leading-normal" htmlFor="remember-me">
-                                Remember me
-                            </label>
-                        </div>
-                        <a className="text-sm font-medium text-primary hover:text-primary/80 transition-colors" href="#">
-                            Forgot password?
-                        </a>
-                    </div>
-
-                    {/* Sign In Button */}
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="flex h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-white shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-60"
-                    >
-                        {loading ? 'Signing in...' : 'Sign In'}
-                    </button>
-                </div>
-
-                {/* Divider */}
-                <div className="flex w-full items-center gap-4">
-                    <hr className="w-full border-t border-slate-600" />
-                    <p className="shrink-0 text-sm text-slate-400">or</p>
-                    <hr className="w-full border-t border-slate-600" />
-                </div>
-
-                {/* SSO Button */}
-                <button className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-slate-600 bg-transparent px-6 text-base font-medium text-slate-100 shadow-sm transition-colors hover:bg-slate-600/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-slate-800">
-                    <img
-                        alt="Microsoft logo"
-                        className="h-6 w-6"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8oE2jA60WThMDg0UcUgV55gI9CcBEZqzN4e4HVJE_Z2NdWKSF6B2zmREvTCbXHU7rbOHt8rz3W70_FSGBBHPwvb_JGIj-0o7NvrsdeX8-VEIakX0ouJb7fd3HrdQlOuU14gIIbXfdgrwUZjq7gk1dHR2lan1hl16hDrflYUYPRosSp0dMA846jQhZcAcO4WoX2ajOzMjAhtUfAcG5_jy3q7jxzvXDww2SHmmT0bbHrHH2tElGABBL4yAtNL71S9V5MRyR2aOdvdY"
-                    />
-                    Sign in with Microsoft
-                </button>
-
-                {/* Footer */}
-                <p className="text-slate-400 text-sm text-center">
-                    Don't have an account?{' '}
-                    <a className="font-medium text-primary hover:text-primary/80 transition-colors" href="#">
-                        Contact your administrator
-                    </a>
-                </p>
-            </div>
+                            <Button type="submit" className="w-full" disabled={isLoading}>
+                                {isLoading ? 'Signing in...' : 'Sign in'}
+                            </Button>
+                        </form>
+                    </Form>
+                </CardContent>
+            </Card>
         </div>
-    )
+    );
 }

@@ -30,7 +30,7 @@ logging:
     maxsizemb: 10
 server:
     apiendpoint: http://localhost:5000/api
-    apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyMjIyMjIyMi0yMjIyLTIyMjItMjIyMi0yMjIyMjIyMjIyMjIiLCJlbWFpbCI6ImFkbWluQGVyYW1vbml0b3IubG9jYWwiLCJ1bmlxdWVfbmFtZSI6IlN5c3RlbSBBZG1pbmlzdHJhdG9yIiwicm9sZSI6Ik9wZXJhdG9yIiwib3JnYW5pemF0aW9uSWQiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJuYmYiOjE3NjQyMzA2MjEsImV4cCI6MTc2NDIzNDIyMSwiaWF0IjoxNzY0MjMwNjIxfQ.jEWpOj_L3B09m80NVXUgRMFmL7ktA0EUJgyrdPP0VlI
+    apikey: 006f18eb990a4e6081db773fabbbb0e13df5387c9ea14f88b5d6a843b9784cf1
     retrycount: 3
     retrydelay: 5
     timeout: 30

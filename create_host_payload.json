@@ -1,0 +1,7 @@
+{
+    "name": "Agent Test 2",
+    "hostname": "localhost",
+    "osType": "Windows",
+    "checkIntervalSeconds": 60,
+    "monitoringEnabled": true
+}

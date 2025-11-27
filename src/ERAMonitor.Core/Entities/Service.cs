@@ -10,6 +10,7 @@ public class Service : BaseEntity
     public ServiceType ServiceType { get; set; }
     public string ServiceName { get; set; } = string.Empty; // Internal name: w3svc, nginx.service
     public string? DisplayName { get; set; } // Friendly name
+    public string? StartupType { get; set; } // Auto, Manual, Disabled, etc.
     public string? Description { get; set; }
     
     // Current Status

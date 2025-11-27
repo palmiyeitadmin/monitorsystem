@@ -97,6 +97,7 @@ public class ServiceRepository : Repository<Service>, IServiceRepository
                 ServiceType = s.ServiceType,
                 ServiceName = s.ServiceName,
                 DisplayName = s.DisplayName,
+                StartupType = s.StartupType,
                 CurrentStatus = s.CurrentStatus,
                 LastStatusChange = s.LastStatusChange,
                 MonitoringEnabled = s.MonitoringEnabled,

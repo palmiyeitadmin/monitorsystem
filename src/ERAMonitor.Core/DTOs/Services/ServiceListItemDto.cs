@@ -13,6 +13,7 @@ public class ServiceListItemDto
     public string ServiceTypeDisplay => GetServiceTypeDisplay();
     public string ServiceName { get; set; } = string.Empty;
     public string? DisplayName { get; set; }
+    public string? StartupType { get; set; }
     
     public StatusType CurrentStatus { get; set; }
     public DateTime? LastStatusChange { get; set; }
