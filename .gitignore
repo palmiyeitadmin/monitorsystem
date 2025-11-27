@@ -1,0 +1,56 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build outputs
+bin/
+obj/
+publish/
+dist/
+.next/
+out/
+
+# Dependencies
+node_modules/
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.production.local
+
+# Database
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Go
+go.work
+
+# .NET
+*.user
+*.suo
+*.cache
+project.lock.json

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Host Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111c21",
+                        "success": "#28A745",
+                        "warning": "#FFC107",
+                        "error": "#DC3545",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex h-screen flex-col bg-[#121d21] p-4 sticky top-0">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAsKLYOnECIX0aXk-eBdUlcXAj1UbeO8pul1LUClOXlnG7_gwtoGP98GHEoIA6GyroyZ2tjP_5DJwHdpTZJ76ujONFDYmts403IFOQfL7B825kIutZENEQqf5svVe4qVc6d72JSUCrcQ39yLwATE9zRChB8wbFsTfSXxvqorIr1pzC1xgk63Zo-BzJGqMNk-aSdwCoWdvo1br_4fCHjdUpsC3VSYYSEt8dF37_5ghtbN_PNsysP0-0t-xDV9473PaId2hpbGYtPbu4");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-[#95b7c6] text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#253c46] text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">database</span>
+<p class="text-sm font-medium leading-normal">Hosts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">lan</span>
+<p class="text-sm font-medium leading-normal">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">check_circle</span>
+<p class="text-sm font-medium leading-normal">Checks</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<p class="text-sm font-medium leading-normal">Incidents</p>
+</a>
+</nav>
+</div>
+<div class="mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="w-full max-w-7xl mx-auto">
+<!-- PageHeading & ToolBar -->
+<header class="flex flex-wrap justify-between items-start gap-4 mb-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-4">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">prod-web-01.eracorp.io</h1>
+<span class="inline-flex items-center rounded-full bg-success/20 px-3 py-1 text-sm font-medium text-success">UP</span>
+</div>
+<p class="text-slate-500 dark:text-[#95b7c6] text-base font-normal leading-normal">Last seen: 2 seconds ago</p>
+</div>
+<div class="flex gap-2">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-slate-200 dark:bg-[#253c46] text-slate-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-slate-300 dark:hover:bg-[#365663]">
+<span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
+<span class="truncate">Edit</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-slate-200 dark:bg-[#253c46] text-slate-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-slate-300 dark:hover:bg-[#365663]">
+<span class="material-symbols-outlined" style="font-size: 20px;">pause_circle</span>
+<span class="truncate">Pause</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-error/20 text-error text-sm font-bold leading-normal tracking-[0.015em] hover:bg-error/30">
+<span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+<span class="truncate">Delete</span>
+</button>
+</div>
+</header>
+<!-- Tabs -->
+<div class="pb-3 border-b border-slate-200 dark:border-[#365663]">
+<div class="flex gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-slate-900 dark:text-white pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Overview</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-500 dark:text-[#95b7c6] pb-[13px] pt-4 hover:text-slate-800 dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Metrics</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-500 dark:text-[#95b7c6] pb-[13px] pt-4 hover:text-slate-800 dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Services</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-500 dark:text-[#95b7c6] pb-[13px] pt-4 hover:text-slate-800 dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Checks</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-500 dark:text-[#95b7c6] pb-[13px] pt-4 hover:text-slate-800 dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Incidents</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-500 dark:text-[#95b7c6] pb-[13px] pt-4 hover:text-slate-800 dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Logs</p>
+</a>
+</div>
+</div>
+<!-- Tab Content: Overview -->
+<div class="mt-6">
+<!-- SectionHeader -->
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">Live Resource Usage</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<!-- Gauge Card -->
+<div class="bg-white dark:bg-[#1A282D] rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-slate-200 dark:border-[#253c46]">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="dark:stroke-[#253c46]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"></path>
+<path class="stroke-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#28aae2" stroke-dasharray="25, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">25%</span>
+</div>
+</div>
+<p class="text-base font-medium text-slate-600 dark:text-slate-300">CPU Load</p>
+</div>
+<div class="bg-white dark:bg-[#1A282D] rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-slate-200 dark:border-[#253c46]">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="dark:stroke-[#253c46]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"></path>
+<path class="stroke-warning" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#FFC107" stroke-dasharray="60, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">60%</span>
+</div>
+</div>
+<p class="text-base font-medium text-slate-600 dark:text-slate-300">RAM Usage</p>
+</div>
+<div class="bg-white dark:bg-[#1A282D] rounded-xl p-6 flex flex-col items-center justify-center gap-4 border border-slate-200 dark:border-[#253c46]">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="dark:stroke-[#253c46]" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e6e6e6" stroke-width="3"></path>
+<path class="stroke-error" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#DC3545" stroke-dasharray="85, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">85%</span>
+</div>
+</div>
+<p class="text-base font-medium text-slate-600 dark:text-slate-300">Disk Usage (/)</p>
+</div>
+</div>
+<!-- SectionHeader -->
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] pb-2 pt-4">System Information</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Data Card -->
+<div class="bg-white dark:bg-[#1A282D] rounded-xl p-6 border border-slate-200 dark:border-[#253c46]">
+<ul class="space-y-4 text-sm">
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Operating System</span>
+<span class="font-medium text-slate-800 dark:text-slate-200">Ubuntu 22.04.1 LTS</span>
+</li>
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Kernel Version</span>
+<span class="font-medium text-slate-800 dark:text-slate-200">5.15.0-52-generic</span>
+</li>
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Agent Version</span>
+<span class="font-medium text-slate-800 dark:text-slate-200">1.2.3</span>
+</li>
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">IP Address (eth0)</span>
+<span class="font-medium text-slate-800 dark:text-slate-200">192.168.1.101</span>
+</li>
+</ul>
+</div>
+<div class="bg-white dark:bg-[#1A282D] rounded-xl p-6 border border-slate-200 dark:border-[#253c46]">
+<ul class="space-y-4 text-sm">
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Uptime</span>
+<span class="font-medium text-slate-800 dark:text-slate-200">32 days, 4 hours</span>
+</li>
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Availability (24h)</span>
+<span class="font-medium text-success">100%</span>
+</li>
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Availability (7d)</span>
+<span class="font-medium text-success">99.98%</span>
+</li>
+<li class="flex justify-between">
+<span class="text-slate-500 dark:text-slate-400">Availability (30d)</span>
+<span class="font-medium text-success">99.95%</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

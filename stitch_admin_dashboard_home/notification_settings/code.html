@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Notification Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#121d21",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex h-screen flex-col bg-[#162429] p-4 sticky top-0" style="width: 260px;">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Company logo for ERA Monitor" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD-wpPeol1ZpTF9RtHctjuB7YtXnkd-kVgIaWwrIk2DIZ10rkSA-0kkHvw73K3QAdBtQQCzXwNLQRwPtvSXG9itUxBiwM0kjel1n243Q_G8PIJ_9lETj3Ix4PEp8h-WddBLGOMOmFYbglvwux4DsDGQsvZMrLfRQmQHAx9No_6MSIVVH-aKirfeJsMeXPr4-DykIcLzQz2TYYVhJwGwlnMpVNhF3WXcQqCqnqSMgDPkbQcD-TzTKci5LeOD7l5IQa66v83ZtL7UcK4");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Admin Panel</h1>
+<p class="text-[#95b7c6] text-sm font-normal leading-normal">ERA Monitor</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dns</span>
+<p class="text-sm font-medium leading-normal">Hosts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">database</span>
+<p class="text-sm font-medium leading-normal">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="mt-auto">
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-4 mb-8">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Notification Settings</p>
+<p class="text-slate-500 dark:text-[#95b7c6] text-base font-normal leading-normal">Configure global notification channels and define custom alert rules.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Channels -->
+<div class="lg:col-span-1 flex flex-col gap-6">
+<!-- SectionHeader -->
+<h2 class="text-slate-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Global Notification Channels</h2>
+<!-- BodyText -->
+<p class="text-slate-600 dark:text-slate-400 text-sm font-normal leading-normal -mt-4">
+                            Configure the services that will be used to send out alert notifications. Changes must be saved for each channel individually.
+                        </p>
+<!-- Accordions for Channels -->
+<div class="flex flex-col gap-3">
+<details class="flex flex-col rounded-xl border border-slate-200 dark:border-[#365663] bg-white dark:bg-[#162429] group" open="">
+<summary class="flex cursor-pointer items-center justify-between gap-6 p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400">mail</span>
+<p class="text-slate-800 dark:text-white text-sm font-medium leading-normal">Email (SMTP)</p>
+</div>
+<span class="material-symbols-outlined text-slate-500 dark:text-white group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 border-t border-slate-200 dark:border-[#365663] pt-4">
+<form class="space-y-4">
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="smtp-server">SMTP Server</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="smtp-server" placeholder="smtp.example.com" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="smtp-port">Port</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="smtp-port" placeholder="587" type="text"/>
+</div>
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="smtp-encryption">Encryption</label>
+<select class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="smtp-encryption">
+<option>SSL/TLS</option>
+<option>STARTTLS</option>
+</select>
+</div>
+</div>
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="smtp-user">Username</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="smtp-user" placeholder="user@example.com" type="text"/>
+</div>
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="smtp-pass">Password</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="smtp-pass" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex items-center justify-between pt-2">
+<button class="px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-700/50 rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" type="button">Test</button>
+<button class="px-3 py-1.5 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90" type="submit">Save</button>
+</div>
+</form>
+</div>
+</details>
+<details class="flex flex-col rounded-xl border border-slate-200 dark:border-[#365663] bg-white dark:bg-[#162429] group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400">send</span>
+<p class="text-slate-800 dark:text-white text-sm font-medium leading-normal">Telegram</p>
+</div>
+<span class="material-symbols-outlined text-slate-500 dark:text-white group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 border-t border-slate-200 dark:border-[#365663] pt-4">
+<form class="space-y-4">
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="telegram-token">Bot Token</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="telegram-token" placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11" type="text"/>
+</div>
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="telegram-chat-id">Chat ID</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="telegram-chat-id" placeholder="-100123456789" type="text"/>
+</div>
+<div class="flex items-center justify-between pt-2">
+<button class="px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-700/50 rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" type="button">Test</button>
+<button class="px-3 py-1.5 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90" type="submit">Save</button>
+</div>
+</form>
+</div>
+</details>
+<details class="flex flex-col rounded-xl border border-slate-200 dark:border-[#365663] bg-white dark:bg-[#162429] group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400">webhook</span>
+<p class="text-slate-800 dark:text-white text-sm font-medium leading-normal">Webhook</p>
+</div>
+<span class="material-symbols-outlined text-slate-500 dark:text-white group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="px-4 pb-4 border-t border-slate-200 dark:border-[#365663] pt-4">
+<form class="space-y-4">
+<div>
+<label class="text-xs font-medium text-slate-500 dark:text-slate-400" for="webhook-url">Webhook Endpoint URL</label>
+<input class="w-full mt-1 bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" id="webhook-url" placeholder="https://your-service.com/webhook/123" type="url"/>
+</div>
+<div class="flex items-center justify-between pt-2">
+<button class="px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-700/50 rounded-md hover:bg-slate-300 dark:hover:bg-slate-700" type="button">Test</button>
+<button class="px-3 py-1.5 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90" type="submit">Save</button>
+</div>
+</form>
+</div>
+</details>
+</div>
+</div>
+<!-- Right Column: Rules -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h2 class="text-slate-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Notification Rules</h2>
+<button class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+                                Add New Rule
+                            </button>
+</div>
+<div class="bg-white dark:bg-[#162429] border border-slate-200 dark:border-[#365663] rounded-xl p-6">
+<!-- Rule Builder Interface -->
+<div class="flex flex-col gap-4">
+<p class="text-lg font-semibold text-slate-800 dark:text-white">Create New Rule</p>
+<!-- IF Condition -->
+<div class="flex items-start gap-4 p-4 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
+<span class="font-bold text-sm text-slate-500 dark:text-slate-400 mt-2">IF</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1">
+<select class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary">
+<option>Host</option>
+<option>Service</option>
+<option>CPU Usage</option>
+<option>RAM Usage</option>
+<option>SSL Certificate</option>
+</select>
+<select class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary">
+<option>goes down</option>
+<option>is greater than</option>
+<option>is less than</option>
+<option>expires in less than</option>
+</select>
+<input class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" placeholder="Value" type="text"/>
+</div>
+</div>
+<!-- THEN Action -->
+<div class="flex items-start gap-4 p-4 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
+<span class="font-bold text-sm text-slate-500 dark:text-slate-400 mt-2">THEN</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1">
+<select class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary">
+<option>Notify</option>
+</select>
+<select class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary">
+<option>User</option>
+<option>DevOps Group</option>
+<option>Customer A</option>
+</select>
+<select class="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary">
+<option>Email</option>
+<option>Telegram</option>
+<option>Webhook</option>
+</select>
+</div>
+</div>
+<!-- WITH Escalation -->
+<div class="flex items-start gap-4 p-4 bg-slate-100 dark:bg-slate-800/50 rounded-lg">
+<span class="font-bold text-sm text-slate-500 dark:text-slate-400 mt-2">WITH</span>
+<div class="flex items-center gap-3 flex-1">
+<span class="text-sm text-slate-600 dark:text-slate-300">Escalation after</span>
+<input class="w-20 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary" type="number" value="15"/>
+<select class="w-32 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-md text-sm text-slate-800 dark:text-white focus:ring-primary focus:border-primary">
+<option>minutes</option>
+<option>hours</option>
+</select>
+</div>
+</div>
+<div class="flex justify-end gap-3 pt-4">
+<button class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-slate-700/50 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-700" type="button">Cancel</button>
+<button class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90" type="submit">Save Rule</button>
+</div>
+</div>
+</div>
+<!-- Rules List -->
+<div class="space-y-3">
+<div class="grid grid-cols-12 gap-4 items-center p-4 bg-white dark:bg-[#162429] border border-slate-200 dark:border-[#365663] rounded-xl">
+<div class="col-span-11">
+<p class="font-semibold text-slate-800 dark:text-white">High CPU on Production Servers</p>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+<span class="font-medium text-slate-600 dark:text-slate-300">IF</span> CPU Usage &gt; 90% <span class="font-medium text-slate-600 dark:text-slate-300">THEN</span> Notify DevOps Group <span class="font-medium text-slate-600 dark:text-slate-300">VIA</span> Telegram
+                                    </p>
+</div>
+<div class="col-span-1 flex justify-end">
+<button class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-4 items-center p-4 bg-white dark:bg-[#162429] border border-slate-200 dark:border-[#365663] rounded-xl">
+<div class="col-span-11">
+<p class="font-semibold text-slate-800 dark:text-white">API Gateway Down</p>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+<span class="font-medium text-slate-600 dark:text-slate-300">IF</span> Service 'api-gateway' goes down <span class="font-medium text-slate-600 dark:text-slate-300">THEN</span> Notify On-call User <span class="font-medium text-slate-600 dark:text-slate-300">VIA</span> Email
+                                    </p>
+</div>
+<div class="col-span-1 flex justify-end">
+<button class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-4 items-center p-4 bg-white dark:bg-[#162429] border border-slate-200 dark:border-[#365663] rounded-xl">
+<div class="col-span-11">
+<p class="font-semibold text-slate-800 dark:text-white">SSL Certificate Expiry Warning</p>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+<span class="font-medium text-slate-600 dark:text-slate-300">IF</span> SSL Certificate expires in less than 14 days <span class="font-medium text-slate-600 dark:text-slate-300">THEN</span> Notify Admins <span class="font-medium text-slate-600 dark:text-slate-300">VIA</span> Email
+                                    </p>
+</div>
+<div class="col-span-1 flex justify-end">
+<button class="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

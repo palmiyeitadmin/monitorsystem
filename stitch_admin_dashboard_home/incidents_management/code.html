@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Incident Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#28aae2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#121d21",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        font-size: 24px;
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="flex h-screen">
+<!-- SideNavBar -->
+<aside class="flex flex-col w-64 bg-background-light dark:bg-[#121d21] border-r border-gray-200 dark:border-[#253c46]">
+<div class="flex flex-col justify-between flex-1 p-4">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Company Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKrxBwcfnshfWjP349wTGOaKru6RRpGgpd83yzMpQBD4Ev-2eMFrf6MYaHmgwr-Te0rfcFdZ0_1HN-7RF-sBoJss_y6gt8aYNaREdJxPLUuxKLlpVMtHcgrORwny-WyGmZz3dhv-0mMxYtGtaJWMCVYfA_HuvpjDFERhq1ac8jT0wj_HtzGDNH_R233dsVQ8mlJ2ka0hc-mF_0pTYO8y8YForNFZ9SpC_ksZagmkvZCi6E-rYp0EDOeZV1pXxoKvbnL4qnNzsvEDs");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">Admin Panel</h1>
+<p class="text-gray-500 dark:text-[#95b7c6] text-sm font-normal leading-normal">ERA Monitor</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">dns</span>
+<p class="text-sm font-medium leading-normal">Servers</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">settings_heart</span>
+<p class="text-sm font-medium leading-normal">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 dark:bg-[#253c46] text-primary dark:text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">warning</span>
+<p class="text-sm font-medium leading-normal">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-[#121d21] text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Create New Incident</span>
+</button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white rounded-lg hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto">
+<div class="p-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Incident Management</p>
+<p class="text-gray-500 dark:text-[#95b7c6] text-base font-normal leading-normal">Track and manage all system incidents from creation to resolution.</p>
+</div>
+<div class="flex items-center gap-4">
+<!-- SegmentedButtons -->
+<div class="flex h-10 items-center justify-center rounded-lg bg-gray-200 dark:bg-[#253c46] p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-4 has-[:checked]:bg-white dark:has-[:checked]:bg-[#121d21] has-[:checked]:shadow-sm has-[:checked]:text-gray-900 dark:has-[:checked]:text-white text-gray-500 dark:text-[#95b7c6] text-sm font-medium leading-normal">
+<span class="truncate">Kanban View</span>
+<input checked="" class="invisible w-0" name="view-toggle" type="radio" value="Kanban View"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-4 has-[:checked]:bg-white dark:has-[:checked]:bg-[#121d21] has-[:checked]:shadow-sm has-[:checked]:text-gray-900 dark:has-[:checked]:text-white text-gray-500 dark:text-[#95b7c6] text-sm font-medium leading-normal">
+<span class="truncate">List View</span>
+<input class="invisible w-0" name="view-toggle" type="radio" value="List View"/>
+</label>
+</div>
+</div>
+</div>
+<!-- Chips/Filters -->
+<div class="flex gap-2 py-4 border-b border-gray-200 dark:border-[#253c46] overflow-x-auto">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] px-3">
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Severity: All</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-white !text-xl">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] px-3">
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Status: All</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-white !text-xl">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] px-3">
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Date Range</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-white !text-xl">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] px-3">
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Customer: All</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-white !text-xl">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] px-3">
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Assigned To: All</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-white !text-xl">arrow_drop_down</span>
+</button>
+</div>
+<!-- Kanban Board -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-6">
+<!-- Column: New -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h2 class="text-base font-bold text-gray-900 dark:text-white">New</h2>
+<span class="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-full dark:bg-[#253c46] dark:text-gray-300">3</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Incident Card 1 -->
+<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer dark:bg-[#1b2b32] dark:border-[#253c46]">
+<div class="flex items-start justify-between">
+<h3 class="font-bold text-gray-900 dark:text-white">Host DOWN: PROD-WEB-01</h3>
+<span class="material-symbols-outlined text-red-500" style="font-variation-settings: 'FILL' 1">error</span>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-[#95b7c6]">3 hours ago</p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-400">CloudNet Inc.</span>
+<div class="w-8 h-8 bg-center bg-no-repeat bg-cover rounded-full" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDCvOmQJND6ttm8Ic_1fmkYOfGKfyXEzprsOTR9JbEsomCCrCUMFIwq_lGakyyJD1AWNVuLDFmPv6jSQ5WOpeMPqvpcNgz9lbyZlT9JLigRTuY0cMuc24fLhTle3zeXfFhmltTm7wFPLbY4TvUoL4ZymEn4AEEQGFTa9D-AgskfDH5xb0LA-Cf7LuSsKKIQlc4k7i05LUCwzNUaEQWpmFPsRBw7t6lJJuHq7dl5YqS1HVWAoOEBNfdlXbCidcCJBg7OCBR2Q0e2Zu4');"></div>
+</div>
+</div>
+<!-- Incident Card 2 -->
+<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer dark:bg-[#1b2b32] dark:border-[#253c46]">
+<div class="flex items-start justify-between">
+<h3 class="font-bold text-gray-900 dark:text-white">High CPU: DB-MASTER-03</h3>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1">warning</span>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-[#95b7c6]">5 hours ago</p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-400">DataFlow LLC</span>
+<div class="flex items-center justify-center w-8 h-8 text-gray-500 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-400" data-alt="Unassigned">
+<span class="material-symbols-outlined !text-xl">person</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Acknowledged -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h2 class="text-base font-bold text-gray-900 dark:text-white">Acknowledged</h2>
+<span class="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-full dark:bg-[#253c46] dark:text-gray-300">1</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Incident Card 3 -->
+<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer dark:bg-[#1b2b32] dark:border-[#253c46]">
+<div class="flex items-start justify-between">
+<h3 class="font-bold text-gray-900 dark:text-white">API Latency Spike</h3>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1">warning</span>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-[#95b7c6]">1 day ago</p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-400">Innovate Co.</span>
+<div class="w-8 h-8 bg-center bg-no-repeat bg-cover rounded-full" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCclrDzkVFjGoH2ZoVPCOHnFPnAl2I9NEpAj1ii-X6OLnqadzjwMQJB8tmhzvHOa4mlxlhi8IXCWzvxncguL68fD4ZhS7x65QIvT3GZEegxFYgL-zWXKb4NAyDSWuO0ZnzVFASAmgq5NbPPNUIRER3sB0Bf42UvvXMRLfVm2jbSEEAfvQt0lgKwHDwOYIDTgffu_OUt-XCS-srRNJ6imVK1zwbtbNzDA5ox7F_DyTSQcgsLA73TX-V8kixHgSb8KRAv2Z-SNsd1lsk');"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: In Progress -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h2 class="text-base font-bold text-gray-900 dark:text-white">In Progress</h2>
+<span class="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-full dark:bg-[#253c46] dark:text-gray-300">2</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Incident Card 4 -->
+<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer dark:bg-[#1b2b32] dark:border-[#253c46]">
+<div class="flex items-start justify-between">
+<h3 class="font-bold text-gray-900 dark:text-white">Service Unreachable: AUTH-01</h3>
+<span class="material-symbols-outlined text-red-500" style="font-variation-settings: 'FILL' 1">error</span>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-[#95b7c6]">2 days ago</p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-400">SecureServe</span>
+<div class="w-8 h-8 bg-center bg-no-repeat bg-cover rounded-full" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCmLOzL-DBiNJdvAsTEcnmyWGvMJ91pwt5xEet1lfX5WqTmtm471ORY4sG59tm1r5hm5AGjH0a9XUz6_tEh0rL6Y_TDemLWXMl_7orJqWVhbyiuWH8ok5mhegGidPz4bIjiNHPahdwZg1EKL-8kWtBSQdyWLb9lmaE-Eqf37c5yrovu6vxvq-uWFfPXcvJ_yaZXp6ymplBv16Ij8Iwp6kQxt-ktJUo1_INFMSOFTUlc90TNE-oklVk-1tfntj4DUkQT0TC4WRyaydM');"></div>
+</div>
+</div>
+<!-- Incident Card 5 -->
+<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer dark:bg-[#1b2b32] dark:border-[#253c46]">
+<div class="flex items-start justify-between">
+<h3 class="font-bold text-gray-900 dark:text-white">Disk Space Alert: BACKUP-02</h3>
+<span class="material-symbols-outlined text-blue-500" style="font-variation-settings: 'FILL' 1">info</span>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-[#95b7c6]">3 days ago</p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-400">DataFlow LLC</span>
+<div class="w-8 h-8 bg-center bg-no-repeat bg-cover rounded-full" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD0OMZEcBrSpmlggjDEw3Lv9jtapJv3FgdR7btpSCDa_AUkPvx5e2biMxqZ9qYqm7utlf7dibGfoWlVafj51k-K8AU3E43zAfFBu8XnFEmpLFuitTQ8eTAqduQdlNbjVe4B3uR3TIGLHI9oV-Q39xRCffc-CnhckyaLNCqWxYz3FD4lggN_MqirUIPuXVQaHaiJMAKzSIRqQx7tzNPKVG0hl93hmgyE_Oxj8x9ADD9ptsNpWab-WXe9cfQ9Iz7lN5_yIBmedB6tPes');"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column: Resolved -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between px-2">
+<h2 class="text-base font-bold text-gray-900 dark:text-white">Resolved</h2>
+<span class="px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-200 rounded-full dark:bg-[#253c46] dark:text-gray-300">5</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Incident Card 6 -->
+<div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer dark:bg-[#1b2b32] dark:border-[#253c46] opacity-70">
+<div class="flex items-start justify-between">
+<h3 class="font-bold text-gray-900 dark:text-white">Login Service Failure</h3>
+<span class="material-symbols-outlined text-green-500" style="font-variation-settings: 'FILL' 1">task_alt</span>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-[#95b7c6]">4 days ago</p>
+<div class="flex items-center justify-between mt-4">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-400">Innovate Co.</span>
+<div class="w-8 h-8 bg-center bg-no-repeat bg-cover rounded-full" data-alt="User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSkD6wgy8FHNr7iOP1xbAgJ2b2NzfXPDd2ddaZE25cCYNrdyVn4ICRoaFmKgAuhwoLEBYFtTLk5kEbEb4X5Qh7RJVDCPCtAgNDh0hKxmMWG0icy03pxu4HtdtELCGdvPnqcdLX4-kD7q5rGsJULYif-PCnXRTJYM33W7TH8E8ACdq9L7oN1QyVJdw_5-Zn7s2j6xHPIZHGsLeIYdkp0AqBpHp9VzqQTXzcNoYik9i9kKH12R8o3pEc81KfEqWucQ0uoISj-qalh_8');"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

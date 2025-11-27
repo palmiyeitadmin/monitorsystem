@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Incidents</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#28aae2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111c21",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-[#121d21] border-r border-gray-200 dark:border-gray-800 flex flex-col">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Company logo for ERA Monitor" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCFBri9eAw-rV_JHWhHA_pVnuiBSYSxpIbQfdJ_ya5yNwex-pFJDZA-1SBaf9LHPJQnORZUn17b5t6YmKrERsknI4fKrQL-g9-R0QFRsXJ23DwOdvFYWNHNfqbT-KOu7kYU26tncfenENXMTVnRvaHefkhKlTq_QL9HjTesQA3TOA6V7yrxiwUqsiUrwkUZg_QCFLUhUoBO8aZoGH8IlTUMLRP8Ur3Tl16L8PoUg-Lc9qKmZaRNjg9vwYmaUNSDucmNjjkroOALrD4");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-gray-500 dark:text-[#95b7c6] text-sm font-normal leading-normal">Customer Portal</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">database</span>
+<p class="text-sm font-medium leading-normal">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary dark:bg-[#253c46] dark:text-white" href="#">
+<span class="material-symbols-outlined fill">warning</span>
+<p class="text-sm font-medium leading-normal">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<p class="text-sm font-medium leading-normal">Support</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex overflow-hidden">
+<div class="flex-1 overflow-y-auto">
+<div class="p-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between items-center gap-4">
+<div class="flex flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Incidents</p>
+<p class="text-gray-500 dark:text-[#95b7c6] text-base font-normal leading-normal">View and track all service incidents affecting your resources.</p>
+</div>
+<button class="flex items-center justify-center rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] px-4">
+<span class="material-symbols-outlined fill text-base">add_circle</span>
+<span class="truncate">Report an Issue</span>
+</button>
+</div>
+<!-- ToolBar & Chips -->
+<div class="mt-6 border-b border-gray-200 dark:border-gray-800">
+<div class="flex justify-between items-center gap-4 pb-3">
+<div class="flex gap-2">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/20 text-primary dark:bg-primary/90 dark:text-white px-4">
+<p class="text-sm font-medium leading-normal">All</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-[#253c46] hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-white px-4">
+<p class="text-sm font-medium leading-normal">Open</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-[#253c46] hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-white px-4">
+<p class="text-sm font-medium leading-normal">In Progress</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-[#253c46] hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-white px-4">
+<p class="text-sm font-medium leading-normal">Resolved</p>
+</button>
+</div>
+<div class="flex gap-2">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full h-10 pl-10 pr-4 bg-white dark:bg-[#121d21] border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-primary focus:border-primary" placeholder="Search incidents..." type="text"/>
+</div>
+<button class="p-2 text-gray-500 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-[#121d21] hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Table -->
+<div class="mt-6 @container">
+<div class="overflow-hidden rounded-lg border border-gray-200 dark:border-[#365663] bg-white dark:bg-[#121d21]">
+<table class="w-full">
+<thead class="bg-gray-50 dark:bg-[#1b2b32]">
+<tr>
+<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider w-[12%]">Incident ID</th>
+<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider w-[30%]">Title</th>
+<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider w-[13%]">Status</th>
+<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider w-[20%]">Affected Resource</th>
+<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider w-[12%]">Severity</th>
+<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider w-[13%]">Date Opened</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-[#365663]">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">#INC-00451</td>
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">API Latency Spike - Production DB Cluster</td>
+<td class="h-[72px] px-4 py-2 text-sm">
+<div class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-blue-800 bg-blue-100 dark:text-blue-200 dark:bg-blue-900/40">
+<span class="size-2 rounded-full bg-blue-500"></span>
+                                                Investigating
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">Web Server-01, API-Gateway</td>
+<td class="h-[72px] px-4 py-2 text-sm">
+<div class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-red-800 bg-red-100 dark:text-red-200 dark:bg-red-900/40">Critical</div>
+</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">2024-10-26</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">#INC-00450</td>
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">Frontend Asset Loading Failure</td>
+<td class="h-[72px] px-4 py-2 text-sm">
+<div class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-amber-800 bg-amber-100 dark:text-amber-200 dark:bg-amber-900/40">
+<span class="size-2 rounded-full bg-amber-500"></span>
+                                                In Progress
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">CDN Service</td>
+<td class="h-[72px] px-4 py-2 text-sm">
+<div class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-orange-800 bg-orange-100 dark:text-orange-200 dark:bg-orange-900/40">High</div>
+</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">2024-10-26</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">#INC-00449</td>
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">Scheduled Maintenance Notification</td>
+<td class="h-[72px] px-4 py-2 text-sm">
+<div class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-green-800 bg-green-100 dark:text-green-200 dark:bg-green-900/40">
+<span class="size-2 rounded-full bg-green-500"></span>
+                                                Resolved
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">All Services</td>
+<td class="h-[72px] px-4 py-2 text-sm">
+<div class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-gray-800 bg-gray-100 dark:text-gray-200 dark:bg-gray-700/40">Low</div>
+</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-[#95b7c6]">2024-10-25</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Incident Details Side Panel -->
+<aside class="w-[480px] flex-shrink-0 bg-white dark:bg-[#121d21] border-l border-gray-200 dark:border-gray-800 flex flex-col">
+<div class="p-6 border-b border-gray-200 dark:border-gray-800">
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Incident #INC-00451</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">API Latency Spike - Production DB Cluster</p>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Summary -->
+<div>
+<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Summary</h3>
+<div class="mt-3 grid grid-cols-2 gap-4 text-sm">
+<div>
+<p class="text-gray-500 dark:text-gray-400">Status</p>
+<div class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-blue-800 bg-blue-100 dark:text-blue-200 dark:bg-blue-900/40 mt-1">
+<span class="size-2 rounded-full bg-blue-500"></span>Investigating
+                                </div>
+</div>
+<div>
+<p class="text-gray-500 dark:text-gray-400">Severity</p>
+<div class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-red-800 bg-red-100 dark:text-red-200 dark:bg-red-900/40 mt-1">Critical</div>
+</div>
+<div class="col-span-2">
+<p class="text-gray-500 dark:text-gray-400">Affected Services</p>
+<p class="font-medium text-gray-900 dark:text-white mt-1">Web Server-01, API-Gateway</p>
+</div>
+</div>
+</div>
+<!-- Timeline -->
+<div>
+<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Timeline</h3>
+<ul class="mt-3 space-y-4">
+<li class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-8 rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-base">bolt</span>
+</div>
+<div class="w-px h-full bg-gray-200 dark:bg-gray-700"></div>
+</div>
+<div>
+<p class="text-sm font-medium text-gray-900 dark:text-white">A fix has been identified and is being deployed.</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:45 AM</p>
+</div>
+</li>
+<li class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="flex items-center justify-center size-8 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-base">flag</span>
+</div>
+</div>
+<div>
+<p class="text-sm font-medium text-gray-900 dark:text-white">We are investigating reports of increased API latency.</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">10:12 AM</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Communication -->
+<div>
+<h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Communication</h3>
+<div class="mt-3 space-y-4">
+<div class="flex items-start gap-3">
+<div class="size-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">
+<span class="text-sm font-bold">ES</span>
+</div>
+<div class="p-3 rounded-lg bg-gray-100 dark:bg-[#1b2b32] w-full">
+<div class="flex justify-between items-center">
+<p class="text-sm font-medium text-gray-900 dark:text-white">ERA Support Technician</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">10:50 AM</p>
+</div>
+<p class="text-sm text-gray-600 dark:text-gray-300 mt-1">The patch has been deployed and we are monitoring the results. We expect a full recovery shortly.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="size-8 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white flex items-center justify-center flex-shrink-0">
+<span class="text-sm font-bold">You</span>
+</div>
+<div class="p-3 rounded-lg bg-gray-100 dark:bg-[#1b2b32] w-full">
+<div class="flex justify-between items-center">
+<p class="text-sm font-medium text-gray-900 dark:text-white">You</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">10:47 AM</p>
+</div>
+<p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Thanks for the update. Do you have an ETA for the fix?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#121d21]/50">
+<div class="relative">
+<textarea class="w-full p-3 pr-20 bg-white dark:bg-[#1b2b32] border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-primary focus:border-primary resize-none" placeholder="Add a comment..." rows="3"></textarea>
+<button class="absolute right-3 top-3 flex items-center justify-center rounded-lg h-10 bg-primary text-white text-sm font-bold px-4">
+                            Submit
+                        </button>
+</div>
+</div>
+</aside>
+</main>
+</div>
+</body></html>

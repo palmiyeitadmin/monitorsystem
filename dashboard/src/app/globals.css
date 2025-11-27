@@ -1,0 +1,238 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter', var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: #111c21;
+  --foreground: #ffffff;
+  --card: #1b2b32;
+  --card-foreground: #ffffff;
+  --popover: #1b2b32;
+  --popover-foreground: #ffffff;
+  --primary: #28aae2;
+  --primary-foreground: #111c21;
+  --secondary: #253c46;
+  --secondary-foreground: #ffffff;
+  --muted: #253c46;
+  --muted-foreground: #95b7c6;
+  --accent: #253c46;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --border: #365663;
+  --input: #253c46;
+  --ring: #28aae2;
+  --chart-1: #488f31;
+  --chart-2: #06b6d4;
+  --chart-3: #8b5cf6;
+  --chart-4: #eab308;
+  --chart-5: #f97316;
+  --sidebar: #121d21;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #28aae2;
+  --sidebar-primary-foreground: #111c21;
+  --sidebar-accent: #253c46;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #365663;
+  --sidebar-ring: #28aae2;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+
+  /* Custom components for dashboard */
+  .stat-card {
+    @apply relative overflow-hidden transition-all duration-300;
+  }
+
+  .stat-card::before {
+    @apply absolute top-0 right-0 w-20 h-20 opacity-10;
+    content: '';
+    background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  }
+
+  .health-chart {
+    @apply relative;
+  }
+
+  .health-chart::before {
+    @apply absolute top-0 right-0 w-32 h-32 opacity-5;
+    content: '';
+    background: radial-gradient(circle, #28aae2 0%, transparent 70%);
+  }
+
+  .incidents-table {
+    @apply relative;
+  }
+
+  .nav-item {
+    @apply relative overflow-hidden;
+  }
+
+  .nav-item::before {
+    @apply absolute left-0 top-0 h-full w-1 bg-primary transform -translate-x-full transition-transform duration-200;
+    content: '';
+  }
+
+  .nav-item:hover::before,
+  .nav-item.active::before {
+    @apply translate-x-0;
+  }
+
+  .datacenter-status {
+    @apply relative;
+  }
+
+  .datacenter-status::before {
+    @apply absolute inset-0 opacity-5;
+    content: '';
+    background: radial-gradient(circle at center, #28aae2 0%, transparent 70%);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+
+  /* Animation classes */
+  @keyframes pulse-slow {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}

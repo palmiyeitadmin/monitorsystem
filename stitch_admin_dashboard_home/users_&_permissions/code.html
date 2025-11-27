@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Users &amp; Permissions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111c21",
+                        "primary-brand": "#0052CC",
+                        "secondary-brand": "#FFC107",
+                        "neutral-light": "#F4F5F7",
+                        "neutral-medium": "#DFE1E6",
+                        "text-dark": "#172B4D",
+                        "text-subtle": "#5E6C84",
+                        "status-green": "#36B37E",
+                        "status-red": "#FF5630"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<nav class="flex h-screen min-h-screen w-64 flex-col bg-[#1b2b32] p-4 sticky top-0">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4dLLOwTG9JYElFFMy_i_0fxVVagGIMCaK0GF_L5fNlrTmLP_T4YJgNteN6N47KnInGZdkmrgJcztcM7bJGalkQCC-NIpMQG1QWM5P08uV7fc5vAzir82dJaY_MjK4EVpAdHnkdDZyWVm_l2WhHNcNr7dBLjFfvfbTfZe4v_-sGKzAOU--zKFi_qlPVdpVaCvhuUW1v16xcxGsEo533hScZR1jUzjOB9fDFncGPpV5fVoT6641pdv0lVCc4MauIC63IqvwNz_pBOw");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-[#95b7c6] text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">dns</span>
+<p class="text-sm font-medium leading-normal">Hosts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+<p class="text-sm font-medium leading-normal">Checks</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">warning</span>
+<p class="text-sm font-medium leading-normal">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary-brand text-white" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">group</span>
+<p class="text-sm font-medium leading-normal">Users &amp; Permissions</p>
+</a>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-[#121d21] text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">View Docs</span>
+</button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white/70 hover:text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">help</span>
+<p class="text-sm font-medium leading-normal">Support</p>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="w-full max-w-7xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div class="flex flex-col gap-1">
+<p class="text-text-dark dark:text-neutral-light text-3xl font-bold leading-tight tracking-tight">Users &amp; Permissions</p>
+<p class="text-text-subtle dark:text-neutral-medium text-base font-normal leading-normal">Manage team members, their roles, and access levels across ERA Monitor.</p>
+</div>
+<button class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-10 px-4 bg-primary-brand text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary-brand/90 transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+<span class="truncate">Add User</span>
+</button>
+</div>
+<!-- Table Card -->
+<div class="bg-white dark:bg-[#1b2b32] rounded-xl shadow-sm border border-neutral-medium/50 dark:border-[#365663]">
+<!-- SearchBar -->
+<div class="p-4 border-b border-neutral-medium/50 dark:border-[#365663]">
+<label class="flex flex-col w-full max-w-sm">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-10">
+<div class="text-text-subtle dark:text-[#95b7c6] flex bg-neutral-light dark:bg-[#253c46] items-center justify-center pl-3 rounded-l-lg">
+<span class="material-symbols-outlined text-2xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary-brand/50 border-neutral-medium/50 dark:border-[#365663] bg-neutral-light dark:bg-[#253c46] h-full placeholder:text-text-subtle dark:placeholder:text-[#95b7c6] px-4 pl-2 text-sm font-normal leading-normal" placeholder="Search by name or email..."/>
+</div>
+</label>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-text-subtle dark:text-[#95b7c6] uppercase bg-neutral-light dark:bg-[#121d21]">
+<tr>
+<th class="p-4" scope="col"><input class="h-4 w-4 rounded border-neutral-medium dark:border-[#365663] bg-transparent text-primary-brand focus:ring-primary-brand/50" type="checkbox"/></th>
+<th class="px-6 py-3" scope="col">Name</th>
+<th class="px-6 py-3" scope="col">Email</th>
+<th class="px-6 py-3" scope="col">Role</th>
+<th class="px-6 py-3" scope="col">Assigned Customers</th>
+<th class="px-6 py-3" scope="col">Last Login</th>
+<th class="px-6 py-3" scope="col">Status</th>
+<th class="px-6 py-3" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white dark:bg-[#1b2b32] border-b dark:border-[#365663] hover:bg-neutral-light/50 dark:hover:bg-[#253c46]/50">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-neutral-medium dark:border-[#365663] bg-transparent text-primary-brand focus:ring-primary-brand/50" type="checkbox"/></td>
+<td class="px-6 py-4 font-medium text-text-dark dark:text-white whitespace-nowrap">Jordan Carter</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">j.carter@example.com</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Admin</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Customer A, Customer B, +3 more</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Jan 20, 2024, 10:15 AM</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/20 text-status-green">Active</span></td>
+<td class="px-6 py-4 flex items-center gap-4 text-text-subtle dark:text-[#95b7c6]">
+<a class="font-medium text-primary-brand hover:underline" href="#">Edit</a>
+</td>
+</tr>
+<tr class="bg-white dark:bg-[#1b2b32] border-b dark:border-[#365663] hover:bg-neutral-light/50 dark:hover:bg-[#253c46]/50">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-neutral-medium dark:border-[#365663] bg-transparent text-primary-brand focus:ring-primary-brand/50" type="checkbox"/></td>
+<td class="px-6 py-4 font-medium text-text-dark dark:text-white whitespace-nowrap">Alex Chen</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">alex.chen@example.com</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Operator</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Customer C</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Jan 19, 2024, 08:45 PM</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/20 text-status-green">Active</span></td>
+<td class="px-6 py-4 flex items-center gap-4 text-text-subtle dark:text-[#95b7c6]">
+<a class="font-medium text-primary-brand hover:underline" href="#">Edit</a>
+</td>
+</tr>
+<tr class="bg-white dark:bg-[#1b2b32] border-b dark:border-[#365663] hover:bg-neutral-light/50 dark:hover:bg-[#253c46]/50">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-neutral-medium dark:border-[#365663] bg-transparent text-primary-brand focus:ring-primary-brand/50" type="checkbox"/></td>
+<td class="px-6 py-4 font-medium text-text-dark dark:text-white whitespace-nowrap">Maria Garcia</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">m.garcia@example.com</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Viewer</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Customer D, Customer E</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Jan 18, 2024, 11:30 AM</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/20 text-status-green">Active</span></td>
+<td class="px-6 py-4 flex items-center gap-4 text-text-subtle dark:text-[#95b7c6]">
+<a class="font-medium text-primary-brand hover:underline" href="#">Edit</a>
+</td>
+</tr>
+<tr class="bg-white dark:bg-[#1b2b32] border-b dark:border-[#365663] hover:bg-neutral-light/50 dark:hover:bg-[#253c46]/50">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-neutral-medium dark:border-[#365663] bg-transparent text-primary-brand focus:ring-primary-brand/50" type="checkbox"/></td>
+<td class="px-6 py-4 font-medium text-text-dark dark:text-white whitespace-nowrap">David Kim</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">david.kim@example.com</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Super Admin</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">All Customers</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Jan 20, 2024, 09:00 AM</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-green/20 text-status-green">Active</span></td>
+<td class="px-6 py-4 flex items-center gap-4 text-text-subtle dark:text-[#95b7c6]">
+<a class="font-medium text-primary-brand hover:underline" href="#">Edit</a>
+</td>
+</tr>
+<tr class="bg-white dark:bg-[#1b2b32] hover:bg-neutral-light/50 dark:hover:bg-[#253c46]/50">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-neutral-medium dark:border-[#365663] bg-transparent text-primary-brand focus:ring-primary-brand/50" type="checkbox"/></td>
+<td class="px-6 py-4 font-medium text-text-dark dark:text-white whitespace-nowrap">Sarah Jones</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">s.jones@example.com</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Admin</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Customer F</td>
+<td class="px-6 py-4 text-text-subtle dark:text-[#95b7c6]">Dec 15, 2023, 02:00 PM</td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-red/20 text-status-red">Inactive</span></td>
+<td class="px-6 py-4 flex items-center gap-4 text-text-subtle dark:text-[#95b7c6]">
+<a class="font-medium text-primary-brand hover:underline" href="#">Edit</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between p-4 border-t border-neutral-medium/50 dark:border-[#365663]">
+<span class="text-sm text-text-subtle dark:text-[#95b7c6]">Showing <span class="font-semibold text-text-dark dark:text-white">1-5</span> of <span class="font-semibold text-text-dark dark:text-white">100</span></span>
+<div class="flex items-center justify-center">
+<a class="flex size-8 items-center justify-center text-text-subtle dark:text-white rounded-lg hover:bg-neutral-light dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined text-xl">chevron_left</span>
+</a>
+<a class="text-sm font-bold leading-normal flex size-8 items-center justify-center text-white rounded-lg bg-primary-brand" href="#">1</a>
+<a class="text-sm font-normal leading-normal flex size-8 items-center justify-center text-text-dark dark:text-white rounded-lg hover:bg-neutral-light dark:hover:bg-[#253c46]" href="#">2</a>
+<a class="text-sm font-normal leading-normal flex size-8 items-center justify-center text-text-dark dark:text-white rounded-lg hover:bg-neutral-light dark:hover:bg-[#253c46]" href="#">3</a>
+<span class="text-sm font-normal leading-normal flex size-8 items-center justify-center text-text-subtle dark:text-white rounded-lg">...</span>
+<a class="text-sm font-normal leading-normal flex size-8 items-center justify-center text-text-dark dark:text-white rounded-lg hover:bg-neutral-light dark:hover:bg-[#253c46]" href="#">10</a>
+<a class="flex size-8 items-center justify-center text-text-subtle dark:text-white rounded-lg hover:bg-neutral-light dark:hover:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

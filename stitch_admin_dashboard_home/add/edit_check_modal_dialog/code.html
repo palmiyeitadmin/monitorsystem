@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Add New Check</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#3B82F6", // Blue-500
+              "background-light": "#f6f7f8",
+              "background-dark": "#0F172A",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full items-center justify-center bg-slate-900/80 p-4">
+<!-- Modal -->
+<div class="flex w-full max-w-[600px] flex-col rounded-xl bg-slate-800 border border-slate-700 shadow-2xl">
+<!-- Modal Header -->
+<div class="flex flex-wrap items-center justify-between gap-3 p-4 border-b border-slate-700">
+<p class="text-slate-200 text-lg font-bold leading-tight">Add New Check</p>
+<button class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-transparent text-slate-400 hover:bg-slate-700 hover:text-slate-200">
+<span class="material-symbols-outlined text-base">close</span>
+</button>
+</div>
+<!-- Tabs -->
+<div class="border-b border-slate-700 px-4">
+<div class="flex gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-[13px] pt-4" href="#">
+<p class="text-white text-sm font-bold leading-normal tracking-[0.015em]">HTTP</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-400 pb-[13px] pt-4 hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">TCP</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-slate-400 pb-[13px] pt-4 hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Custom Health</p>
+</a>
+</div>
+</div>
+<!-- Tab Content -->
+<div class="flex-1 overflow-y-auto p-4 space-y-6" style="max-height: calc(100vh - 220px);">
+<!-- Section: Basic Settings -->
+<div>
+<h3 class="text-slate-200 text-base font-bold leading-tight tracking-[-0.015em] pb-2 pt-2">Basic Settings</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Check Name*</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 placeholder:text-slate-500 px-3 text-sm font-normal" placeholder="e.g., Main Website API" value=""/>
+</label>
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">URL*</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 placeholder:text-slate-500 px-3 text-sm font-normal" placeholder="https://your-domain.com" value=""/>
+</label>
+<div class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">HTTP Method</p>
+<select class="form-select flex w-full min-w-0 flex-1 cursor-pointer overflow-hidden rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 px-3 text-sm font-normal">
+<option>GET</option>
+<option>POST</option>
+<option>PUT</option>
+<option>DELETE</option>
+</select>
+</div>
+<label class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Expected Status Code</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 placeholder:text-slate-500 px-3 text-sm font-normal" placeholder="e.g., 200" type="number" value=""/>
+</label>
+</div>
+</div>
+<!-- Collapsible Section: Advanced Request Settings -->
+<details class="group">
+<summary class="flex cursor-pointer items-center justify-between list-none py-2">
+<h3 class="text-slate-200 text-base font-bold leading-tight tracking-[-0.015em]">Advanced Request Settings</h3>
+<span class="material-symbols-outlined text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="pt-2 space-y-4">
+<div class="flex items-center justify-between">
+<p class="text-slate-200 text-sm font-medium">Follow Redirects</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-600 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<label class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Request Timeout (seconds)</p>
+<input class="form-input w-full rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 placeholder:text-slate-500 px-3 text-sm" placeholder="10" type="number" value="10"/>
+</label>
+<label class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Request Body</p>
+<textarea class="form-textarea w-full rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary placeholder:text-slate-500 p-3 text-sm font-mono" placeholder='{"key": "value"}' rows="4"></textarea>
+</label>
+</div>
+</details>
+<!-- Divider -->
+<hr class="border-slate-700"/>
+<!-- Section: SSL Certificate Monitoring -->
+<div>
+<h3 class="text-slate-200 text-base font-bold leading-tight tracking-[-0.015em] pt-2">SSL Certificate Monitoring</h3>
+<div class="mt-4 flex items-center justify-between">
+<p class="text-slate-200 text-sm font-medium">Monitor SSL Expiry</p>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-600 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary/50 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Divider -->
+<hr class="border-slate-700"/>
+<!-- Section: Timing & Assignment -->
+<div>
+<h3 class="text-slate-200 text-base font-bold leading-tight tracking-[-0.015em] pt-2">Timing &amp; Assignment</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+<div class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Check Interval</p>
+<select class="form-select w-full rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 px-3 text-sm">
+<option>1 minute</option>
+<option selected="">5 minutes</option>
+<option>15 minutes</option>
+<option>30 minutes</option>
+</select>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Customer*</p>
+<select class="form-select w-full rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 px-3 text-sm">
+<option>Select a customer</option>
+<option>TechCorp Inc.</option>
+<option>Innovate LLC</option>
+</select>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Associated Host <span class="text-slate-400">(Optional)</span></p>
+<select class="form-select w-full rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 px-3 text-sm">
+<option>None</option>
+<option>web-server-01</option>
+<option>db-cluster-main</option>
+</select>
+</div>
+<div class="flex flex-col">
+<p class="text-slate-200 text-sm font-medium leading-normal pb-2">Location/Region</p>
+<select class="form-select w-full rounded-lg text-slate-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-700 bg-slate-900 focus:border-primary h-10 px-3 text-sm">
+<option>us-east-1</option>
+<option>eu-west-2</option>
+<option>ap-southeast-1</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Test Result Panel (hidden by default) -->
+<div class="rounded-lg border border-slate-700 bg-slate-900 p-4 space-y-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+<p class="text-slate-200 font-bold">Success</p>
+</div>
+<div class="grid grid-cols-3 gap-4 text-sm">
+<div>
+<p class="text-slate-400">Response Time</p>
+<p class="text-slate-200">128ms</p>
+</div>
+<div>
+<p class="text-slate-400">Status Code</p>
+<p class="text-slate-200">200 OK</p>
+</div>
+<div>
+<p class="text-slate-400">SSL Expiry</p>
+<p class="text-slate-200">85 days</p>
+</div>
+</div>
+<details class="group">
+<summary class="text-primary text-sm font-medium cursor-pointer list-none">
+<span class="group-open:hidden">Show Response Preview</span>
+<span class="hidden group-open:inline">Hide Response Preview</span>
+</summary>
+<pre class="mt-2 p-3 bg-black/30 rounded-md text-slate-300 text-xs overflow-auto"><code>{
+  "status": "ok",
+  "data": { "version": "1.2.3" }
+}</code></pre>
+</details>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="flex flex-wrap items-center justify-end gap-3 p-4 border-t border-slate-700 bg-slate-800/80 backdrop-blur-sm sticky bottom-0">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent text-slate-300 text-sm font-medium hover:bg-slate-700">
+<span class="truncate">Cancel</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-slate-600 text-white text-sm font-medium hover:bg-slate-500">
+<span class="truncate">Test Check</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed">
+<span class="truncate">Save Check</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

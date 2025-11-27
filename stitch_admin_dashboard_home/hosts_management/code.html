@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Hosts Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111c21",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+           font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex flex-col w-64 bg-[#121d21] p-4 text-white shrink-0">
+<div class="flex flex-col gap-4 h-full">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZlmUmnHNST5fTxPeZwLEqLJcqFPiqL3kkBGKvEu5rhWM2tXX-xvWyj9YrdX5HQ-ESt2WhlfeJf2MdFjwIAMiCNiK7zlAgMWVHLgneucn18o7_n57P5eglrp213c0moVsSwSCqoNVqQS-SLzyVfFTQ6abM-KNJksgWv3ENWQ9o5vGSRguW8-kexvDB6S4JaZ2qoCSar7Ur5KdTjrmjh_BtNrLAJ03TtMJK-8bGodKxHoeUEcNmCCnRsqNv2hZBhqYmO4mVwonn3g0");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-[#95b7c6] text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4 flex-grow">
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white bg-[#253c46] rounded-lg" href="#">
+<span class="material-symbols-outlined fill">dns</span>
+<p class="text-sm font-medium leading-normal">Hosts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">lan</span>
+<p class="text-sm font-medium leading-normal">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<p class="text-sm font-medium leading-normal">Alerts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+</nav>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#253c46] rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col p-8">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Hosts Management</p>
+</div>
+<!-- Toolbar -->
+<div class="flex justify-between items-center gap-2 px-4 py-3 bg-white dark:bg-[#1b2b32] rounded-lg mb-6">
+<div class="flex items-center gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">search</span>
+<input class="pl-10 pr-4 py-2 w-64 bg-gray-100 dark:bg-[#121d21] border-transparent focus:border-primary focus:ring-primary rounded-md text-sm text-gray-900 dark:text-white" placeholder="Search by name or IP..." type="text"/>
+</div>
+<button class="p-2 text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-[#253c46] rounded-md transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 bg-primary/20 text-primary/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] px-4 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined">group_work</span>
+<span class="truncate">Bulk Actions</span>
+</button>
+</div>
+<button class="flex items-center justify-center rounded-lg h-10 bg-primary text-[#121d21] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined fill text-[#121d21]">add</span>
+<span class="truncate">Add New Host</span>
+</button>
+</div>
+<!-- Table -->
+<div class="flex-grow overflow-x-auto">
+<div class="overflow-hidden rounded-lg border border-[#365663] bg-[#121d21]">
+<table class="w-full text-left">
+<thead class="bg-[#1b2b32]">
+<tr>
+<th class="p-4 w-12"><input class="rounded bg-[#253c46] border-[#365663] text-primary focus:ring-primary focus:ring-offset-[#1b2b32]" type="checkbox"/></th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">Status</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">Hostname</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">IP Address</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal w-14">OS</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">Location</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">Customer</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">Last Seen</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">CPU/RAM</th>
+<th class="px-4 py-3 text-white text-sm font-medium leading-normal">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-t border-t-[#365663] hover:bg-[#1b2b32]/50">
+<td class="p-4"><input class="rounded bg-[#253c46] border-[#365663] text-primary focus:ring-primary focus:ring-offset-[#121d21]" type="checkbox"/></td>
+<td class="px-4 py-2 text-sm font-normal leading-normal text-[#28A745]"><span class="flex items-center gap-2"><div class="size-2.5 rounded-full bg-current"></div>Up</span></td>
+<td class="px-4 py-2 text-white text-sm font-normal leading-normal">web-server-01</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">192.168.1.101</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8" data-alt="Linux OS logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDVFHNTTsl-HEFA0wHpsGLM9tUaLrv703eg9d1y4bkvQi9JJkoAWhzKx8xEtZLc1linLo3tgAIxrftAw8JwuUDKemH_4YyETutIpAFmR6eARb9uEJTI2Bhm6l6bVmrzB-HjOiYWaCfqFaPMFZV8JIiObcRaW-1IrUeziXAEXbjYud6pOkW72DZEER9aq_IIi__izTQieAKPurhQxSZr0JRCdiH-M8ilR0Hy6nV3t-V2X5veVNWNbcGxzKrv10OT8Z_v68EL0DIDCtI");'></div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">US-East-1</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">CloudNet Inc.</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">2 minutes ago</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="flex items-center gap-3">
+<div class="w-24 overflow-hidden rounded-full bg-[#365663] h-1.5"><div class="h-full rounded-full bg-[#28aae2]" style="width: 45%;"></div></div>
+<p class="text-white text-sm font-medium leading-normal">45%</p>
+</div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6]"><button class="p-2 hover:bg-[#253c46] rounded-full"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+<tr class="border-t border-t-[#365663] hover:bg-[#1b2b32]/50">
+<td class="p-4"><input class="rounded bg-[#253c46] border-[#365663] text-primary focus:ring-primary focus:ring-offset-[#121d21]" type="checkbox"/></td>
+<td class="px-4 py-2 text-sm font-normal leading-normal text-[#DC3545]"><span class="flex items-center gap-2"><div class="size-2.5 rounded-full bg-current"></div>Down</span></td>
+<td class="px-4 py-2 text-white text-sm font-normal leading-normal">db-server-01</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">192.168.1.102</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8" data-alt="Linux OS logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDVtj2Z-sIWvDR_vDV2gEDZY-Yto0kyNMLizGJCZm1BuKwWObX3hSjx9eM0epaWvkT5tT_LHz_tbBpLxw26NuTp8d-bIkgU7ClVFCfpMArxTxYIN_MR47k4406JRmiupx-aQKxbx88nFcOdHoefnK6ufKCXNzZKY9EM7YKRIvbDB3bZRpRDKrAiWxt_hE0t0WXBKNJ-lHPnmuKwbl_kIY_gUWB9FT0tDsZ08w2YidOpmyUKH4Ip9-3Xn0PLWmvBLC8-1EAHhnE1UOA");'></div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">US-West-2</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">DataCore LLC</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">1 hour ago</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="flex items-center gap-3">
+<div class="w-24 overflow-hidden rounded-full bg-[#365663] h-1.5"><div class="h-full rounded-full bg-[#DC3545]" style="width: 0%;"></div></div>
+<p class="text-white text-sm font-medium leading-normal">--</p>
+</div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6]"><button class="p-2 hover:bg-[#253c46] rounded-full"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+<tr class="border-t border-t-[#365663] hover:bg-[#1b2b32]/50">
+<td class="p-4"><input class="rounded bg-[#253c46] border-[#365663] text-primary focus:ring-primary focus:ring-offset-[#121d21]" type="checkbox"/></td>
+<td class="px-4 py-2 text-sm font-normal leading-normal text-[#FFC107]"><span class="flex items-center gap-2"><div class="size-2.5 rounded-full bg-current"></div>Warning</span></td>
+<td class="px-4 py-2 text-white text-sm font-normal leading-normal">win-utility-vm</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">10.0.0.55</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8" data-alt="Windows OS logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAuGWB2ZvmUY5ULufJa9vUbLbgew4Vuo3I-YGmPmv_0xrV4LOCJ7LdvhrOso-0PMD9NOXgkvnKnUGJ7QvYX2zFEMLCzx8F6xyrdXnMN1QegqvPGSzKIUpLyLrGt_0OQqahnwMHkIk006rD2Yu4Oj7Ac82wEmKzo5JZYxb2dJLdiA6w8f0ITxq_TnQNut99pueHEeqB4prn9QtfYs7pkpcVaikfaYKBcfH2sqqiP7VUqvVeDnJHUJBWFrjP-SoNN3uwlii_SphIaFqo");'></div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">EU-Central-1</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">SynthAI Corp</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">5 minutes ago</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="flex items-center gap-3">
+<div class="w-24 overflow-hidden rounded-full bg-[#365663] h-1.5"><div class="h-full rounded-full bg-[#FFC107]" style="width: 85%;"></div></div>
+<p class="text-white text-sm font-medium leading-normal">85%</p>
+</div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6]"><button class="p-2 hover:bg-[#253c46] rounded-full"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+<tr class="border-t border-t-[#365663] hover:bg-[#1b2b32]/50">
+<td class="p-4"><input class="rounded bg-[#253c46] border-[#365663] text-primary focus:ring-primary focus:ring-offset-[#121d21]" type="checkbox"/></td>
+<td class="px-4 py-2 text-sm font-normal leading-normal text-[#28A745]"><span class="flex items-center gap-2"><div class="size-2.5 rounded-full bg-current"></div>Up</span></td>
+<td class="px-4 py-2 text-white text-sm font-normal leading-normal">app-server-prod</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">192.168.2.20</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8" data-alt="Linux OS logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC19rH6C5w9KusLEnI0SAhi3HldBRRlie_6pzujiLVw8tjDgsErYXx_cvW97lT0IPr5xuyfPW8Ru3DWpmA60zxFqSWnxi129K6Xcpus0okpEBc_APn9Epry2AIsFOquuoPHdqs94bJXAFTuQ5q7imVRBdhVuWkXMPwF1HfZ-_H76r--AX5a06fu6LKd3_l8HQEv5rDVW-_SkBemdoBVL4C_bWMHo-DThlaSyxPW83_CystOmyGEfFOp5SuwsmzgSeBNYHYiie5SRtA");'></div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">US-East-1</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">CloudNet Inc.</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">1 minute ago</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="flex items-center gap-3">
+<div class="w-24 overflow-hidden rounded-full bg-[#365663] h-1.5"><div class="h-full rounded-full bg-[#28aae2]" style="width: 60%;"></div></div>
+<p class="text-white text-sm font-medium leading-normal">60%</p>
+</div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6]"><button class="p-2 hover:bg-[#253c46] rounded-full"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+<tr class="border-t border-t-[#365663] hover:bg-[#1b2b32]/50">
+<td class="p-4"><input class="rounded bg-[#253c46] border-[#365663] text-primary focus:ring-primary focus:ring-offset-[#121d21]" type="checkbox"/></td>
+<td class="px-4 py-2 text-sm font-normal leading-normal text-[#28A745]"><span class="flex items-center gap-2"><div class="size-2.5 rounded-full bg-current"></div>Up</span></td>
+<td class="px-4 py-2 text-white text-sm font-normal leading-normal">win-dc-01</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">10.0.0.10</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8" data-alt="Windows OS logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAovYihvhLur2C9w7lssHQMXEske7x5bwPBdHQvfxBuhye61VKpblskBKsB8dNt1Vo_hUtB76Bq7up5Kj8vBt0u7C0Wqjaz514LVn9BtwLWnWY6086uu9OXnUFdKzk94sfl3XXo6NPvoLfM-iGs9gjXdQBe2qUUMthTf5owJBsSrGMNQgAMRIEI6EFUBzKAgZknuHwgxRY_nrhWJhXJJFPUuxeVq_l_DAoXq1O5S6KMhU0Ig9K42IrWwmpVTVBHUSHh7h7Ye2CDK-0");'></div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">EU-Central-1</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">SynthAI Corp</td>
+<td class="px-4 py-2 text-[#95b7c6] text-sm font-normal leading-normal">10 minutes ago</td>
+<td class="px-4 py-2 text-sm font-normal leading-normal">
+<div class="flex items-center gap-3">
+<div class="w-24 overflow-hidden rounded-full bg-[#365663] h-1.5"><div class="h-full rounded-full bg-[#28aae2]" style="width: 30%;"></div></div>
+<p class="text-white text-sm font-medium leading-normal">30%</p>
+</div>
+</td>
+<td class="px-4 py-2 text-[#95b7c6]"><button class="p-2 hover:bg-[#253c46] rounded-full"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-center p-4 mt-auto">
+<a class="flex size-10 items-center justify-center text-gray-400 dark:text-white" href="#">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</a>
+<a class="text-sm font-bold leading-normal tracking-[0.015em] flex size-10 items-center justify-center text-[#121d21] rounded-full bg-primary" href="#">1</a>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-500 dark:text-white rounded-full hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">2</a>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-500 dark:text-white rounded-full hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">3</a>
+<span class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-500 dark:text-white rounded-full" href="#">...</span>
+<a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-500 dark:text-white rounded-full hover:bg-gray-200 dark:hover:bg-[#253c46]" href="#">10</a>
+<a class="flex size-10 items-center justify-center text-gray-400 dark:text-white" href="#">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</a>
+</div>
+</main>
+</div>
+</body></html>

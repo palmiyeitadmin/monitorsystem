@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Notification History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#38bdf8", // Sky 400
+            "background-light": "#f1f5f9", // Slate 100
+            "background-dark": "#0f172a", // Slate 900
+            "component-dark": "#1e293b", // Slate 800
+            "component-light": "#ffffff", // White
+            "border-dark": "#334155", // Slate 700
+            "border-light": "#e2e8f0", // Slate 200
+            "text-primary-light": "#0f172a", // Slate 900
+            "text-primary-dark": "#e2e8f0", // Slate 200
+            "text-secondary-light": "#64748b", // Slate 500
+            "text-secondary-dark": "#94a3b8", // Slate 400
+            "success": "#22c55e",
+            "error": "#ef4444",
+            "warning": "#f59e0b",
+            "info": "#6366f1",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark">
+<div class="flex min-h-screen">
+<aside class="w-64 flex-shrink-0 bg-component-light dark:bg-component-dark border-r border-border-light dark:border-border-dark p-4 flex flex-col justify-between">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBV1bX1BUoM3j5avJvTMAb1fqLSZd8PxZ8cNQQZizt4bqMtEn1jfBftv1j3Vg30gsfkhmUeValnseOI3GjuJ1XDUgcn4w-sAeVLsM2X6nkeT3qc6QAhs3vviAufQyxhoPGcwu81S4Fpwjg8M_nJAA54sjI_qKzvHIvM6LWTauL7CX0Z3H4pVnc33FcS4ihmCSXczOY85scke8_EhobRzi9WyFgy-0KVP5Zj4Dah1TM7zlCiYxXO4UH-qbHTHjiXPv3ktWNd9fy9ie4");'></div>
+<div class="flex flex-col">
+<h1 class="text-base font-bold leading-normal">ERA Monitor</h1>
+<p class="text-sm font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">warning</span>
+<p class="text-sm font-medium leading-normal">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">check_circle</span>
+<p class="text-sm font-medium leading-normal">Checks</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<p class="text-sm font-medium leading-normal">Notification History</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-7xl mx-auto space-y-8">
+<div class="flex flex-wrap justify-between items-center gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="text-4xl font-black leading-tight tracking-tight">Notification History</h1>
+<p class="text-base font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark">View all sent alerts, notifications, and their delivery status</p>
+</div>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold leading-normal tracking-wide hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">download</span>
+<span class="truncate">Export to CSV</span>
+</button>
+</div>
+<div class="flex gap-3 flex-wrap">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-4 pr-2 text-sm font-medium hover:border-primary/50">
+<span>Date Range: Last 24 hours</span>
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-4 pr-2 text-sm font-medium hover:border-primary/50">
+<span>Channel: All</span>
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+</button>
+<div class="relative group">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-4 pr-2 text-sm font-medium hover:border-primary/50">
+<span>Notification Type: All</span>
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+</button>
+<div class="absolute z-10 top-full mt-2 w-48 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark shadow-lg p-2 space-y-1 hidden group-hover:block">
+<a class="block px-3 py-1.5 text-sm rounded-md hover:bg-primary/10" href="#">Alert</a>
+<a class="block px-3 py-1.5 text-sm rounded-md hover:bg-primary/10" href="#">Report</a>
+<a class="block px-3 py-1.5 text-sm rounded-md hover:bg-primary/10" href="#">System</a>
+</div>
+</div>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-4 pr-2 text-sm font-medium hover:border-primary/50">
+<span>Status: All</span>
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-4 pr-2 text-sm font-medium hover:border-primary/50">
+<span>Severity: All</span>
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+</button>
+<div class="relative">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark absolute left-3 top-1/2 -translate-y-1/2">search</span>
+<input class="h-9 w-48 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-10 pr-3 text-sm focus:ring-primary focus:border-primary" placeholder="Search by Incident ID" type="text"/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark absolute left-3 top-1/2 -translate-y-1/2">search</span>
+<input class="h-9 w-48 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-10 pr-3 text-sm focus:ring-primary focus:border-primary" placeholder="Search by Recipient" type="text"/>
+</div>
+<div class="relative group">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark pl-4 pr-2 text-sm font-medium hover:border-primary/50">
+<span>Customer: All</span>
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+</button>
+<div class="absolute z-10 top-full mt-2 w-72 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark shadow-lg p-3 space-y-2 hidden group-hover:block">
+<div class="relative">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark absolute left-3 top-1/2 -translate-y-1/2 text-base">search</span>
+<input class="h-8 w-full rounded-md bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark pl-9 pr-3 text-sm focus:ring-primary focus:border-primary" placeholder="Search customers..." type="text"/>
+</div>
+<div class="max-h-60 overflow-y-auto space-y-1 pr-1">
+<label class="flex items-center gap-3 p-2 rounded-md hover:bg-primary/10 cursor-pointer">
+<input class="h-4 w-4 rounded border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<span class="text-sm">Global Tech Inc.</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-md hover:bg-primary/10 cursor-pointer">
+<input class="h-4 w-4 rounded border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<span class="text-sm">Innovate Solutions</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-md hover:bg-primary/10 cursor-pointer">
+<input class="h-4 w-4 rounded border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<span class="text-sm">Quantum Leap Corp</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-md hover:bg-primary/10 cursor-pointer">
+<input class="h-4 w-4 rounded border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<span class="text-sm">Starlight Enterprises</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-md hover:bg-primary/10 cursor-pointer">
+<input class="h-4 w-4 rounded border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<span class="text-sm">Vertex Dynamics</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-md hover:bg-primary/10 cursor-pointer">
+<input class="h-4 w-4 rounded border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<span class="text-sm">Nexus Systems</span>
+</label>
+</div>
+<div class="flex justify-end gap-2 pt-2 border-t border-border-light dark:border-border-dark">
+<button class="h-8 px-3 rounded-md text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700">Clear</button>
+<button class="h-8 px-3 rounded-md text-sm font-medium bg-primary text-white hover:bg-primary/90">Apply</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Sent (24h)</p>
+<div class="flex items-baseline gap-2">
+<p class="text-3xl font-bold leading-tight">1,234</p>
+<div class="flex items-center text-success text-sm font-medium"><span class="material-symbols-outlined text-base">arrow_upward</span><span>12%</span></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Delivered</p>
+<div class="flex items-baseline gap-2">
+<p class="text-3xl font-bold leading-tight">1,150</p>
+<div class="flex items-center text-success text-sm font-medium"><span class="material-symbols-outlined text-base">arrow_upward</span><span>15%</span></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Failed</p>
+<div class="flex items-baseline gap-2">
+<p class="text-3xl font-bold leading-tight">64</p>
+<div class="flex items-center text-error text-sm font-medium"><span class="material-symbols-outlined text-base">arrow_downward</span><span>5%</span></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Pending</p>
+<div class="flex items-baseline gap-2">
+<p class="text-3xl font-bold leading-tight">20</p>
+<div class="flex items-center text-warning text-sm font-medium"><span class="material-symbols-outlined text-base">arrow_upward</span><span>2%</span></div>
+</div>
+</div>
+</div>
+<div class="overflow-hidden rounded-xl border border-border-light dark:border-border-dark bg-component-light dark:bg-component-dark">
+<div class="overflow-x-auto">
+<table class="min-w-full divide-y divide-border-light dark:divide-border-dark">
+<thead class="bg-slate-50 dark:bg-slate-900/50">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider" scope="col">Time</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider" scope="col">Channel</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider" scope="col">Recipient</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider" scope="col">Subject/Message</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider" scope="col">Related To</th>
+<th class="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider" scope="col">Status</th>
+<th class="relative px-6 py-3" scope="col"><span class="sr-only">Actions</span></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark">
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">2023-10-27 10:45:12</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Email</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">admin@example.com</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">CRITICAL: Server CPU &gt; 95%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-primary hover:underline cursor-pointer">Incident #5821</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-success/10 text-success">
+<span class="material-symbols-outlined text-sm">check_circle</span> Delivered
+                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="bg-slate-50/50 dark:bg-slate-900/20">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">2023-10-27 10:45:10</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">SMS</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">+15551234567</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">CRITICAL: Server CPU &gt; 95%</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-primary hover:underline cursor-pointer">Incident #5821</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-error/10 text-error">
+<span class="material-symbols-outlined text-sm">cancel</span> Failed
+                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">2023-10-27 10:44:55</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Telegram</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">@oncall_engineer</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">WARNING: Latency spike detected</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-primary hover:underline cursor-pointer">Check 'API Gateway'</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning/10 text-warning">
+<span class="material-symbols-outlined text-sm">hourglass_top</span> Pending
+                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="bg-slate-50/50 dark:bg-slate-900/20">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">2023-10-27 10:43:01</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Webhook</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">https://hooks.slack.com/...</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">INFO: Deployment Succeeded</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-primary hover:underline cursor-pointer">Deployment #998</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-info/10 text-info">
+<span class="material-symbols-outlined text-sm">autorenew</span> Retrying
+                    </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed inset-y-0 right-0 w-full max-w-lg bg-background-light dark:bg-background-dark border-l border-border-light dark:border-border-dark shadow-2xl p-8 transform translate-x-0 overflow-y-auto">
+<div class="space-y-8">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark">
+<span class="material-symbols-outlined text-3xl text-primary">sms</span>
+</div>
+<div>
+<h2 class="text-xl font-bold">SMS Notification</h2>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">2023-10-27 10:45:10</p>
+</div>
+</div>
+<button class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium bg-error/10 text-error">
+<span class="material-symbols-outlined text-base">cancel</span> Failed
+        </span>
+<div class="space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Delivery Information</h3>
+<div class="grid grid-cols-3 gap-4 text-sm">
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Recipient</div>
+<div class="col-span-2 font-medium">+15551234567</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Subject</div>
+<div class="col-span-2 font-medium">CRITICAL: Server CPU &gt; 95%</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Sent At</div>
+<div class="col-span-2 font-medium">2023-10-27 10:45:10 UTC</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Message ID</div>
+<div class="col-span-2 font-medium truncate">sm_1a2b3c4d5e6f7g8h9i0j</div>
+</div>
+</div>
+<div class="space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Content Preview</h3>
+<div class="p-4 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark text-sm">
+            [ERA Monitor] CRITICAL: Server CPU utilization has exceeded 95% on server 'prod-db-01'. Incident #5821 has been created.
+          </div>
+</div>
+<div class="space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Related Information</h3>
+<div class="grid grid-cols-3 gap-4 text-sm">
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Incident</div>
+<div class="col-span-2 font-medium text-primary hover:underline cursor-pointer">#5821 - Server CPU &gt; 95%</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Rule</div>
+<div class="col-span-2 font-medium text-primary hover:underline cursor-pointer">Critical CPU Alert</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Customer</div>
+<div class="col-span-2 font-medium text-primary hover:underline cursor-pointer">Global Tech Inc.</div>
+</div>
+</div>
+<div class="space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Delivery Log</h3>
+<div class="space-y-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+<p><span class="font-medium text-error">[10:45:10] Failed:</span> Network error: Connection timed out</p>
+<p><span class="font-medium text-text-primary-light dark:text-text-primary-dark">[10:45:09] Attempting delivery...</span></p>
+</div>
+</div>
+<div class="space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Retry Information</h3>
+<div class="grid grid-cols-3 gap-4 text-sm">
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Error</div>
+<div class="col-span-2 font-medium text-error">Connection timed out</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Retry Count</div>
+<div class="col-span-2 font-medium">1 / 3</div>
+<div class="col-span-1 text-text-secondary-light dark:text-text-secondary-dark">Next Retry</div>
+<div class="col-span-2 font-medium">In 5 minutes</div>
+</div>
+<div class="flex gap-4">
+<button class="flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold leading-normal tracking-wide hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">replay</span>
+<span>Retry Now</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-component-light dark:bg-component-dark border border-border-light dark:border-border-dark text-sm font-bold leading-normal tracking-wide hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span>Cancel Retries</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

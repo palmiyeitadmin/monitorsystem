@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Incident Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+            line-height: 1; /* Aligns icons better */
+        }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#4F46E5",
+              "background-light": "#F8FAFC",
+              "background-dark": "#0F172A",
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#1E293B",
+              "text-light-primary": "#0F172A",
+              "text-light-secondary": "#64748B",
+              "text-dark-primary": "#F8FAFC",
+              "text-dark-secondary": "#94A3B8",
+              "critical": "#EF4444",
+              "warning": "#FBBF24",
+              "resolved": "#22C55E",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="w-full min-h-screen p-4 sm:p-6 md:p-8">
+<div class="max-w-screen-2xl mx-auto">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 mb-6">
+<a class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-medium hover:text-primary dark:hover:text-primary" href="#">Incidents</a>
+<span class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-medium">/</span>
+<span class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium">INC-00451</span>
+</div>
+<!-- Page Header -->
+<div class="flex flex-wrap justify-between items-start gap-4 mb-8">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-4 flex-wrap">
+<p class="text-text-light-primary dark:text-text-dark-primary text-4xl font-black leading-tight tracking-tighter">INC-00451: Host DOWN: PROD-WEB-01</p>
+<div class="flex items-center gap-2 h-8 shrink-0 justify-center rounded-full bg-critical/10 px-3">
+<div class="w-2 h-2 rounded-full bg-critical"></div>
+<p class="text-critical text-sm font-semibold">Critical</p>
+</div>
+</div>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-base font-normal">Created: 24 Aug 2024, 14:30 UTC | Duration: <span class="text-text-light-primary dark:text-text-dark-primary font-medium">02h:15m:12s</span></p>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center rounded-md h-10 px-4 bg-surface-light dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary text-sm font-semibold border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700/50">
+<span class="material-symbols-outlined mr-2 text-base">task_alt</span>
+                        Acknowledge
+                    </button>
+<button class="flex items-center justify-center rounded-md h-10 px-4 bg-primary text-white text-sm font-semibold hover:bg-primary/90">
+<span class="material-symbols-outlined mr-2 text-base">check_circle</span>
+                        Resolve
+                    </button>
+<div class="relative">
+<button class="flex items-center justify-center rounded-md h-10 px-2 w-10 bg-surface-light dark:bg-surface-dark border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700/50">
+<span class="material-symbols-outlined text-text-light-primary dark:text-text-dark-primary">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column (65%) -->
+<div class="lg:col-span-2 flex flex-col gap-8">
+<!-- Affected Resources Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg border border-slate-200 dark:border-slate-800">
+<h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold p-5 border-b border-slate-200 dark:border-slate-800">Affected Resources</h2>
+<div class="p-5 space-y-4">
+<div class="flex gap-4 p-4 rounded-md bg-slate-100 dark:bg-slate-900/50">
+<div class="text-text-light-primary dark:text-text-dark-primary flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700 shrink-0 size-12">
+<span class="material-symbols-outlined text-3xl">dns</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">PROD-WEB-01 <span class="text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary">(Primary)</span></p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm">Status: <span class="text-critical font-semibold">DOWN</span> | Location: us-east-1 | Customer: Acme Corp</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-md">
+<div class="text-text-light-primary dark:text-text-dark-primary flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700 shrink-0 size-12">
+<span class="material-symbols-outlined text-3xl">database</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-base font-semibold">DB-CLUSTER-01 <span class="text-xs font-medium text-text-light-secondary dark:text-text-dark-secondary">(Related)</span></p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm">Status: <span class="text-warning font-semibold">DEGRADED</span> | Location: us-east-1 | Customer: Acme Corp</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Incident Timeline Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg border border-slate-200 dark:border-slate-800">
+<h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold p-5 border-b border-slate-200 dark:border-slate-800">Incident Timeline</h2>
+<div class="p-5">
+<ol class="relative border-l border-slate-200 dark:border-slate-700 ml-4">
+<!-- Timeline Item: Created -->
+<li class="mb-8 ml-8">
+<span class="absolute flex items-center justify-center w-8 h-8 bg-red-200 rounded-full -left-4 ring-8 ring-surface-light dark:ring-surface-dark dark:bg-red-900">
+<span class="material-symbols-outlined text-red-800 dark:text-red-300 text-base">error</span>
+</span>
+<p class="text-sm font-normal text-text-light-secondary dark:text-text-dark-secondary">24 Aug 2024, 14:30 UTC</p>
+<h3 class="text-base font-semibold text-text-light-primary dark:text-text-dark-primary">Incident Created</h3>
+<p class="text-sm font-normal text-text-light-secondary dark:text-text-dark-secondary">Automated alert triggered for 'Host DOWN' on PROD-WEB-01.</p>
+</li>
+<!-- Timeline Item: Acknowledged -->
+<li class="mb-8 ml-8">
+<span class="absolute flex items-center justify-center w-8 h-8 bg-blue-200 rounded-full -left-4 ring-8 ring-surface-light dark:ring-surface-dark dark:bg-blue-900">
+<span class="material-symbols-outlined text-blue-800 dark:text-blue-300 text-base">task_alt</span>
+</span>
+<p class="text-sm font-normal text-text-light-secondary dark:text-text-dark-secondary">24 Aug 2024, 14:32 UTC</p>
+<h3 class="text-base font-semibold text-text-light-primary dark:text-text-dark-primary">Incident Acknowledged by Alex Chen</h3>
+<p class="text-sm font-normal text-text-light-secondary dark:text-text-dark-secondary">Alex Chen has started investigating the issue.</p>
+</li>
+<!-- Timeline Item: Note Added -->
+<li class="mb-8 ml-8">
+<span class="absolute flex items-center justify-center w-8 h-8 bg-slate-200 rounded-full -left-4 ring-8 ring-surface-light dark:ring-surface-dark dark:bg-slate-700">
+<span class="material-symbols-outlined text-slate-800 dark:text-slate-300 text-base">sticky_note_2</span>
+</span>
+<p class="text-sm font-normal text-text-light-secondary dark:text-text-dark-secondary">24 Aug 2024, 15:10 UTC</p>
+<h3 class="text-base font-semibold text-text-light-primary dark:text-text-dark-primary">Note added by Alex Chen</h3>
+<p class="text-sm font-normal text-text-light-secondary dark:text-text-dark-secondary p-3 bg-slate-100 dark:bg-slate-800/50 rounded-md mt-1">"Initial investigation points to a network configuration issue in the us-east-1a availability zone. The DB cluster is showing degraded performance due to connection timeouts. Escalating to the network team."</p>
+</li>
+</ol>
+<!-- Add Note Form -->
+<div class="mt-6 border-t border-slate-200 dark:border-slate-800 pt-5">
+<textarea class="w-full rounded-md bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-primary focus:border-primary text-text-light-primary dark:text-text-dark-primary text-sm" id="note" name="note" placeholder="Add a note or update..." rows="3"></textarea>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center rounded-md h-9 w-9 bg-surface-light dark:bg-surface-dark border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700/50">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-base">attachment</span>
+</button>
+<button class="flex items-center justify-center rounded-md h-9 w-9 bg-surface-light dark:bg-surface-dark border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700/50">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-base">visibility_off</span>
+</button>
+</div>
+<button class="flex items-center justify-center rounded-md h-9 px-4 bg-primary text-white text-sm font-semibold hover:bg-primary/90">Add Note</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (35%) -->
+<div class="lg:col-span-1 flex flex-col gap-8">
+<!-- Assignment Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+<h3 class="text-text-light-primary dark:text-text-dark-primary font-bold mb-4">Assignment</h3>
+<div class="flex items-center gap-3 mb-4">
+<img alt="Avatar of Alex Chen" class="w-12 h-12 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_qGJ4Wozm_EnT71IfD7jfpOm5uhxOF2joOb3s9epUOUNY0wGXQ9tH5KHayN0dF83JDa9SO6JYjY04-PIL_7Zels0M2IOzpf6_xFJzXHURUL553qL-k4H7v7PB5tDyH8O--PluQcTuWEyHFASgui9H53EifecCXn3im-_nWTwW51dou6pBZgLT-ixfbkaOGOAx2erSWsjuDRvE9iYajqQ4gsVaLe7kwK7AxYtFyTc3RpaKlMW55q5R5pPfVoQMf9BFjYx7bKWHURc"/>
+<div>
+<p class="font-semibold text-text-light-primary dark:text-text-dark-primary">Alex Chen</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">SRE Team Lead</p>
+</div>
+</div>
+<select aria-label="Reassign incident" class="w-full rounded-md bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-primary focus:border-primary text-text-light-primary dark:text-text-dark-primary text-sm">
+<option>Reassign to...</option>
+<option>Brenda Song (SRE)</option>
+<option>Networking Team</option>
+</select>
+</div>
+<!-- Severity & Priority Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+<h3 class="text-text-light-primary dark:text-text-dark-primary font-bold mb-4">Severity &amp; Priority</h3>
+<div class="space-y-4">
+<div>
+<label class="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Priority</label>
+<select aria-label="Set priority" class="w-full mt-1 rounded-md bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-primary focus:border-primary text-text-light-primary dark:text-text-dark-primary text-sm">
+<option>P1 - Urgent</option>
+<option>P2 - High</option>
+<option>P3 - Medium</option>
+</select>
+</div>
+<div>
+<label class="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Impact</label>
+<select aria-label="Set impact" class="w-full mt-1 rounded-md bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 focus:ring-primary focus:border-primary text-text-light-primary dark:text-text-dark-primary text-sm">
+<option>High - Service Outage</option>
+<option>Medium - Service Degraded</option>
+<option>Low - Minor</option>
+</select>
+</div>
+</div>
+</div>
+<!-- SLA Information Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+<h3 class="text-text-light-primary dark:text-text-dark-primary font-bold mb-4">SLA Information</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="font-medium text-text-light-secondary dark:text-text-dark-secondary">Response SLA</span>
+<span class="font-semibold text-resolved">Met (2m / 15m target)</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+<div class="bg-resolved h-2 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-sm mb-1">
+<span class="font-medium text-text-light-secondary dark:text-text-dark-secondary">Resolution SLA</span>
+<span class="font-semibold text-warning">1h 45m remaining</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+<div class="bg-warning h-2 rounded-full" style="width: 44%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Customer Information Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg border border-slate-200 dark:border-slate-800 p-5">
+<h3 class="text-text-light-primary dark:text-text-dark-primary font-bold mb-4">Customer Information</h3>
+<div class="space-y-3 text-sm">
+<p class="font-semibold text-text-light-primary dark:text-text-dark-primary text-base">Acme Corp</p>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-xl">person</span>
+<span class="text-text-light-secondary dark:text-text-dark-secondary">John Doe (Primary Contact)</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-xl">mail</span>
+<span class="text-text-light-secondary dark:text-text-dark-secondary">j.doe@acme.com</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary text-xl">call</span>
+<span class="text-text-light-secondary dark:text-text-dark-secondary">+1 (555) 123-4567</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,8 @@
+﻿D:\era_monitor\monitorsystem\src\ERAMonitor.API\Controllers\AuthController.cs(82,55): error CS0246: The type or namespace name 'RegisterRequest' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.API\ERAMonitor.API.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.API\Controllers\UsersController.cs(68,57): error CS0246: The type or namespace name 'RegisterRequest' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.API\ERAMonitor.API.csproj]
+
+Build FAILED.
+    2 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:02.35

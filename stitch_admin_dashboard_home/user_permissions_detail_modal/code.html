@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit User Permissions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#28aae2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111c21",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-[#0F172A] font-display">
+<div class="relative flex min-h-screen w-full items-center justify-center p-4 bg-slate-900/80">
+<!-- Modal Container -->
+<div class="flex w-full max-w-[700px] flex-col rounded-xl bg-slate-800 text-white shadow-2xl border border-slate-700/80">
+<!-- Modal Header -->
+<header class="flex items-start justify-between p-6 border-b border-slate-700/80">
+<div class="flex flex-col gap-1">
+<h2 class="text-xl font-bold text-slate-100">Edit Permissions: Ahmet Yılmaz</h2>
+<p class="text-sm text-slate-400">ahmet.yilmaz@email.com</p>
+</div>
+<button class="flex items-center justify-center p-1 rounded-full text-slate-400 hover:bg-slate-700 hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</header>
+<!-- Modal Body -->
+<div class="flex-1 p-6 space-y-6 overflow-y-auto">
+<!-- User Basic Info Section -->
+<section class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+<div class="flex items-center gap-4 sm:col-span-2">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16" data-alt="User avatar placeholder image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBdrzksKPPrKIA6OjjCIlb39xW6PVFS6QgvNcp54LHRaoXdDD3aZIj36SrZ5IkuHgzIq51U1u6QlZXNCYiJMNXVfkZNxDBIh3PlM0OBPxmL-DK8Nc999KMuwNyt19wr1MYGXRs9FrZYoHKMuEcjQXmgu9_asd3ZD7iqAWCgUiRd5HoYmwUBKbvrdERKoPH2BAfL6TwGYkBFxNQ8mXr_iSqhlsJ1dnuazmH10RF0xv9sVNSpPVl7rEpLj7r6WJlNNpI7aN2fdPOy2i4");'></div>
+<button class="absolute bottom-0 right-0 flex items-center justify-center p-1 bg-slate-600 rounded-full hover:bg-primary transition-colors">
+<span class="material-symbols-outlined !text-[16px]">edit</span>
+</button>
+</div>
+<div class="flex flex-col flex-1">
+<label class="text-sm font-medium text-slate-300 pb-1" for="fullName">Full Name*</label>
+<input class="form-input w-full rounded-lg text-slate-100 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-600 bg-slate-700 focus:border-primary placeholder:text-slate-400 text-base" id="fullName" value="Ahmet Yılmaz"/>
+</div>
+</div>
+<div>
+<label class="text-sm font-medium text-slate-300 pb-1 block" for="email">Email*</label>
+<input class="form-input w-full rounded-lg text-slate-400 focus:outline-0 border border-slate-700 bg-slate-800 cursor-not-allowed placeholder:text-slate-500 text-base" id="email" readonly="" value="ahmet.yilmaz@sso.provider.com"/>
+</div>
+<div>
+<label class="text-sm font-medium text-slate-300 pb-1 block" for="role">Role*</label>
+<select class="form-select w-full rounded-lg text-slate-100 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-600 bg-slate-700 focus:border-primary text-base" id="role">
+<option>Super Admin</option>
+<option>Admin</option>
+<option selected="">Operator</option>
+<option>Viewer</option>
+<option>Customer User</option>
+</select>
+</div>
+<div class="flex items-center justify-between sm:col-span-2">
+<div class="flex items-center gap-4">
+<p class="text-sm font-medium text-slate-300">Status</p>
+<label class="relative flex h-[26px] w-[46px] cursor-pointer items-center rounded-full border-none bg-slate-600 p-0.5 has-[:checked]:bg-primary">
+<div class="h-full aspect-square rounded-full bg-white transition-transform duration-300 ease-in-out" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 8px, rgba(0, 0, 0, 0.06) 0px 3px 1px;"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+<span class="text-sm text-green-400">Active</span>
+</div>
+<p class="text-sm text-slate-400">Last Login: 2024-07-21 14:32 UTC</p>
+</div>
+</section>
+<hr class="border-slate-700/80"/>
+<!-- Role Description -->
+<div class="flex items-start gap-3 p-4 rounded-lg bg-emerald-950/50 border border-emerald-500/20">
+<span class="material-symbols-outlined text-emerald-400 mt-0.5">info</span>
+<p class="text-sm text-emerald-300">
+<span class="font-bold">Operator Role:</span> Can view and manage assigned resources. This role has limited access to administrative functions and cannot manage other users.
+                </p>
+</div>
+<hr class="border-slate-700/80"/>
+<!-- Detailed Permissions Section -->
+<section class="space-y-4">
+<h3 class="text-lg font-bold text-slate-100">Detailed Permissions</h3>
+<div class="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
+<!-- Column 1 -->
+<div class="space-y-6">
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Hosts</h4>
+<div class="space-y-2 pl-2">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> View Hosts</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Add/Edit Hosts</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Delete Hosts</label>
+</div>
+</div>
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Services</h4>
+<div class="space-y-2 pl-2">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> View Services</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Manage Services</label>
+</div>
+</div>
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Checks</h4>
+<div class="space-y-2 pl-2">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> View Checks</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Run Manual Check</label>
+</div>
+</div>
+</div>
+<!-- Column 2 -->
+<div class="space-y-6">
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Incidents</h4>
+<div class="space-y-2 pl-2">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> View Incidents</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Create Incidents</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Acknowledge Incidents</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Resolve Incidents</label>
+</div>
+</div>
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Administration</h4>
+<div class="space-y-2 pl-2">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Manage Users</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Manage Locations</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> View Audit Logs</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<hr class="border-slate-700/80"/>
+<!-- Notification Preferences -->
+<section class="space-y-4">
+<h3 class="text-lg font-bold text-slate-100">Notification Preferences</h3>
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Receive Notifications For:</h4>
+<div class="grid grid-cols-2 gap-2 pl-2 md:grid-cols-3">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> New Incidents</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Incident Status Changes</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Reports Ready</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Service Down/Up</label>
+</div>
+</div>
+<div class="space-y-2">
+<h4 class="font-semibold text-slate-200">Notification Channels:</h4>
+<div class="grid grid-cols-2 gap-2 pl-2 md:grid-cols-3">
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Email</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> Telegram</label>
+<label class="flex items-center gap-3 text-sm text-slate-300 cursor-pointer"><input checked="" class="form-checkbox rounded bg-slate-600 border-slate-500 text-primary focus:ring-primary/50" type="checkbox"/> SMS</label>
+</div>
+</div>
+</section>
+</div>
+<!-- Modal Footer -->
+<footer class="flex flex-col sm:flex-row items-center justify-between gap-3 p-6 bg-slate-800/50 border-t border-slate-700/80">
+<button class="w-full sm:w-auto flex items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent text-primary text-sm font-medium hover:bg-primary/10 transition-colors">Reset to Role Defaults</button>
+<div class="flex w-full sm:w-auto items-center gap-3">
+<button class="flex-1 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-slate-700 text-slate-100 text-sm font-medium hover:bg-slate-600 transition-colors">Cancel</button>
+<button class="flex-1 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors">Save Permissions</button>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

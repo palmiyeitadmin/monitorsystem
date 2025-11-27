@@ -1,0 +1,11 @@
+﻿D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Data\Repositories\UserSessionRepository.cs(15,56): error CS1061: 'UserSession' does not contain a definition for 'RefreshTokenHash' and no accessible extension method 'RefreshTokenHash' accepting a first argument of type 'UserSession' could be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\AuthService.cs(123,13): error CS0117: 'UserSession' does not contain a definition for 'RefreshTokenHash' [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\AuthService.cs(170,17): error CS1061: 'UserSession' does not contain a definition for 'RefreshTokenHash' and no accessible extension method 'RefreshTokenHash' accepting a first argument of type 'UserSession' could be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\AuthService.cs(225,13): error CS0117: 'User' does not contain a definition for 'Phone' [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\AuthService.cs(500,55): error CS1061: 'UserSession' does not contain a definition for 'RefreshTokenHash' and no accessible extension method 'RefreshTokenHash' accepting a first argument of type 'UserSession' could be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+
+Build FAILED.
+    2 Warning(s)
+    5 Error(s)
+
+Time Elapsed 00:00:01.86

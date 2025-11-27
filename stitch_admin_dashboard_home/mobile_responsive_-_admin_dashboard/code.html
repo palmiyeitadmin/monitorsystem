@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+        }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#29abe2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#0f172a",
+              "surface-dark": "#1e293b",
+              "text-primary-dark": "#f1f5f9",
+              "text-secondary-dark": "#94a3b8",
+              "border-dark": "#334155",
+              "success": "#22c55e",
+              "warning": "#f59e0b",
+              "error": "#ef4444",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-primary-dark">
+<div class="flex min-h-screen">
+<!-- Side Navigation -->
+<aside class="flex-shrink-0 bg-background-light dark:bg-background-dark border-r border-border-dark flex-col justify-between p-4 hidden lg:flex w-64">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 px-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<h1 class="text-text-primary-dark text-lg font-bold leading-normal">ERA Monitor</h1>
+<p class="text-text-secondary-dark text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl text-text-secondary-dark">dns</span>
+<p class="text-sm font-medium leading-normal text-text-primary-dark">Hosts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl text-text-secondary-dark">database</span>
+<p class="text-sm font-medium leading-normal text-text-primary-dark">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl text-text-secondary-dark">warning</span>
+<p class="text-sm font-medium leading-normal text-text-primary-dark">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl text-text-secondary-dark">checklist</span>
+<p class="text-sm font-medium leading-normal text-text-primary-dark">Checks</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl text-text-secondary-dark">bar_chart</span>
+<p class="text-sm font-medium leading-normal text-text-primary-dark">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl text-text-secondary-dark">settings</span>
+<p class="text-sm font-medium leading-normal text-text-primary-dark">Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark transition-colors" href="#">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCye4phwo6ne8uNs07wC3GiWA1LI3Er2XnrkACZP1bpFum_NgNA5amSj0RQydQ41PmZSF7B8Cg2R7EDjip1eItW-gZLFzeN0u3laW3WzPOkgAFU1Zh6e66t-jTjDGvyC52XxuwTq9LE1cdNfbbxMXcIOcOnzjFdexBiaPRylWzh4GlMw6JSOMNIKb-ruwaJ1p1A0qduluvJalvfAXhpX_Ma-K4wchv0q4kitOMdwXlDcoTXRzFGPDUxsGYTtpAU0qMk3-vYo2xjtoY");'></div>
+<p class="text-text-primary-dark text-sm font-medium leading-normal">Alex Grim</p>
+</a>
+</div>
+</aside>
+<!-- Collapsed Sidebar (Tablet) -->
+<aside class="flex-shrink-0 bg-background-light dark:bg-background-dark border-r border-border-dark flex-col justify-between p-3 hidden md:flex lg:hidden">
+<div class="flex flex-col gap-6 items-center">
+<button class="p-2 rounded-lg hover:bg-surface-dark">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<nav class="flex flex-col gap-4">
+<a class="p-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+</a>
+<a class="p-2 rounded-lg hover:bg-surface-dark text-text-secondary-dark hover:text-text-primary-dark" href="#"><span class="material-symbols-outlined text-2xl">dns</span></a>
+<a class="p-2 rounded-lg hover:bg-surface-dark text-text-secondary-dark hover:text-text-primary-dark" href="#"><span class="material-symbols-outlined text-2xl">database</span></a>
+<a class="p-2 rounded-lg hover:bg-surface-dark text-text-secondary-dark hover:text-text-primary-dark" href="#"><span class="material-symbols-outlined text-2xl">warning</span></a>
+<a class="p-2 rounded-lg hover:bg-surface-dark text-text-secondary-dark hover:text-text-primary-dark" href="#"><span class="material-symbols-outlined text-2xl">checklist</span></a>
+<a class="p-2 rounded-lg hover:bg-surface-dark text-text-secondary-dark hover:text-text-primary-dark" href="#"><span class="material-symbols-outlined text-2xl">bar_chart</span></a>
+<a class="p-2 rounded-lg hover:bg-surface-dark text-text-secondary-dark hover:text-text-primary-dark" href="#"><span class="material-symbols-outlined text-2xl">settings</span></a>
+</nav>
+</div>
+<div class="flex flex-col items-center">
+<a class="p-2 rounded-lg hover:bg-surface-dark" href="#">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDD60akm3oVeviOFgp8csEZBO3P55SBAV9FPWc22Mdwcs1bV23AofwMgwJDZ7BHVBFBgD7nsNboa4bT0odKzT-aBowKJzASENbkg7B6rJ2xKZcLaVGPIs9tfMJ_QURG0yaglB72L4PnrMiwcFX9oGbvjF_FX_PGv14pZiDVonr0EJuXHT7E30iMTpfsE_3ajvl3zQzsKrSFo9lfDPUVeE-8y3imO7aJs_yd3pRUpKRoWuKY6i6PvvLFgdWgZM1LewNPd3RW1oc8UPw");'></div>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col pb-24 md:pb-0">
+<!-- Top Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark px-4 sm:px-6 py-3 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-10">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-2 -ml-2">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<div class="flex items-center gap-2 md:hidden">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path></svg>
+</div>
+<h2 class="text-text-primary-dark text-lg font-bold">ERA Monitor</h2>
+</div>
+</div>
+<div class="flex items-center gap-2 sm:gap-4">
+<div class="hidden sm:block relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-dark text-xl">search</span>
+<input class="w-full bg-surface-dark border-border-dark rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-primary focus:border-primary" placeholder="Search..." type="text"/>
+</div>
+<button class="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-surface-dark text-text-primary-dark hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</button>
+<button class="hidden lg:flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-surface-dark text-text-primary-dark hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+<div class="max-w-7xl mx-auto space-y-6">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-center gap-3">
+<h1 class="text-text-primary-dark text-3xl md:text-4xl font-black tracking-tight">Dashboard</h1>
+<div class="flex items-center gap-2">
+<button class="bg-surface-dark border border-border-dark rounded-lg px-3 py-2 text-sm font-medium flex items-center gap-2 hover:bg-border-dark transition-colors">
+<span class="material-symbols-outlined text-base">calendar_today</span>
+<span>Last 24 hours</span>
+<span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="bg-primary text-white rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-base">add_circle</span>
+<span>New Check</span>
+</button>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-surface-dark border border-border-dark">
+<p class="text-text-secondary-dark text-base font-medium">Total Hosts</p>
+<p class="text-text-primary-dark tracking-tight text-3xl font-bold">1,204</p>
+<p class="text-success text-sm font-medium">+1.5%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-surface-dark border border-border-dark">
+<p class="text-text-secondary-dark text-base font-medium">Services Up</p>
+<p class="text-text-primary-dark tracking-tight text-3xl font-bold">99.98%</p>
+<p class="text-error text-sm font-medium">-0.01%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-surface-dark border border-border-dark">
+<p class="text-text-secondary-dark text-base font-medium">Active Incidents</p>
+<p class="text-text-primary-dark tracking-tight text-3xl font-bold">3</p>
+<p class="text-warning text-sm font-medium">+3 since yesterday</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-surface-dark border border-border-dark">
+<p class="text-text-secondary-dark text-base font-medium">CPU Load Avg</p>
+<p class="text-text-primary-dark tracking-tight text-3xl font-bold">42%</p>
+<p class="text-success text-sm font-medium">+2.1%</p>
+</div>
+</div>
+<!-- Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+<div class="flex flex-col gap-4 p-6 rounded-lg bg-surface-dark border border-border-dark">
+<p class="text-text-primary-dark text-lg font-medium">Server Response Time (ms)</p>
+<div class="flex min-h-[240px] flex-1 flex-col justify-end">
+<svg fill="none" height="100%" preserveaspectratio="none" viewbox="0 0 475 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#29abe2" stroke-linecap="round" stroke-width="3"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#chart-gradient)"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="chart-gradient" x1="236" x2="236" y1="1" y2="150">
+<stop stop-color="#29abe2" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="#29abe2" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-6 rounded-lg bg-surface-dark border border-border-dark">
+<p class="text-text-primary-dark text-lg font-medium">Network Traffic (GB)</p>
+<div class="grid min-h-[240px] grid-flow-col gap-4 grid-rows-[1fr_auto] items-end justify-items-center px-3">
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 90%;"></div><p class="text-text-secondary-dark text-xs font-medium">12am</p>
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 50%;"></div><p class="text-text-secondary-dark text-xs font-medium">4am</p>
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 70%;"></div><p class="text-text-secondary-dark text-xs font-medium">8am</p>
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 50%;"></div><p class="text-text-secondary-dark text-xs font-medium">12pm</p>
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 60%;"></div><p class="text-text-secondary-dark text-xs font-medium">4pm</p>
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 10%;"></div><p class="text-text-secondary-dark text-xs font-medium">8pm</p>
+<div class="bg-primary/20 hover:bg-primary/40 w-full rounded-t" style="height: 70%;"></div><p class="text-text-secondary-dark text-xs font-medium">Now</p>
+</div>
+</div>
+</div>
+<!-- Incidents Table / List -->
+<div class="rounded-lg bg-surface-dark border border-border-dark">
+<div class="p-6">
+<h3 class="text-text-primary-dark text-lg font-medium">Recent Incidents</h3>
+</div>
+<!-- Desktop/Tablet Table -->
+<div class="hidden md:block">
+<table class="w-full text-left">
+<thead class="border-b border-border-dark">
+<tr>
+<th class="p-4 text-sm font-semibold text-text-secondary-dark">Status</th>
+<th class="p-4 text-sm font-semibold text-text-secondary-dark">Host</th>
+<th class="p-4 text-sm font-semibold text-text-secondary-dark">Message</th>
+<th class="p-4 text-sm font-semibold text-text-secondary-dark">Timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-border-dark">
+<td class="p-4"><span class="inline-flex items-center gap-2 text-sm font-medium bg-error/20 text-error px-2 py-1 rounded-full"><span class="size-2 bg-error rounded-full"></span>Critical</span></td>
+<td class="p-4 text-sm text-text-primary-dark">db-prod-01.us-east-1</td>
+<td class="p-4 text-sm text-text-primary-dark">Service 'PostgreSQL' is down.</td>
+<td class="p-4 text-sm text-text-secondary-dark">2 min ago</td>
+</tr>
+<tr class="border-b border-border-dark">
+<td class="p-4"><span class="inline-flex items-center gap-2 text-sm font-medium bg-warning/20 text-warning px-2 py-1 rounded-full"><span class="size-2 bg-warning rounded-full"></span>Warning</span></td>
+<td class="p-4 text-sm text-text-primary-dark">web-app-03.eu-west-2</td>
+<td class="p-4 text-sm text-text-primary-dark">High CPU usage detected (92%).</td>
+<td class="p-4 text-sm text-text-secondary-dark">15 min ago</td>
+</tr>
+<tr>
+<td class="p-4"><span class="inline-flex items-center gap-2 text-sm font-medium bg-success/20 text-success px-2 py-1 rounded-full"><span class="size-2 bg-success rounded-full"></span>Resolved</span></td>
+<td class="p-4 text-sm text-text-primary-dark">api-gateway-01.ap-south-1</td>
+<td class="p-4 text-sm text-text-primary-dark">Latency returned to normal.</td>
+<td class="p-4 text-sm text-text-secondary-dark">45 min ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Mobile Card List -->
+<div class="md:hidden flex flex-col gap-4 p-4">
+<div class="bg-background-dark p-4 rounded-lg flex flex-col gap-3 border border-border-dark">
+<div class="flex justify-between items-center">
+<p class="text-text-primary-dark font-medium">db-prod-01.us-east-1</p>
+<span class="inline-flex items-center gap-2 text-sm font-medium bg-error/20 text-error px-2 py-1 rounded-full"><span class="size-2 bg-error rounded-full"></span>Critical</span>
+</div>
+<p class="text-text-secondary-dark text-sm">Service 'PostgreSQL' is down.</p>
+<p class="text-text-secondary-dark text-xs">2 min ago</p>
+</div>
+<div class="bg-background-dark p-4 rounded-lg flex flex-col gap-3 border border-border-dark">
+<div class="flex justify-between items-center">
+<p class="text-text-primary-dark font-medium">web-app-03.eu-west-2</p>
+<span class="inline-flex items-center gap-2 text-sm font-medium bg-warning/20 text-warning px-2 py-1 rounded-full"><span class="size-2 bg-warning rounded-full"></span>Warning</span>
+</div>
+<p class="text-text-secondary-dark text-sm">High CPU usage detected (92%).</p>
+<p class="text-text-secondary-dark text-xs">15 min ago</p>
+</div>
+<div class="bg-background-dark p-4 rounded-lg flex flex-col gap-3 border border-border-dark">
+<div class="flex justify-between items-center">
+<p class="text-text-primary-dark font-medium">api-gateway-01.ap-south-1</p>
+<span class="inline-flex items-center gap-2 text-sm font-medium bg-success/20 text-success px-2 py-1 rounded-full"><span class="size-2 bg-success rounded-full"></span>Resolved</span>
+</div>
+<p class="text-text-secondary-dark text-sm">Latency returned to normal.</p>
+<p class="text-text-secondary-dark text-xs">45 min ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-dark border-t border-border-dark flex justify-around items-center py-2 z-20">
+<a class="flex flex-col items-center justify-center text-primary w-1/5" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-xs">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary-dark hover:text-primary w-1/5" href="#">
+<span class="material-symbols-outlined text-2xl">dns</span>
+<span class="text-xs">Hosts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary-dark hover:text-primary w-1/5" href="#">
+<span class="material-symbols-outlined text-2xl">warning</span>
+<span class="text-xs">Incidents</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary-dark hover:text-primary w-1/5" href="#">
+<span class="material-symbols-outlined text-2xl">checklist</span>
+<span class="text-xs">Checks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-secondary-dark hover:text-primary w-1/5" href="#">
+<span class="material-symbols-outlined text-2xl">menu</span>
+<span class="text-xs">Menu</span>
+</a>
+</nav>
+<!-- Mobile FAB -->
+<button class="md:hidden fixed bottom-20 right-4 bg-primary text-white rounded-full size-14 flex items-center justify-center shadow-lg hover:opacity-90 transition-opacity z-20">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+</body></html>

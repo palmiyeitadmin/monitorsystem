@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Services Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#28aae2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111c21",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex w-64 flex-col bg-[#121d21] p-4 text-white">
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-primary rounded-lg p-2">
+<span class="material-symbols-outlined text-background-dark" style="font-size: 24px;">monitor_heart</span>
+</div>
+<h1 class="text-xl font-bold">ERA Monitor</h1>
+</div>
+<div class="flex grow flex-col justify-between">
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/70 hover:bg-[#253c46] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-[#253c46] px-3 py-2 text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lan</span>
+<p class="text-sm font-medium">Services</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/70 hover:bg-[#253c46] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dns</span>
+<p class="text-sm font-medium">Hosts</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/70 hover:bg-[#253c46] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Customers</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/70 hover:bg-[#253c46] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<p class="text-sm font-medium">Alerts</p>
+</a>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3 p-3 mb-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Admin user avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA6dtuf0I-cUJ0lH_jqFa3LMSDTdgs-ALpq6aMlp8hSyPb7tvH19u9Ocvmomk1Nt314PmvqluzHga9cYIsFhHv-n-Lg3zgU1umfonkB5Rcp68Tf2V9Xa8jM6NpYUYmAwspSbFfI8NnDXtQch8oJ1lV1N7Cpfla4GrUs9_QdFBTJBxpJckfhS3OPhEp757xkgsro4EepS8HXXoW0-egezkoRTJWzRlXjgRxJoULl_d4BY9-IEaRTgnBLvmJCzSZQUCWVrzRridd8p-o");'></div>
+<div class="flex flex-col">
+<h2 class="text-white text-base font-medium">Admin User</h2>
+<p class="text-[#95b7c6] text-sm font-normal">admin@eramonitor.com</p>
+</div>
+</div>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/70 hover:bg-[#253c46] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/70 hover:bg-[#253c46] hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium">Logout</p>
+</a>
+</div>
+</div></aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-y-auto">
+<div class="p-8 flex-1">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<h1 class="text-gray-900 dark:text-white text-3xl font-bold tracking-tight">Services Management</h1>
+<!-- ToolBar -->
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-300">download</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-300">tune</span>
+</button>
+<button class="flex items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-background-dark gap-2 text-sm font-bold min-w-0 px-4 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-background-dark" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="truncate">Add Service</span>
+</button>
+</div>
+</div>
+<!-- Secondary Header -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+<!-- SegmentedButtons -->
+<div class="flex h-10 items-center justify-center rounded-lg bg-gray-200 dark:bg-[#253c46] p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-background-dark has-[:checked]:shadow-sm has-[:checked]:text-gray-900 dark:has-[:checked]:text-white text-gray-600 dark:text-[#95b7c6] text-sm font-medium">
+<span class="truncate">Grouped by host</span>
+<input class="invisible w-0" name="view-toggle" type="radio" value="Grouped by host"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-background-dark has-[:checked]:shadow-sm has-[:checked]:text-gray-900 dark:has-[:checked]:text-white text-gray-600 dark:text-[#95b7c6] text-sm font-medium">
+<span class="truncate">Flat list view</span>
+<input checked="" class="invisible w-0" name="view-toggle" type="radio" value="Flat list view"/>
+</label>
+</div>
+<!-- Search Input -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900/50 focus:ring-2 focus:ring-primary/50 focus:border-primary/80 transition-shadow" placeholder="Search by service name..." type="text"/>
+</div>
+</div>
+<!-- Chips/Filters -->
+<div class="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-800">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400">Filters:</p>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] pl-3 pr-2 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+<p class="text-sm font-medium leading-normal">Type</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400" style="font-size: 20px;">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] pl-3 pr-2 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+<p class="text-sm font-medium leading-normal">Status</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400" style="font-size: 20px;">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] pl-3 pr-2 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+<p class="text-sm font-medium leading-normal">Host</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400" style="font-size: 20px;">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-[#253c46] pl-3 pr-2 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+<p class="text-sm font-medium leading-normal">Customer</p>
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400" style="font-size: 20px;">expand_more</span>
+</button>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto mt-4">
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700/30 dark:text-gray-400">
+<tr>
+<th class="px-6 py-3 rounded-l-lg" scope="col">
+<div class="flex items-center gap-1 cursor-pointer">Service Name <span class="material-symbols-outlined" style="font-size: 16px;">arrow_upward</span></div>
+</th>
+<th class="px-6 py-3" scope="col">Type</th>
+<th class="px-6 py-3" scope="col">Host</th>
+<th class="px-6 py-3" scope="col">Status</th>
+<th class="px-6 py-3" scope="col">Last Check</th>
+<th class="px-6 py-3 rounded-r-lg" scope="col"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white dark:bg-background-dark border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">WebApp-Main-Pool</td>
+<td class="px-6 py-4">IIS App Pool</td>
+<td class="px-6 py-4">PROD-WEB-01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-2.5 w-2.5 rounded-full bg-green-500"></div> Running
+                                    </div>
+</td>
+<td class="px-6 py-4">2 minutes ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="bg-white dark:bg-background-dark border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">AuthenticationService</td>
+<td class="px-6 py-4">Windows Service</td>
+<td class="px-6 py-4">AUTH-SRV-01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-2.5 w-2.5 rounded-full bg-green-500"></div> Running
+                                    </div>
+</td>
+<td class="px-6 py-4">3 minutes ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="bg-white dark:bg-background-dark border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">PostgresDB-Container</td>
+<td class="px-6 py-4">Docker Container</td>
+<td class="px-6 py-4">DB-SRV-02</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-red-500 dark:text-red-400">
+<div class="h-2.5 w-2.5 rounded-full bg-red-500"></div> Stopped
+                                    </div>
+</td>
+<td class="px-6 py-4">15 minutes ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="bg-white dark:bg-background-dark border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">Nginx-Proxy</td>
+<td class="px-6 py-4">Systemd Unit</td>
+<td class="px-6 py-4">PROD-WEB-02</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2 text-yellow-500 dark:text-yellow-400">
+<div class="h-2.5 w-2.5 rounded-full bg-yellow-400"></div> Warning
+                                    </div>
+</td>
+<td class="px-6 py-4">5 minutes ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="bg-white dark:bg-background-dark hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">ReportingSite</td>
+<td class="px-6 py-4">IIS Site</td>
+<td class="px-6 py-4">BI-SRV-01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-2.5 w-2.5 rounded-full bg-green-500"></div> Running
+                                    </div>
+</td>
+<td class="px-6 py-4">1 minute ago</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<nav aria-label="Table navigation" class="flex items-center justify-between pt-4">
+<span class="text-sm font-normal text-gray-500 dark:text-gray-400">Showing <span class="font-semibold text-gray-900 dark:text-white">1-5</span> of <span class="font-semibold text-gray-900 dark:text-white">1000</span></span>
+<ul class="inline-flex items-center -space-x-px">
+<li>
+<a class="px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white flex items-center" href="#">Previous</a>
+</li>
+<li>
+<a class="px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white flex items-center" href="#">1</a>
+</li>
+<li>
+<a aria-current="page" class="px-3 h-8 leading-tight text-primary bg-primary/20 border border-primary/50 text-primary dark:bg-gray-700 dark:border-primary/80 dark:text-white flex items-center" href="#">2</a>
+</li>
+<li>
+<a class="px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white flex items-center" href="#">3</a>
+</li>
+<li>
+<a class="px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white flex items-center" href="#">Next</a>
+</li>
+</ul>
+</nav>
+</div>
+</main>
+<!-- Slide-over Panel -->
+<aside class="absolute top-0 right-0 h-full w-[480px] bg-background-light dark:bg-background-dark border-l border-gray-200 dark:border-gray-800 shadow-2xl flex flex-col transform translate-x-0 transition-transform duration-300 ease-in-out">
+<div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+<div>
+<h2 class="text-lg font-bold text-gray-900 dark:text-white">WebApp-Main-Pool</h2>
+<div class="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+<div class="h-2 w-2 rounded-full bg-green-500"></div> Running
+                    </div>
+</div>
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="border-b border-gray-200 dark:border-gray-800">
+<nav aria-label="Tabs" class="flex -mb-px">
+<a class="w-1/4 py-3 px-1 text-center border-b-2 font-medium text-sm text-primary border-primary" href="#">Overview</a>
+<a class="w-1/4 py-3 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600" href="#">History</a>
+<a class="w-1/4 py-3 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600" href="#">Configuration</a>
+<a class="w-1/4 py-3 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600" href="#">Actions</a>
+</nav>
+</div>
+<div class="flex-1 p-6 overflow-y-auto">
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="p-4 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
+<p class="text-sm text-gray-500 dark:text-gray-400">Restart Count</p>
+<p class="text-2xl font-bold text-gray-900 dark:text-white">3</p>
+</div>
+<div class="p-4 bg-gray-100 dark:bg-gray-800/50 rounded-lg">
+<p class="text-sm text-gray-500 dark:text-gray-400">Uptime</p>
+<p class="text-2xl font-bold text-gray-900 dark:text-white">99.8%</p>
+</div>
+</div>
+<h3 class="text-md font-semibold text-gray-900 dark:text-white mb-4">Status History (Last 24 hours)</h3>
+<div class="h-40 w-full bg-gray-100 dark:bg-gray-800/50 rounded-lg p-2 flex items-end">
+<!-- Placeholder for graph -->
+<div class="flex w-full h-full items-end gap-px">
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-red-500 w-1/12 h-[10%] rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-yellow-400 w-1/12 h-[30%] rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-red-500 w-1/12 h-[15%] rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+<div class="bg-green-500 w-1/12 h-full rounded-t-sm"></div>
+</div>
+</div>
+<h3 class="text-md font-semibold text-gray-900 dark:text-white mt-8 mb-4">Configuration Details</h3>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<p class="text-gray-500 dark:text-gray-400">Executable Path</p>
+<p class="font-mono text-gray-800 dark:text-gray-300">C:\inetpub\wwwroot\app.dll</p>
+</div>
+<div class="flex justify-between text-sm">
+<p class="text-gray-500 dark:text-gray-400">Start Mode</p>
+<p class="font-mono text-gray-800 dark:text-gray-300">OnDemand</p>
+</div>
+<div class="flex justify-between text-sm">
+<p class="text-gray-500 dark:text-gray-400">User Account</p>
+<p class="font-mono text-gray-800 dark:text-gray-300">NetworkService</p>
+</div>
+<div class="flex justify-between text-sm">
+<p class="text-gray-500 dark:text-gray-400">.NET CLR Version</p>
+<p class="font-mono text-gray-800 dark:text-gray-300">v4.0</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

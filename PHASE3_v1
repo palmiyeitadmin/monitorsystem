@@ -1,0 +1,2966 @@
+PHASE 3: Host & Service Management (Days 8-12)
+3.1 Overview
+Phase 3 focuses on implementing:
+
+Host (Server) management with full CRUD operations
+Agent heartbeat processing and metrics storage
+Service management (IIS, Windows Services, Systemd, Docker)
+Real-time host status updates via SignalR
+Host metrics time-series data storage and retrieval
+Disk monitoring and alerts
+Host down detection logic
+
+
+3.2 Entities
+Host Entity (Complete)
+csharp// src/ERAMonitor.Core/Entities/Host.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Entities;
+
+public class Host : BaseEntityWithOrganization
+{
+    public Guid? LocationId { get; set; }
+    public Guid? CustomerId { get; set; }
+    
+    // Basic Info
+    public string Name { get; set; } = string.Empty;
+    public string? Hostname { get; set; }
+    public string? Description { get; set; }
+    public OsType OsType { get; set; }
+    public string? OsVersion { get; set; }
+    public HostCategory Category { get; set; } = HostCategory.VirtualMachine;
+    public string[] Tags { get; set; } = Array.Empty<string>();
+    
+    // Network Info
+    public string? PrimaryIp { get; set; }
+    public string? PublicIp { get; set; }
+    
+    // Agent Configuration
+    public string ApiKey { get; set; } = GenerateApiKey();
+    public string? AgentVersion { get; set; }
+    public DateTime? AgentInstalledAt { get; set; }
+    public int CheckIntervalSeconds { get; set; } = 60;
+    
+    // Current Status (updated by agent heartbeat)
+    public StatusType CurrentStatus { get; set; } = StatusType.Unknown;
+    public DateTime? LastSeenAt { get; set; }
+    public string? LastHeartbeat { get; set; } // Full JSON for debugging
+    public DateTime? StatusChangedAt { get; set; }
+    public StatusType? PreviousStatus { get; set; }
+    
+    // Current Metrics (denormalized for quick dashboard access)
+    public long? UptimeSeconds { get; set; }
+    public decimal? CpuPercent { get; set; }
+    public decimal? RamPercent { get; set; }
+    public long? RamUsedMb { get; set; }
+    public long? RamTotalMb { get; set; }
+    public int? ProcessCount { get; set; }
+    
+    // Thresholds for alerts
+    public int CpuWarningThreshold { get; set; } = 80;
+    public int CpuCriticalThreshold { get; set; } = 95;
+    public int RamWarningThreshold { get; set; } = 80;
+    public int RamCriticalThreshold { get; set; } = 95;
+    public int DiskWarningThreshold { get; set; } = 80;
+    public int DiskCriticalThreshold { get; set; } = 95;
+    
+    // Monitoring Settings
+    public bool MonitoringEnabled { get; set; } = true;
+    public bool AlertOnDown { get; set; } = true;
+    public int AlertDelaySeconds { get; set; } = 60; // Wait before alerting
+    public bool AlertOnHighCpu { get; set; } = true;
+    public bool AlertOnHighRam { get; set; } = true;
+    public bool AlertOnHighDisk { get; set; } = true;
+    
+    // Maintenance Mode
+    public bool MaintenanceMode { get; set; } = false;
+    public DateTime? MaintenanceStartAt { get; set; }
+    public DateTime? MaintenanceEndAt { get; set; }
+    public string? MaintenanceReason { get; set; }
+    
+    // Notes
+    public string? Notes { get; set; }
+    
+    // Soft Delete
+    public bool IsActive { get; set; } = true;
+    
+    // Navigation Properties
+    public virtual Location? Location { get; set; }
+    public virtual Customer? Customer { get; set; }
+    public virtual ICollection<HostDisk> Disks { get; set; } = new List<HostDisk>();
+    public virtual ICollection<HostMetric> Metrics { get; set; } = new List<HostMetric>();
+    public virtual ICollection<Service> Services { get; set; } = new List<Service>();
+    public virtual ICollection<Check> Checks { get; set; } = new List<Check>();
+    
+    // Helper Methods
+    public static string GenerateApiKey()
+    {
+        return Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
+    }
+    
+    public bool IsInMaintenance()
+    {
+        if (!MaintenanceMode) return false;
+        
+        var now = DateTime.UtcNow;
+        
+        if (MaintenanceStartAt.HasValue && now < MaintenanceStartAt.Value)
+            return false;
+            
+        if (MaintenanceEndAt.HasValue && now > MaintenanceEndAt.Value)
+            return false;
+            
+        return true;
+    }
+    
+    public bool ShouldAlert()
+    {
+        return MonitoringEnabled && !IsInMaintenance() && AlertOnDown;
+    }
+    
+    public string GetStatusDisplay()
+    {
+        if (!MonitoringEnabled) return "Disabled";
+        if (IsInMaintenance()) return "Maintenance";
+        return CurrentStatus.ToString();
+    }
+}
+HostDisk Entity
+csharp// src/ERAMonitor.Core/Entities/HostDisk.cs
+
+namespace ERAMonitor.Core.Entities;
+
+public class HostDisk : BaseEntity
+{
+    public Guid HostId { get; set; }
+    
+    public string Name { get; set; } = string.Empty; // C:, /dev/sda1, etc.
+    public string? MountPoint { get; set; } // C:\, /, /home
+    public string? FileSystem { get; set; } // NTFS, ext4, xfs
+    public string? Label { get; set; } // Volume label
+    
+    public decimal TotalGb { get; set; }
+    public decimal UsedGb { get; set; }
+    public decimal FreeGb => TotalGb - UsedGb;
+    public decimal UsedPercent { get; set; }
+    
+    // Navigation
+    public virtual Host Host { get; set; } = null!;
+}
+HostMetric Entity (Time Series)
+csharp// src/ERAMonitor.Core/Entities/HostMetric.cs
+
+namespace ERAMonitor.Core.Entities;
+
+public class HostMetric
+{
+    public long Id { get; set; } // BIGSERIAL for time series
+    public Guid HostId { get; set; }
+    
+    // CPU
+    public decimal? CpuPercent { get; set; }
+    
+    // Memory
+    public decimal? RamPercent { get; set; }
+    public long? RamUsedMb { get; set; }
+    public long? RamTotalMb { get; set; }
+    
+    // Disk (JSON array for multiple disks)
+    public string? DiskInfo { get; set; } // [{name, totalGb, usedGb, usedPercent}]
+    
+    // Network
+    public long? NetworkInBytes { get; set; }
+    public long? NetworkOutBytes { get; set; }
+    
+    // System
+    public long? UptimeSeconds { get; set; }
+    public int? ProcessCount { get; set; }
+    
+    // Timestamp
+    public DateTime RecordedAt { get; set; } = DateTime.UtcNow;
+    
+    // Navigation
+    public virtual Host Host { get; set; } = null!;
+}
+Service Entity
+csharp// src/ERAMonitor.Core/Entities/Service.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Entities;
+
+public class Service : BaseEntity
+{
+    public Guid HostId { get; set; }
+    
+    // Service Identification
+    public ServiceType ServiceType { get; set; }
+    public string ServiceName { get; set; } = string.Empty; // Internal name: w3svc, nginx.service
+    public string? DisplayName { get; set; } // Friendly name
+    public string? Description { get; set; }
+    
+    // Current Status
+    public StatusType CurrentStatus { get; set; } = StatusType.Unknown;
+    public DateTime? LastStatusChange { get; set; }
+    public StatusType? PreviousStatus { get; set; }
+    
+    // Service-specific configuration (JSON)
+    public string? Config { get; set; }
+    // For IIS_Site: {bindings, physicalPath, appPoolName}
+    // For IIS_AppPool: {managedRuntimeVersion, startMode, processModel}
+    // For WindowsService: {startType, serviceAccount, executablePath}
+    // For SystemdUnit: {unitFile, activeState, subState, mainPID}
+    // For DockerContainer: {containerId, image, ports, networks}
+    
+    // Monitoring
+    public bool MonitoringEnabled { get; set; } = true;
+    public bool AlertOnStop { get; set; } = true;
+    
+    // Statistics
+    public int RestartCount { get; set; } = 0;
+    public DateTime? LastRestartAt { get; set; }
+    public DateTime? LastHealthyAt { get; set; }
+    
+    // Navigation
+    public virtual Host Host { get; set; } = null!;
+    public virtual ICollection<ServiceStatusHistory> StatusHistory { get; set; } = new List<ServiceStatusHistory>();
+}
+ServiceStatusHistory Entity
+csharp// src/ERAMonitor.Core/Entities/ServiceStatusHistory.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Entities;
+
+public class ServiceStatusHistory
+{
+    public long Id { get; set; } // BIGSERIAL
+    public Guid ServiceId { get; set; }
+    
+    public StatusType Status { get; set; }
+    public string? Message { get; set; }
+    public string? Details { get; set; } // JSON for additional info
+    
+    public DateTime RecordedAt { get; set; } = DateTime.UtcNow;
+    
+    // Navigation
+    public virtual Service Service { get; set; } = null!;
+}
+
+3.3 DTOs
+Host DTOs
+csharp// src/ERAMonitor.Core/DTOs/Hosts/HostDto.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class HostDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Hostname { get; set; }
+    public OsType OsType { get; set; }
+    public string? OsVersion { get; set; }
+    public HostCategory Category { get; set; }
+    public StatusType CurrentStatus { get; set; }
+    public DateTime? LastSeenAt { get; set; }
+    public decimal? CpuPercent { get; set; }
+    public decimal? RamPercent { get; set; }
+    public bool MonitoringEnabled { get; set; }
+    public bool MaintenanceMode { get; set; }
+    
+    // Related
+    public Guid? CustomerId { get; set; }
+    public string? CustomerName { get; set; }
+    public Guid? LocationId { get; set; }
+    public string? LocationName { get; set; }
+    
+    // Counts
+    public int ServiceCount { get; set; }
+    public int ServicesHealthy { get; set; }
+    public int ServicesUnhealthy { get; set; }
+    
+    public DateTime CreatedAt { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Hosts/HostListItemDto.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class HostListItemDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Hostname { get; set; }
+    public OsType OsType { get; set; }
+    public HostCategory Category { get; set; }
+    public string[] Tags { get; set; } = Array.Empty<string>();
+    
+    // Status
+    public StatusType CurrentStatus { get; set; }
+    public string StatusDisplay { get; set; } = string.Empty;
+    public DateTime? LastSeenAt { get; set; }
+    public bool MonitoringEnabled { get; set; }
+    public bool MaintenanceMode { get; set; }
+    
+    // Metrics
+    public decimal? CpuPercent { get; set; }
+    public decimal? RamPercent { get; set; }
+    public decimal? DiskMaxPercent { get; set; } // Highest disk usage
+    public long? UptimeSeconds { get; set; }
+    
+    // Related
+    public CustomerSummaryDto? Customer { get; set; }
+    public LocationSummaryDto? Location { get; set; }
+    
+    // Counts
+    public int ServiceCount { get; set; }
+    public int ServicesUp { get; set; }
+    public int ServicesDown { get; set; }
+    public int OpenIncidentCount { get; set; }
+    
+    public DateTime CreatedAt { get; set; }
+}
+
+public class CustomerSummaryDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? LogoUrl { get; set; }
+}
+
+public class LocationSummaryDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? City { get; set; }
+    public string? Country { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Hosts/HostDetailDto.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class HostDetailDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Hostname { get; set; }
+    public string? Description { get; set; }
+    public OsType OsType { get; set; }
+    public string? OsVersion { get; set; }
+    public HostCategory Category { get; set; }
+    public string[] Tags { get; set; } = Array.Empty<string>();
+    
+    // Network
+    public string? PrimaryIp { get; set; }
+    public string? PublicIp { get; set; }
+    
+    // Agent
+    public string ApiKey { get; set; } = string.Empty;
+    public string? AgentVersion { get; set; }
+    public DateTime? AgentInstalledAt { get; set; }
+    public int CheckIntervalSeconds { get; set; }
+    
+    // Status
+    public StatusType CurrentStatus { get; set; }
+    public string StatusDisplay { get; set; } = string.Empty;
+    public DateTime? LastSeenAt { get; set; }
+    public DateTime? StatusChangedAt { get; set; }
+    
+    // Current Metrics
+    public HostCurrentMetricsDto Metrics { get; set; } = new();
+    
+    // Disks
+    public List<HostDiskDto> Disks { get; set; } = new();
+    
+    // Thresholds
+    public HostThresholdsDto Thresholds { get; set; } = new();
+    
+    // Monitoring Settings
+    public HostMonitoringSettingsDto MonitoringSettings { get; set; } = new();
+    
+    // Maintenance
+    public HostMaintenanceDto Maintenance { get; set; } = new();
+    
+    // Related
+    public CustomerSummaryDto? Customer { get; set; }
+    public LocationSummaryDto? Location { get; set; }
+    
+    // Statistics
+    public HostStatisticsDto Statistics { get; set; } = new();
+    
+    public string? Notes { get; set; }
+    public bool IsActive { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+
+public class HostCurrentMetricsDto
+{
+    public decimal? CpuPercent { get; set; }
+    public decimal? RamPercent { get; set; }
+    public long? RamUsedMb { get; set; }
+    public long? RamTotalMb { get; set; }
+    public long? UptimeSeconds { get; set; }
+    public int? ProcessCount { get; set; }
+    
+    public string UptimeDisplay => FormatUptime(UptimeSeconds);
+    
+    private static string FormatUptime(long? seconds)
+    {
+        if (!seconds.HasValue) return "Unknown";
+        
+        var ts = TimeSpan.FromSeconds(seconds.Value);
+        if (ts.TotalDays >= 1)
+            return $"{(int)ts.TotalDays}d {ts.Hours}h {ts.Minutes}m";
+        if (ts.TotalHours >= 1)
+            return $"{(int)ts.TotalHours}h {ts.Minutes}m";
+        return $"{ts.Minutes}m {ts.Seconds}s";
+    }
+}
+
+public class HostDiskDto
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? MountPoint { get; set; }
+    public string? FileSystem { get; set; }
+    public decimal TotalGb { get; set; }
+    public decimal UsedGb { get; set; }
+    public decimal FreeGb { get; set; }
+    public decimal UsedPercent { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+
+public class HostThresholdsDto
+{
+    public int CpuWarning { get; set; } = 80;
+    public int CpuCritical { get; set; } = 95;
+    public int RamWarning { get; set; } = 80;
+    public int RamCritical { get; set; } = 95;
+    public int DiskWarning { get; set; } = 80;
+    public int DiskCritical { get; set; } = 95;
+}
+
+public class HostMonitoringSettingsDto
+{
+    public bool MonitoringEnabled { get; set; }
+    public bool AlertOnDown { get; set; }
+    public int AlertDelaySeconds { get; set; }
+    public bool AlertOnHighCpu { get; set; }
+    public bool AlertOnHighRam { get; set; }
+    public bool AlertOnHighDisk { get; set; }
+}
+
+public class HostMaintenanceDto
+{
+    public bool InMaintenance { get; set; }
+    public DateTime? StartAt { get; set; }
+    public DateTime? EndAt { get; set; }
+    public string? Reason { get; set; }
+}
+
+public class HostStatisticsDto
+{
+    public int ServiceCount { get; set; }
+    public int ServicesUp { get; set; }
+    public int ServicesDown { get; set; }
+    public int CheckCount { get; set; }
+    public int OpenIncidentCount { get; set; }
+    public decimal Uptime7d { get; set; }
+    public decimal Uptime30d { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Hosts/CreateHostRequest.cs
+
+using System.ComponentModel.DataAnnotations;
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class CreateHostRequest
+{
+    [Required(ErrorMessage = "Name is required")]
+    [MaxLength(200)]
+    public string Name { get; set; } = string.Empty;
+    
+    [MaxLength(255)]
+    public string? Hostname { get; set; }
+    
+    public string? Description { get; set; }
+    
+    [Required(ErrorMessage = "OS type is required")]
+    public OsType OsType { get; set; }
+    
+    [MaxLength(100)]
+    public string? OsVersion { get; set; }
+    
+    public HostCategory Category { get; set; } = HostCategory.VirtualMachine;
+    
+    public string[]? Tags { get; set; }
+    
+    // Network
+    [MaxLength(50)]
+    public string? PrimaryIp { get; set; }
+    
+    [MaxLength(50)]
+    public string? PublicIp { get; set; }
+    
+    // Assignment
+    public Guid? CustomerId { get; set; }
+    public Guid? LocationId { get; set; }
+    
+    // Monitoring Settings
+    [Range(10, 3600)]
+    public int CheckIntervalSeconds { get; set; } = 60;
+    
+    public bool MonitoringEnabled { get; set; } = true;
+    public bool AlertOnDown { get; set; } = true;
+    
+    [Range(0, 3600)]
+    public int AlertDelaySeconds { get; set; } = 60;
+    
+    public bool AlertOnHighCpu { get; set; } = true;
+    public bool AlertOnHighRam { get; set; } = true;
+    public bool AlertOnHighDisk { get; set; } = true;
+    
+    // Thresholds
+    [Range(1, 100)]
+    public int CpuWarningThreshold { get; set; } = 80;
+    
+    [Range(1, 100)]
+    public int CpuCriticalThreshold { get; set; } = 95;
+    
+    [Range(1, 100)]
+    public int RamWarningThreshold { get; set; } = 80;
+    
+    [Range(1, 100)]
+    public int RamCriticalThreshold { get; set; } = 95;
+    
+    [Range(1, 100)]
+    public int DiskWarningThreshold { get; set; } = 80;
+    
+    [Range(1, 100)]
+    public int DiskCriticalThreshold { get; set; } = 95;
+    
+    public string? Notes { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Hosts/UpdateHostRequest.cs
+
+using System.ComponentModel.DataAnnotations;
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class UpdateHostRequest
+{
+    [Required(ErrorMessage = "Name is required")]
+    [MaxLength(200)]
+    public string Name { get; set; } = string.Empty;
+    
+    [MaxLength(255)]
+    public string? Hostname { get; set; }
+    
+    public string? Description { get; set; }
+    
+    [Required]
+    public OsType OsType { get; set; }
+    
+    [MaxLength(100)]
+    public string? OsVersion { get; set; }
+    
+    public HostCategory Category { get; set; }
+    
+    public string[]? Tags { get; set; }
+    
+    // Network
+    [MaxLength(50)]
+    public string? PrimaryIp { get; set; }
+    
+    [MaxLength(50)]
+    public string? PublicIp { get; set; }
+    
+    // Assignment
+    public Guid? CustomerId { get; set; }
+    public Guid? LocationId { get; set; }
+    
+    // Monitoring Settings
+    [Range(10, 3600)]
+    public int CheckIntervalSeconds { get; set; } = 60;
+    
+    public bool MonitoringEnabled { get; set; } = true;
+    public bool AlertOnDown { get; set; } = true;
+    
+    [Range(0, 3600)]
+    public int AlertDelaySeconds { get; set; } = 60;
+    
+    public bool AlertOnHighCpu { get; set; } = true;
+    public bool AlertOnHighRam { get; set; } = true;
+    public bool AlertOnHighDisk { get; set; } = true;
+    
+    // Thresholds
+    [Range(1, 100)]
+    public int CpuWarningThreshold { get; set; } = 80;
+    
+    [Range(1, 100)]
+    public int CpuCriticalThreshold { get; set; } = 95;
+    
+    [Range(1, 100)]
+    public int RamWarningThreshold { get; set; } = 80;
+    
+    [Range(1, 100)]
+    public int RamCriticalThreshold { get; set; } = 95;
+    
+    [Range(1, 100)]
+    public int DiskWarningThreshold { get; set; } = 80;
+    
+    [Range(1, 100)]
+    public int DiskCriticalThreshold { get; set; } = 95;
+    
+    public string? Notes { get; set; }
+    
+    public bool IsActive { get; set; } = true;
+}
+csharp// src/ERAMonitor.Core/DTOs/Hosts/HostMetricsDto.cs
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class HostMetricsDto
+{
+    public Guid HostId { get; set; }
+    public List<MetricDataPoint> CpuHistory { get; set; } = new();
+    public List<MetricDataPoint> RamHistory { get; set; } = new();
+    public List<DiskMetricDataPoint> DiskHistory { get; set; } = new();
+    public List<NetworkMetricDataPoint> NetworkHistory { get; set; } = new();
+}
+
+public class MetricDataPoint
+{
+    public DateTime Timestamp { get; set; }
+    public decimal Value { get; set; }
+}
+
+public class DiskMetricDataPoint
+{
+    public DateTime Timestamp { get; set; }
+    public string DiskName { get; set; } = string.Empty;
+    public decimal UsedPercent { get; set; }
+}
+
+public class NetworkMetricDataPoint
+{
+    public DateTime Timestamp { get; set; }
+    public long InBytes { get; set; }
+    public long OutBytes { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Hosts/SetMaintenanceRequest.cs
+
+using System.ComponentModel.DataAnnotations;
+
+namespace ERAMonitor.Core.DTOs.Hosts;
+
+public class SetMaintenanceRequest
+{
+    public bool Enable { get; set; }
+    
+    public DateTime? StartAt { get; set; }
+    
+    public DateTime? EndAt { get; set; }
+    
+    [MaxLength(500)]
+    public string? Reason { get; set; }
+}
+Agent DTOs
+csharp// src/ERAMonitor.Core/DTOs/Agent/HeartbeatRequest.cs
+
+namespace ERAMonitor.Core.DTOs.Agent;
+
+public class HeartbeatRequest
+{
+    public DateTime Timestamp { get; set; }
+    public SystemInfoDto System { get; set; } = new();
+    public List<DiskInfoDto> Disks { get; set; } = new();
+    public List<ServiceInfoDto> Services { get; set; } = new();
+    public NetworkInfoDto? Network { get; set; }
+    public string AgentVersion { get; set; } = string.Empty;
+}
+
+public class SystemInfoDto
+{
+    public string Hostname { get; set; } = string.Empty;
+    public string OsType { get; set; } = string.Empty; // Windows, Linux
+    public string? OsVersion { get; set; }
+    public decimal CpuPercent { get; set; }
+    public decimal RamPercent { get; set; }
+    public long RamUsedMb { get; set; }
+    public long RamTotalMb { get; set; }
+    public long UptimeSeconds { get; set; }
+    public int ProcessCount { get; set; }
+}
+
+public class DiskInfoDto
+{
+    public string Name { get; set; } = string.Empty; // C:, /dev/sda1
+    public string? MountPoint { get; set; } // C:\, /
+    public string? FileSystem { get; set; } // NTFS, ext4
+    public decimal TotalGb { get; set; }
+    public decimal UsedGb { get; set; }
+    public decimal UsedPercent { get; set; }
+}
+
+public class ServiceInfoDto
+{
+    public string Name { get; set; } = string.Empty; // w3svc, nginx.service
+    public string? DisplayName { get; set; }
+    public string Type { get; set; } = string.Empty; // IIS_Site, IIS_AppPool, WindowsService, SystemdUnit, DockerContainer
+    public string Status { get; set; } = string.Empty; // Running, Stopped, Starting, etc.
+    public Dictionary<string, object>? Config { get; set; }
+}
+
+public class NetworkInfoDto
+{
+    public string? PrimaryIp { get; set; }
+    public string? PublicIp { get; set; }
+    public long? InBytes { get; set; }
+    public long? OutBytes { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Agent/HeartbeatResponse.cs
+
+namespace ERAMonitor.Core.DTOs.Agent;
+
+public class HeartbeatResponse
+{
+    public bool Success { get; set; }
+    public string HostId { get; set; } = string.Empty;
+    public int NextCheckIn { get; set; } // Seconds until next expected heartbeat
+    public List<AgentCommand>? Commands { get; set; } // Future: remote commands
+    public string? Message { get; set; }
+}
+
+public class AgentCommand
+{
+    public string CommandType { get; set; } = string.Empty;
+    public string? Payload { get; set; }
+    public DateTime IssuedAt { get; set; }
+}
+Service DTOs
+csharp// src/ERAMonitor.Core/DTOs/Services/ServiceDto.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Services;
+
+public class ServiceDto
+{
+    public Guid Id { get; set; }
+    public Guid HostId { get; set; }
+    public string HostName { get; set; } = string.Empty;
+    public ServiceType ServiceType { get; set; }
+    public string ServiceName { get; set; } = string.Empty;
+    public string? DisplayName { get; set; }
+    public StatusType CurrentStatus { get; set; }
+    public DateTime? LastStatusChange { get; set; }
+    public bool MonitoringEnabled { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Services/ServiceDetailDto.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Services;
+
+public class ServiceDetailDto
+{
+    public Guid Id { get; set; }
+    public Guid HostId { get; set; }
+    public string HostName { get; set; } = string.Empty;
+    
+    public ServiceType ServiceType { get; set; }
+    public string ServiceName { get; set; } = string.Empty;
+    public string? DisplayName { get; set; }
+    public string? Description { get; set; }
+    
+    // Status
+    public StatusType CurrentStatus { get; set; }
+    public DateTime? LastStatusChange { get; set; }
+    public StatusType? PreviousStatus { get; set; }
+    
+    // Config (type-specific)
+    public Dictionary<string, object>? Config { get; set; }
+    
+    // Monitoring
+    public bool MonitoringEnabled { get; set; }
+    public bool AlertOnStop { get; set; }
+    
+    // Statistics
+    public int RestartCount { get; set; }
+    public DateTime? LastRestartAt { get; set; }
+    public DateTime? LastHealthyAt { get; set; }
+    
+    // Recent Status History
+    public List<ServiceStatusHistoryDto> RecentHistory { get; set; } = new();
+    
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+
+public class ServiceStatusHistoryDto
+{
+    public StatusType Status { get; set; }
+    public string? Message { get; set; }
+    public DateTime RecordedAt { get; set; }
+}
+csharp// src/ERAMonitor.Core/DTOs/Services/ServiceListItemDto.cs
+
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.DTOs.Services;
+
+public class ServiceListItemDto
+{
+    public Guid Id { get; set; }
+    public Guid HostId { get; set; }
+    public string HostName { get; set; } = string.Empty;
+    public OsType HostOsType { get; set; }
+    
+    public ServiceType ServiceType { get; set; }
+    public string ServiceTypeDisplay => GetServiceTypeDisplay();
+    public string ServiceName { get; set; } = string.Empty;
+    public string? DisplayName { get; set; }
+    
+    public StatusType CurrentStatus { get; set; }
+    public DateTime? LastStatusChange { get; set; }
+    public bool MonitoringEnabled { get; set; }
+    
+    public Guid? CustomerId { get; set; }
+    public string? CustomerName { get; set; }
+    
+    private string GetServiceTypeDisplay()
+    {
+        return ServiceType switch
+        {
+            ServiceType.IIS_Site => "IIS Site",
+            ServiceType.IIS_AppPool => "IIS App Pool",
+            ServiceType.WindowsService => "Windows Service",
+            ServiceType.SystemdUnit => "Systemd Unit",
+            ServiceType.DockerContainer => "Docker Container",
+            ServiceType.Process => "Process",
+            _ => ServiceType.ToString()
+        };
+    }
+}
+csharp// src/ERAMonitor.Core/DTOs/Services/UpdateServiceRequest.cs
+
+namespace ERAMonitor.Core.DTOs.Services;
+
+public class UpdateServiceRequest
+{
+    public string? DisplayName { get; set; }
+    public string? Description { get; set; }
+    public bool MonitoringEnabled { get; set; } = true;
+    public bool AlertOnStop { get; set; } = true;
+}
+
+3.4 Repository Interfaces
+csharp// src/ERAMonitor.Core/Interfaces/Repositories/IHostRepository.cs
+
+using ERAMonitor.Core.Entities;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Hosts;
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Interfaces.Repositories;
+
+public interface IHostRepository : IRepository<Host>
+{
+    Task<Host?> GetByApiKeyAsync(string apiKey);
+    Task<bool> ApiKeyExistsAsync(string apiKey, Guid? excludeId = null);
+    
+    Task<PagedResponse<HostListItemDto>> GetPagedAsync(
+        Guid organizationId,
+        PagedRequest request,
+        StatusType? status = null,
+        Guid? customerId = null,
+        Guid? locationId = null,
+        OsType? osType = null,
+        string[]? tags = null,
+        bool? monitoringEnabled = null,
+        bool? isActive = null);
+    
+    Task<HostDetailDto?> GetDetailAsync(Guid id, Guid organizationId);
+    
+    Task<List<Host>> GetByCustomerAsync(Guid customerId);
+    Task<List<Host>> GetByLocationAsync(Guid locationId);
+    
+    Task<List<Host>> GetHostsNotSeenSinceAsync(DateTime threshold);
+    Task<List<Host>> GetHostsInMaintenanceEndingAsync(DateTime before);
+    
+    Task<int> GetCountByStatusAsync(Guid organizationId, StatusType status);
+    Task<Dictionary<StatusType, int>> GetStatusCountsAsync(Guid organizationId);
+    
+    // For dashboard
+    Task<List<HostListItemDto>> GetRecentlyDownAsync(Guid organizationId, int limit = 10);
+    Task<List<HostListItemDto>> GetHighResourceUsageAsync(Guid organizationId, int cpuThreshold = 90, int ramThreshold = 90, int limit = 10);
+}
+csharp// src/ERAMonitor.Core/Interfaces/Repositories/IHostMetricRepository.cs
+
+using ERAMonitor.Core.Entities;
+using ERAMonitor.Core.DTOs.Hosts;
+
+namespace ERAMonitor.Core.Interfaces.Repositories;
+
+public interface IHostMetricRepository
+{
+    Task<HostMetric> AddAsync(HostMetric metric);
+    Task AddRangeAsync(IEnumerable<HostMetric> metrics);
+    
+    Task<List<HostMetric>> GetByHostAsync(Guid hostId, DateTime from, DateTime to);
+    Task<List<HostMetric>> GetLatestByHostAsync(Guid hostId, int count = 100);
+    
+    Task<HostMetricsDto> GetMetricsHistoryAsync(Guid hostId, DateTime from, DateTime to, string interval = "5m");
+    
+    // Aggregated data for charts
+    Task<List<MetricDataPoint>> GetCpuHistoryAsync(Guid hostId, DateTime from, DateTime to, string interval = "5m");
+    Task<List<MetricDataPoint>> GetRamHistoryAsync(Guid hostId, DateTime from, DateTime to, string interval = "5m");
+    
+    // Cleanup old metrics
+    Task<int> DeleteOlderThanAsync(int retentionDays);
+    
+    Task SaveChangesAsync();
+}
+csharp// src/ERAMonitor.Core/Interfaces/Repositories/IHostDiskRepository.cs
+
+using ERAMonitor.Core.Entities;
+
+namespace ERAMonitor.Core.Interfaces.Repositories;
+
+public interface IHostDiskRepository
+{
+    Task<List<HostDisk>> GetByHostAsync(Guid hostId);
+    Task<HostDisk?> GetByHostAndNameAsync(Guid hostId, string name);
+    
+    Task<HostDisk> AddAsync(HostDisk disk);
+    void Update(HostDisk disk);
+    void Remove(HostDisk disk);
+    
+    Task UpsertDisksAsync(Guid hostId, List<HostDisk> disks);
+    
+    Task SaveChangesAsync();
+}
+csharp// src/ERAMonitor.Core/Interfaces/Repositories/IServiceRepository.cs
+
+using ERAMonitor.Core.Entities;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Services;
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Interfaces.Repositories;
+
+public interface IServiceRepository : IRepository<Service>
+{
+    Task<Service?> GetByHostAndNameAsync(Guid hostId, ServiceType type, string serviceName);
+    
+    Task<PagedResponse<ServiceListItemDto>> GetPagedAsync(
+        Guid organizationId,
+        PagedRequest request,
+        Guid? hostId = null,
+        Guid? customerId = null,
+        ServiceType? serviceType = null,
+        StatusType? status = null,
+        bool? monitoringEnabled = null);
+    
+    Task<ServiceDetailDto?> GetDetailAsync(Guid id);
+    
+    Task<List<Service>> GetByHostAsync(Guid hostId);
+    Task<List<Service>> GetByHostAsync(Guid hostId, ServiceType type);
+    
+    Task<int> GetCountByStatusAsync(Guid organizationId, StatusType status);
+    Task<Dictionary<StatusType, int>> GetStatusCountsAsync(Guid organizationId);
+    Task<Dictionary<ServiceType, int>> GetCountsByTypeAsync(Guid organizationId);
+    
+    Task UpsertServicesAsync(Guid hostId, List<Service> services);
+}
+csharp// src/ERAMonitor.Core/Interfaces/Repositories/IServiceStatusHistoryRepository.cs
+
+using ERAMonitor.Core.Entities;
+using ERAMonitor.Core.DTOs.Services;
+
+namespace ERAMonitor.Core.Interfaces.Repositories;
+
+public interface IServiceStatusHistoryRepository
+{
+    Task<ServiceStatusHistory> AddAsync(ServiceStatusHistory history);
+    
+    Task<List<ServiceStatusHistory>> GetByServiceAsync(Guid serviceId, int limit = 100);
+    Task<List<ServiceStatusHistory>> GetByServiceAsync(Guid serviceId, DateTime from, DateTime to);
+    
+    Task<List<ServiceStatusHistoryDto>> GetRecentByServiceAsync(Guid serviceId, int limit = 20);
+    
+    // For uptime calculation
+    Task<List<ServiceStatusHistory>> GetStatusChangesAsync(Guid serviceId, DateTime from, DateTime to);
+    
+    Task<int> DeleteOlderThanAsync(int retentionDays);
+    
+    Task SaveChangesAsync();
+}
+
+3.5 Service Interfaces
+csharp// src/ERAMonitor.Core/Interfaces/Services/IHostService.cs
+
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Hosts;
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Interfaces.Services;
+
+public interface IHostService
+{
+    Task<PagedResponse<HostListItemDto>> GetPagedAsync(
+        Guid organizationId,
+        PagedRequest request,
+        StatusType? status = null,
+        Guid? customerId = null,
+        Guid? locationId = null,
+        OsType? osType = null,
+        string[]? tags = null);
+    
+    Task<HostDetailDto> GetByIdAsync(Guid id, Guid organizationId);
+    Task<HostDetailDto> CreateAsync(Guid organizationId, CreateHostRequest request);
+    Task<HostDetailDto> UpdateAsync(Guid id, Guid organizationId, UpdateHostRequest request);
+    Task DeleteAsync(Guid id, Guid organizationId);
+    
+    Task<string> RegenerateApiKeyAsync(Guid id, Guid organizationId);
+    Task<HostDetailDto> SetMaintenanceAsync(Guid id, Guid organizationId, SetMaintenanceRequest request);
+    Task<bool> ToggleMonitoringAsync(Guid id, Guid organizationId);
+    
+    // Metrics
+    Task<HostMetricsDto> GetMetricsAsync(Guid id, Guid organizationId, DateTime from, DateTime to, string interval = "5m");
+    
+    // Statistics
+    Task<Dictionary<StatusType, int>> GetStatusCountsAsync(Guid organizationId);
+    Task<List<HostListItemDto>> GetRecentlyDownAsync(Guid organizationId, int limit = 10);
+    Task<List<HostListItemDto>> GetHighResourceUsageAsync(Guid organizationId, int limit = 10);
+}
+csharp// src/ERAMonitor.Core/Interfaces/Services/IHeartbeatService.cs
+
+using ERAMonitor.Core.DTOs.Agent;
+using ERAMonitor.Core.Entities;
+
+namespace ERAMonitor.Core.Interfaces.Services;
+
+public interface IHeartbeatService
+{
+    Task<HeartbeatResponse> ProcessHeartbeatAsync(string apiKey, HeartbeatRequest request);
+    
+    // Called by background job to detect down hosts
+    Task ProcessHostDownDetectionAsync();
+    
+    // Process maintenance mode expiration
+    Task ProcessMaintenanceExpirationAsync();
+}
+csharp// src/ERAMonitor.Core/Interfaces/Services/IServiceMonitorService.cs
+
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Services;
+using ERAMonitor.Core.Enums;
+
+namespace ERAMonitor.Core.Interfaces.Services;
+
+public interface IServiceMonitorService
+{
+    Task<PagedResponse<ServiceListItemDto>> GetPagedAsync(
+        Guid organizationId,
+        PagedRequest request,
+        Guid? hostId = null,
+        Guid? customerId = null,
+        ServiceType? serviceType = null,
+        StatusType? status = null);
+    
+    Task<ServiceDetailDto> GetByIdAsync(Guid id);
+    Task<ServiceDetailDto> UpdateAsync(Guid id, UpdateServiceRequest request);
+    Task<bool> ToggleMonitoringAsync(Guid id);
+    
+    Task<List<ServiceStatusHistoryDto>> GetStatusHistoryAsync(Guid id, DateTime from, DateTime to);
+    
+    Task<Dictionary<StatusType, int>> GetStatusCountsAsync(Guid organizationId);
+    Task<Dictionary<ServiceType, int>> GetCountsByTypeAsync(Guid organizationId);
+}
+
+3.6 Service Implementations
+HeartbeatService Implementation
+csharp// src/ERAMonitor.Infrastructure/Services/HeartbeatService.cs
+
+using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using ERAMonitor.API.Hubs;
+using ERAMonitor.Core.DTOs.Agent;
+using ERAMonitor.Core.Entities;
+using ERAMonitor.Core.Enums;
+using ERAMonitor.Core.Exceptions;
+using ERAMonitor.Core.Interfaces.Repositories;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.Infrastructure.Services;
+
+public class HeartbeatService : IHeartbeatService
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IHostMetricRepository _metricRepository;
+    private readonly IHostDiskRepository _diskRepository;
+    private readonly IServiceRepository _serviceRepository;
+    private readonly IServiceStatusHistoryRepository _statusHistoryRepository;
+    private readonly IIncidentService _incidentService;
+    private readonly INotificationService _notificationService;
+    private readonly IHubContext<MonitoringHub> _hubContext;
+    private readonly IAuditService _auditService;
+    private readonly ILogger<HeartbeatService> _logger;
+    
+    // Threshold for considering a host as down (no heartbeat)
+    private const int HostDownThresholdSeconds = 90;
+    
+    public HeartbeatService(
+        IUnitOfWork unitOfWork,
+        IHostMetricRepository metricRepository,
+        IHostDiskRepository diskRepository,
+        IServiceRepository serviceRepository,
+        IServiceStatusHistoryRepository statusHistoryRepository,
+        IIncidentService incidentService,
+        INotificationService notificationService,
+        IHubContext<MonitoringHub> hubContext,
+        IAuditService auditService,
+        ILogger<HeartbeatService> logger)
+    {
+        _unitOfWork = unitOfWork;
+        _metricRepository = metricRepository;
+        _diskRepository = diskRepository;
+        _serviceRepository = serviceRepository;
+        _statusHistoryRepository = statusHistoryRepository;
+        _incidentService = incidentService;
+        _notificationService = notificationService;
+        _hubContext = hubContext;
+        _auditService = auditService;
+        _logger = logger;
+    }
+    
+    public async Task<HeartbeatResponse> ProcessHeartbeatAsync(string apiKey, HeartbeatRequest request)
+    {
+        // 1. Validate API key and get host
+        var host = await _unitOfWork.Hosts.GetByApiKeyAsync(apiKey);
+        
+        if (host == null)
+        {
+            _logger.LogWarning("Heartbeat received with invalid API key: {ApiKey}", apiKey[..8] + "...");
+            throw new UnauthorizedException("Invalid API key");
+        }
+        
+        if (!host.IsActive)
+        {
+            _logger.LogWarning("Heartbeat received for inactive host: {HostId}", host.Id);
+            throw new UnauthorizedException("Host is deactivated");
+        }
+        
+        _logger.LogDebug("Processing heartbeat for host {HostName} ({HostId})", host.Name, host.Id);
+        
+        // 2. Determine host status based on metrics
+        var previousStatus = host.CurrentStatus;
+        var newStatus = DetermineHostStatus(host, request);
+        
+        // 3. Update host record
+        host.LastSeenAt = DateTime.UtcNow;
+        host.CurrentStatus = newStatus;
+        host.AgentVersion = request.AgentVersion;
+        host.LastHeartbeat = JsonSerializer.Serialize(request);
+        
+        // Update metrics
+        host.CpuPercent = (decimal)request.System.CpuPercent;
+        host.RamPercent = (decimal)request.System.RamPercent;
+        host.RamUsedMb = request.System.RamUsedMb;
+        host.RamTotalMb = request.System.RamTotalMb;
+        host.UptimeSeconds = request.System.UptimeSeconds;
+        host.ProcessCount = request.System.ProcessCount;
+        
+        // Update network info
+        if (request.Network != null)
+        {
+            host.PrimaryIp = request.Network.PrimaryIp;
+            host.PublicIp = request.Network.PublicIp;
+        }
+        
+        // Update OS info if changed
+        if (!string.IsNullOrEmpty(request.System.OsVersion) && host.OsVersion != request.System.OsVersion)
+        {
+            host.OsVersion = request.System.OsVersion;
+        }
+        
+        // Handle status change
+        if (previousStatus != newStatus)
+        {
+            host.PreviousStatus = previousStatus;
+            host.StatusChangedAt = DateTime.UtcNow;
+            
+            _logger.LogInformation("Host {HostName} status changed from {OldStatus} to {NewStatus}",
+                host.Name, previousStatus, newStatus);
+        }
+        
+        _unitOfWork.Hosts.Update(host);
+        
+        // 4. Update/Insert disks
+        await UpdateHostDisksAsync(host.Id, request.Disks);
+        
+        // 5. Update/Insert services
+        await UpdateHostServicesAsync(host.Id, request.Services);
+        
+        // 6. Store metrics (time series)
+        await StoreMetricsAsync(host.Id, request);
+        
+        // 7. Save all changes
+        await _unitOfWork.SaveChangesAsync();
+        
+        // 8. Handle status change events (after save)
+        if (previousStatus != newStatus)
+        {
+            await HandleHostStatusChangeAsync(host, previousStatus, newStatus);
+        }
+        
+        // 9. Check threshold alerts
+        await CheckThresholdAlertsAsync(host, request);
+        
+        // 10. Broadcast update via SignalR
+        await BroadcastHostUpdateAsync(host);
+        
+        return new HeartbeatResponse
+        {
+            Success = true,
+            HostId = host.Id.ToString(),
+            NextCheckIn = host.CheckIntervalSeconds,
+            Message = "Heartbeat processed successfully"
+        };
+    }
+    
+    public async Task ProcessHostDownDetectionAsync()
+    {
+        var threshold = DateTime.UtcNow.AddSeconds(-HostDownThresholdSeconds);
+        var hosts = await _unitOfWork.Hosts.GetHostsNotSeenSinceAsync(threshold);
+        
+        foreach (var host in hosts)
+        {
+            // Skip hosts in maintenance or with monitoring disabled
+            if (!host.ShouldAlert())
+            {
+                continue;
+            }
+            
+            // Skip hosts already marked as down
+            if (host.CurrentStatus == StatusType.Down)
+            {
+                continue;
+            }
+            
+            _logger.LogWarning("Host {HostName} ({HostId}) detected as DOWN - no heartbeat since {LastSeen}",
+                host.Name, host.Id, host.LastSeenAt);
+            
+            var previousStatus = host.CurrentStatus;
+            host.PreviousStatus = previousStatus;
+            host.CurrentStatus = StatusType.Down;
+            host.StatusChangedAt = DateTime.UtcNow;
+            
+            _unitOfWork.Hosts.Update(host);
+            await _unitOfWork.SaveChangesAsync();
+            
+            // Create incident
+            await _incidentService.CreateAutoIncidentAsync(
+                "Host",
+                host.Id,
+                host.Name,
+                $"Host DOWN: {host.Name}",
+                $"No heartbeat received since {host.LastSeenAt:yyyy-MM-dd HH:mm:ss} UTC",
+                IncidentSeverity.Critical,
+                host.CustomerId,
+                host.OrganizationId
+            );
+            
+            // Send notifications
+            await _notificationService.SendHostDownNotificationAsync(host);
+            
+            // Broadcast update
+            await BroadcastHostUpdateAsync(host);
+        }
+    }
+    
+    public async Task ProcessMaintenanceExpirationAsync()
+    {
+        var hosts = await _unitOfWork.Hosts.GetHostsInMaintenanceEndingAsync(DateTime.UtcNow);
+        
+        foreach (var host in hosts)
+        {
+            _logger.LogInformation("Maintenance period ended for host {HostName}", host.Name);
+            
+            host.MaintenanceMode = false;
+            host.MaintenanceEndAt = null;
+            host.MaintenanceStartAt = null;
+            host.MaintenanceReason = null;
+            
+            _unitOfWork.Hosts.Update(host);
+            
+            await _auditService.LogAsync(
+                "MaintenanceEnded",
+                "Host",
+                host.Id,
+                host.Name,
+                organizationId: host.OrganizationId
+            );
+        }
+        
+        await _unitOfWork.SaveChangesAsync();
+    }
+    
+    #region Private Helper Methods
+    
+    private StatusType DetermineHostStatus(Host host, HeartbeatRequest request)
+    {
+        // Host is responding, so at minimum it's Up
+        // Check for warning/degraded conditions
+        
+        var warnings = new List<string>();
+        
+        // CPU check
+        if (request.System.CpuPercent >= host.CpuCriticalThreshold)
+        {
+            return StatusType.Warning; // Critical CPU
+        }
+        if (request.System.CpuPercent >= host.CpuWarningThreshold)
+        {
+            warnings.Add("High CPU");
+        }
+        
+        // RAM check
+        if (request.System.RamPercent >= host.RamCriticalThreshold)
+        {
+            return StatusType.Warning; // Critical RAM
+        }
+        if (request.System.RamPercent >= host.RamWarningThreshold)
+        {
+            warnings.Add("High RAM");
+        }
+        
+        // Disk check
+        foreach (var disk in request.Disks)
+        {
+            if ((decimal)disk.UsedPercent >= host.DiskCriticalThreshold)
+            {
+                return StatusType.Warning; // Critical disk
+            }
+            if ((decimal)disk.UsedPercent >= host.DiskWarningThreshold)
+            {
+                warnings.Add($"High disk usage on {disk.Name}");
+            }
+        }
+        
+        // Check for any services down
+        var servicesDown = request.Services.Count(s => 
+            s.Status.Equals("Stopped", StringComparison.OrdinalIgnoreCase) ||
+            s.Status.Equals("Failed", StringComparison.OrdinalIgnoreCase));
+        
+        if (servicesDown > 0)
+        {
+            return StatusType.Degraded;
+        }
+        
+        if (warnings.Count > 0)
+        {
+            return StatusType.Warning;
+        }
+        
+        return StatusType.Up;
+    }
+    
+    private async Task UpdateHostDisksAsync(Guid hostId, List<DiskInfoDto> disks)
+    {
+        var existingDisks = await _diskRepository.GetByHostAsync(hostId);
+        var existingDiskNames = existingDisks.Select(d => d.Name).ToHashSet();
+        var reportedDiskNames = disks.Select(d => d.Name).ToHashSet();
+        
+        foreach (var diskDto in disks)
+        {
+            var existing = existingDisks.FirstOrDefault(d => d.Name == diskDto.Name);
+            
+            if (existing != null)
+            {
+                // Update existing
+                existing.MountPoint = diskDto.MountPoint;
+                existing.FileSystem = diskDto.FileSystem;
+                existing.TotalGb = diskDto.TotalGb;
+                existing.UsedGb = diskDto.UsedGb;
+                existing.UsedPercent = diskDto.UsedPercent;
+                existing.UpdatedAt = DateTime.UtcNow;
+                
+                _diskRepository.Update(existing);
+            }
+            else
+            {
+                // Add new disk
+                var newDisk = new HostDisk
+                {
+                    HostId = hostId,
+                    Name = diskDto.Name,
+                    MountPoint = diskDto.MountPoint,
+                    FileSystem = diskDto.FileSystem,
+                    TotalGb = diskDto.TotalGb,
+                    UsedGb = diskDto.UsedGb,
+                    UsedPercent = diskDto.UsedPercent
+                };
+                
+                await _diskRepository.AddAsync(newDisk);
+            }
+        }
+        
+        // Remove disks no longer reported
+        var removedDisks = existingDisks.Where(d => !reportedDiskNames.Contains(d.Name));
+        foreach (var disk in removedDisks)
+        {
+            _diskRepository.Remove(disk);
+        }
+        
+        await _diskRepository.SaveChangesAsync();
+    }
+    
+    private async Task UpdateHostServicesAsync(Guid hostId, List<ServiceInfoDto> services)
+    {
+        var existingServices = await _serviceRepository.GetByHostAsync(hostId);
+        
+        foreach (var serviceDto in services)
+        {
+            if (!Enum.TryParse<ServiceType>(serviceDto.Type, true, out var serviceType))
+            {
+                _logger.LogWarning("Unknown service type: {Type}", serviceDto.Type);
+                continue;
+            }
+            
+            var existing = existingServices.FirstOrDefault(s => 
+                s.ServiceType == serviceType && s.ServiceName == serviceDto.Name);
+            
+            var newStatus = MapServiceStatus(serviceDto.Status);
+            
+            if (existing != null)
+            {
+                var previousStatus = existing.CurrentStatus;
+                
+                // Update existing
+                existing.DisplayName = serviceDto.DisplayName ?? existing.DisplayName;
+                existing.CurrentStatus = newStatus;
+                existing.Config = serviceDto.Config != null 
+                    ? JsonSerializer.Serialize(serviceDto.Config) 
+                    : existing.Config;
+                existing.UpdatedAt = DateTime.UtcNow;
+                
+                // Track status change
+                if (previousStatus != newStatus)
+                {
+                    existing.PreviousStatus = previousStatus;
+                    existing.LastStatusChange = DateTime.UtcNow;
+                    
+                    if (newStatus == StatusType.Up)
+                    {
+                        existing.LastHealthyAt = DateTime.UtcNow;
+                    }
+                    
+                    // Record status history
+                    await _statusHistoryRepository.AddAsync(new ServiceStatusHistory
+                    {
+                        ServiceId = existing.Id,
+                        Status = newStatus,
+                        Message = $"Status changed from {previousStatus} to {newStatus}"
+                    });
+                    
+                    // Handle service down
+                    if (previousStatus != StatusType.Down && newStatus == StatusType.Down)
+                    {
+                        await HandleServiceDownAsync(existing);
+                    }
+                    else if (previousStatus == StatusType.Down && newStatus == StatusType.Up)
+                    {
+                        await HandleServiceRecoveredAsync(existing);
+                    }
+                }
+                
+                _serviceRepository.Update(existing);
+            }
+            else
+            {
+                // Add new service
+                var newService = new Service
+                {
+                    HostId = hostId,
+                    ServiceType = serviceType,
+                    ServiceName = serviceDto.Name,
+                    DisplayName = serviceDto.DisplayName,
+                    CurrentStatus = newStatus,
+                    LastStatusChange = DateTime.UtcNow,
+                    Config = serviceDto.Config != null ? JsonSerializer.Serialize(serviceDto.Config) : null,
+                    MonitoringEnabled = true,
+                    AlertOnStop = true
+                };
+                
+                if (newStatus == StatusType.Up)
+                {
+                    newService.LastHealthyAt = DateTime.UtcNow;
+                }
+                
+                await _serviceRepository.AddAsync(newService);
+                
+                // Record initial status
+                await _statusHistoryRepository.AddAsync(new ServiceStatusHistory
+                {
+                    ServiceId = newService.Id,
+                    Status = newStatus,
+                    Message = "Service discovered"
+                });
+            }
+        }
+        
+        await _statusHistoryRepository.SaveChangesAsync();
+    }
+    
+    private async Task StoreMetricsAsync(Guid hostId, HeartbeatRequest request)
+    {
+        var metric = new HostMetric
+        {
+            HostId = hostId,
+            CpuPercent = (decimal)request.System.CpuPercent,
+            RamPercent = (decimal)request.System.RamPercent,
+            RamUsedMb = request.System.RamUsedMb,
+            RamTotalMb = request.System.RamTotalMb,
+            UptimeSeconds = request.System.UptimeSeconds,
+            ProcessCount = request.System.ProcessCount,
+            DiskInfo = JsonSerializer.Serialize(request.Disks),
+            NetworkInBytes = request.Network?.InBytes,
+            NetworkOutBytes = request.Network?.OutBytes,
+            RecordedAt = DateTime.UtcNow
+        };
+        
+        await _metricRepository.AddAsync(metric);
+        await _metricRepository.SaveChangesAsync();
+    }
+    
+    private async Task HandleHostStatusChangeAsync(Host host, StatusType previousStatus, StatusType newStatus)
+    {
+        _logger.LogInformation("Host {HostName} status changed: {OldStatus} -> {NewStatus}",
+            host.Name, previousStatus, newStatus);
+        
+        // Host came back online
+        if (previousStatus == StatusType.Down && newStatus == StatusType.Up)
+        {
+            // Auto-resolve related incidents
+            await _incidentService.AutoResolveIncidentsAsync("Host", host.Id, "Host is back online");
+            
+            // Send recovery notification
+            await _notificationService.SendHostRecoveredNotificationAsync(host);
+        }
+        // Host went down (shouldn't happen here as we get heartbeat, but for status change tracking)
+        else if (previousStatus != StatusType.Down && newStatus == StatusType.Down)
+        {
+            if (host.ShouldAlert())
+            {
+                await _incidentService.CreateAutoIncidentAsync(
+                    "Host",
+                    host.Id,
+                    host.Name,
+                    $"Host DOWN: {host.Name}",
+                    "Host stopped responding",
+                    IncidentSeverity.Critical,
+                    host.CustomerId,
+                    host.OrganizationId
+                );
+            }
+        }
+        // Status degradation
+        else if (newStatus == StatusType.Warning || newStatus == StatusType.Degraded)
+        {
+            // Could create warning-level incident if configured
+        }
+    }
+    
+    private async Task HandleServiceDownAsync(Service service)
+    {
+        if (!service.MonitoringEnabled || !service.AlertOnStop)
+        {
+            return;
+        }
+        
+        var host = await _unitOfWork.Hosts.GetByIdAsync(service.HostId);
+        if (host == null || host.IsInMaintenance())
+        {
+            return;
+        }
+        
+        _logger.LogWarning("Service {ServiceName} on host {HostId} is DOWN", 
+            service.DisplayName ?? service.ServiceName, service.HostId);
+        
+        await _incidentService.CreateAutoIncidentAsync(
+            "Service",
+            service.Id,
+            service.DisplayName ?? service.ServiceName,
+            $"Service Stopped: {service.DisplayName ?? service.ServiceName}",
+            $"Service {service.ServiceName} on host {host.Name} has stopped",
+            IncidentSeverity.High,
+            host.CustomerId,
+            host.OrganizationId
+        );
+        
+        await _notificationService.SendServiceDownNotificationAsync(service, host);
+    }
+    
+    private async Task HandleServiceRecoveredAsync(Service service)
+    {
+        _logger.LogInformation("Service {ServiceName} recovered", 
+            service.DisplayName ?? service.ServiceName);
+        
+        // Auto-resolve related incidents
+        await _incidentService.AutoResolveIncidentsAsync("Service", service.Id, "Service is back online");
+        
+        var host = await _unitOfWork.Hosts.GetByIdAsync(service.HostId);
+        if (host != null)
+        {
+            await _notificationService.SendServiceRecoveredNotificationAsync(service, host);
+        }
+    }
+    
+    private async Task CheckThresholdAlertsAsync(Host host, HeartbeatRequest request)
+    {
+        // Check CPU threshold
+        if (host.AlertOnHighCpu && request.System.CpuPercent >= host.CpuCriticalThreshold)
+        {
+            // Could create alert or incident
+        }
+        
+        // Check RAM threshold
+        if (host.AlertOnHighRam && request.System.RamPercent >= host.RamCriticalThreshold)
+        {
+            // Could create alert or incident
+        }
+        
+        // Check Disk thresholds
+        if (host.AlertOnHighDisk)
+        {
+            foreach (var disk in request.Disks)
+            {
+                if ((decimal)disk.UsedPercent >= host.DiskCriticalThreshold)
+                {
+                    // Could create alert or incident
+                }
+            }
+        }
+    }
+    
+    private async Task BroadcastHostUpdateAsync(Host host)
+    {
+        var update = new
+        {
+            hostId = host.Id,
+            hostName = host.Name,
+            currentStatus = host.CurrentStatus.ToString(),
+            cpuPercent = host.CpuPercent,
+            ramPercent = host.RamPercent,
+            lastSeenAt = host.LastSeenAt,
+            statusChangedAt = host.StatusChangedAt
+        };
+        
+        await _hubContext.BroadcastHostUpdate(host.Id, update);
+        
+        if (host.CustomerId.HasValue)
+        {
+            await _hubContext.Clients.Group($"customer_{host.CustomerId}").SendAsync("HostUpdated", update);
+        }
+    }
+    
+    private static StatusType MapServiceStatus(string status)
+    {
+        return status.ToLowerInvariant() switch
+        {
+            "running" => StatusType.Up,
+            "started" => StatusType.Up,
+            "active" => StatusType.Up,
+            "stopped" => StatusType.Down,
+            "failed" => StatusType.Down,
+            "inactive" => StatusType.Down,
+            "starting" => StatusType.Warning,
+            "stopping" => StatusType.Warning,
+            "paused" => StatusType.Warning,
+            "degraded" => StatusType.Degraded,
+            _ => StatusType.Unknown
+        };
+    }
+    
+    #endregion
+}
+HostService Implementation
+csharp// src/ERAMonitor.Infrastructure/Services/HostService.cs
+
+using Microsoft.Extensions.Logging;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Hosts;
+using ERAMonitor.Core.Entities;
+using ERAMonitor.Core.Enums;
+using ERAMonitor.Core.Exceptions;
+using ERAMonitor.Core.Interfaces.Repositories;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.Infrastructure.Services;
+
+public class HostService : IHostService
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IHostMetricRepository _metricRepository;
+    private readonly IAuditService _auditService;
+    private readonly ILogger<HostService> _logger;
+    
+    public HostService(
+        IUnitOfWork unitOfWork,
+        IHostMetricRepository metricRepository,
+        IAuditService auditService,
+        ILogger<HostService> logger)
+    {
+        _unitOfWork = unitOfWork;
+        _metricRepository = metricRepository;
+        _auditService = auditService;
+        _logger = logger;
+    }
+    
+    public async Task<PagedResponse<HostListItemDto>> GetPagedAsync(
+        Guid organizationId,
+        PagedRequest request,
+        StatusType? status = null,
+        Guid? customerId = null,
+        Guid? locationId = null,
+        OsType? osType = null,
+        string[]? tags = null)
+    {
+        return await _unitOfWork.Hosts.GetPagedAsync(
+            organizationId,
+            request,
+            status,
+            customerId,
+            locationId,
+            osType,
+            tags
+        );
+    }
+    
+    public async Task<HostDetailDto> GetByIdAsync(Guid id, Guid organizationId)
+    {
+        var host = await _unitOfWork.Hosts.GetDetailAsync(id, organizationId);
+        
+        if (host == null)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        return host;
+    }
+    
+    public async Task<HostDetailDto> CreateAsync(Guid organizationId, CreateHostRequest request)
+    {
+        // Validate customer if provided
+        if (request.CustomerId.HasValue)
+        {
+            var customer = await _unitOfWork.Customers.GetByIdAsync(request.CustomerId.Value);
+            if (customer == null || customer.OrganizationId != organizationId)
+            {
+                throw new BusinessException("Invalid customer ID", "INVALID_CUSTOMER");
+            }
+        }
+        
+        // Validate location if provided
+        if (request.LocationId.HasValue)
+        {
+            var location = await _unitOfWork.Locations.GetByIdAsync(request.LocationId.Value);
+            if (location == null || location.OrganizationId != organizationId)
+            {
+                throw new BusinessException("Invalid location ID", "INVALID_LOCATION");
+            }
+        }
+        
+        var host = new Host
+        {
+            OrganizationId = organizationId,
+            Name = request.Name,
+            Hostname = request.Hostname,
+            Description = request.Description,
+            OsType = request.OsType,
+            OsVersion = request.OsVersion,
+            Category = request.Category,
+            Tags = request.Tags ?? Array.Empty<string>(),
+            PrimaryIp = request.PrimaryIp,
+            PublicIp = request.PublicIp,
+            CustomerId = request.CustomerId,
+            LocationId = request.LocationId,
+            CheckIntervalSeconds = request.CheckIntervalSeconds,
+            MonitoringEnabled = request.MonitoringEnabled,
+            AlertOnDown = request.AlertOnDown,
+            AlertDelaySeconds = request.AlertDelaySeconds,
+            AlertOnHighCpu = request.AlertOnHighCpu,
+            AlertOnHighRam = request.AlertOnHighRam,
+            AlertOnHighDisk = request.AlertOnHighDisk,
+            CpuWarningThreshold = request.CpuWarningThreshold,
+            CpuCriticalThreshold = request.CpuCriticalThreshold,
+            RamWarningThreshold = request.RamWarningThreshold,
+            RamCriticalThreshold = request.RamCriticalThreshold,
+            DiskWarningThreshold = request.DiskWarningThreshold,
+            DiskCriticalThreshold = request.DiskCriticalThreshold,
+            Notes = request.Notes,
+            CurrentStatus = StatusType.Unknown
+        };
+        
+        await _unitOfWork.Hosts.AddAsync(host);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogCreateAsync(host);
+        
+        _logger.LogInformation("Host created: {HostName} ({HostId})", host.Name, host.Id);
+        
+        return await GetByIdAsync(host.Id, organizationId);
+    }
+    
+    public async Task<HostDetailDto> UpdateAsync(Guid id, Guid organizationId, UpdateHostRequest request)
+    {
+        var host = await _unitOfWork.Hosts.GetByIdAsync(id);
+        
+        if (host == null || host.OrganizationId != organizationId)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        var oldValues = new
+        {
+            host.Name,
+            host.Hostname,
+            host.Description,
+            host.OsType,
+            host.Category,
+            host.CustomerId,
+            host.LocationId,
+            host.MonitoringEnabled
+        };
+        
+        // Validate customer if changed
+        if (request.CustomerId != host.CustomerId && request.CustomerId.HasValue)
+        {
+            var customer = await _unitOfWork.Customers.GetByIdAsync(request.CustomerId.Value);
+            if (customer == null || customer.OrganizationId != organizationId)
+            {
+                throw new BusinessException("Invalid customer ID", "INVALID_CUSTOMER");
+            }
+        }
+        
+        // Update host
+        host.Name = request.Name;
+        host.Hostname = request.Hostname;
+        host.Description = request.Description;
+        host.OsType = request.OsType;
+        host.OsVersion = request.OsVersion;
+        host.Category = request.Category;
+        host.Tags = request.Tags ?? Array.Empty<string>();
+        host.PrimaryIp = request.PrimaryIp;
+        host.PublicIp = request.PublicIp;
+        host.CustomerId = request.CustomerId;
+        host.LocationId = request.LocationId;
+        host.CheckIntervalSeconds = request.CheckIntervalSeconds;
+        host.MonitoringEnabled = request.MonitoringEnabled;
+        host.AlertOnDown = request.AlertOnDown;
+        host.AlertDelaySeconds = request.AlertDelaySeconds;
+        host.AlertOnHighCpu = request.AlertOnHighCpu;
+        host.AlertOnHighRam = request.AlertOnHighRam;
+        host.AlertOnHighDisk = request.AlertOnHighDisk;
+        host.CpuWarningThreshold = request.CpuWarningThreshold;
+        host.CpuCriticalThreshold = request.CpuCriticalThreshold;
+        host.RamWarningThreshold = request.RamWarningThreshold;
+        host.RamCriticalThreshold = request.RamCriticalThreshold;
+        host.DiskWarningThreshold = request.DiskWarningThreshold;
+        host.DiskCriticalThreshold = request.DiskCriticalThreshold;
+        host.Notes = request.Notes;
+        host.IsActive = request.IsActive;
+        
+        _unitOfWork.Hosts.Update(host);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogUpdateAsync(host, oldValues);
+        
+        return await GetByIdAsync(id, organizationId);
+    }
+    
+    public async Task DeleteAsync(Guid id, Guid organizationId)
+    {
+        var host = await _unitOfWork.Hosts.GetByIdAsync(id);
+        
+        if (host == null || host.OrganizationId != organizationId)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        // Soft delete
+        host.IsActive = false;
+        host.MonitoringEnabled = false;
+        
+        _unitOfWork.Hosts.Update(host);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogDeleteAsync(host);
+        
+        _logger.LogInformation("Host deleted: {HostName} ({HostId})", host.Name, host.Id);
+    }
+    
+    public async Task<string> RegenerateApiKeyAsync(Guid id, Guid organizationId)
+    {
+        var host = await _unitOfWork.Hosts.GetByIdAsync(id);
+        
+        if (host == null || host.OrganizationId != organizationId)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        var oldKey = host.ApiKey;
+        host.ApiKey = Host.GenerateApiKey();
+        
+        _unitOfWork.Hosts.Update(host);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogAsync(
+            "RegenerateApiKey",
+            "Host",
+            host.Id,
+            host.Name,
+            new { OldKeyPrefix = oldKey[..8] + "..." },
+            new { NewKeyPrefix = host.ApiKey[..8] + "..." },
+            organizationId: organizationId
+        );
+        
+        _logger.LogInformation("API key regenerated for host: {HostName}", host.Name);
+        
+        return host.ApiKey;
+    }
+    
+    public async Task<HostDetailDto> SetMaintenanceAsync(Guid id, Guid organizationId, SetMaintenanceRequest request)
+    {
+        var host = await _unitOfWork.Hosts.GetByIdAsync(id);
+        
+        if (host == null || host.OrganizationId != organizationId)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        var oldValues = new
+        {
+            host.MaintenanceMode,
+            host.MaintenanceStartAt,
+            host.MaintenanceEndAt,
+            host.MaintenanceReason
+        };
+        
+        host.MaintenanceMode = request.Enable;
+        host.MaintenanceStartAt = request.Enable ? (request.StartAt ?? DateTime.UtcNow) : null;
+        host.MaintenanceEndAt = request.Enable ? request.EndAt : null;
+        host.MaintenanceReason = request.Enable ? request.Reason : null;
+        
+        _unitOfWork.Hosts.Update(host);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogAsync(
+            request.Enable ? "MaintenanceEnabled" : "MaintenanceDisabled",
+            "Host",
+            host.Id,
+            host.Name,
+            oldValues,
+            new { host.MaintenanceMode, host.MaintenanceStartAt, host.MaintenanceEndAt, host.MaintenanceReason },
+            organizationId: organizationId
+        );
+        
+        _logger.LogInformation("Maintenance mode {Action} for host: {HostName}",
+            request.Enable ? "enabled" : "disabled", host.Name);
+        
+        return await GetByIdAsync(id, organizationId);
+    }
+    
+    public async Task<bool> ToggleMonitoringAsync(Guid id, Guid organizationId)
+    {
+        var host = await _unitOfWork.Hosts.GetByIdAsync(id);
+        
+        if (host == null || host.OrganizationId != organizationId)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        host.MonitoringEnabled = !host.MonitoringEnabled;
+        
+        _unitOfWork.Hosts.Update(host);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogAsync(
+            "ToggleMonitoring",
+            "Host",
+            host.Id,
+            host.Name,
+            newValues: new { host.MonitoringEnabled },
+            organizationId: organizationId
+        );
+        
+        return host.MonitoringEnabled;
+    }
+    
+    public async Task<HostMetricsDto> GetMetricsAsync(
+        Guid id, 
+        Guid organizationId, 
+        DateTime from, 
+        DateTime to, 
+        string interval = "5m")
+    {
+        var host = await _unitOfWork.Hosts.GetByIdAsync(id);
+        
+        if (host == null || host.OrganizationId != organizationId)
+        {
+            throw new NotFoundException($"Host with ID {id} not found");
+        }
+        
+        return await _metricRepository.GetMetricsHistoryAsync(id, from, to, interval);
+    }
+    
+    public async Task<Dictionary<StatusType, int>> GetStatusCountsAsync(Guid organizationId)
+    {
+        return await _unitOfWork.Hosts.GetStatusCountsAsync(organizationId);
+    }
+    
+    public async Task<List<HostListItemDto>> GetRecentlyDownAsync(Guid organizationId, int limit = 10)
+    {
+        return await _unitOfWork.Hosts.GetRecentlyDownAsync(organizationId, limit);
+    }
+    
+    public async Task<List<HostListItemDto>> GetHighResourceUsageAsync(Guid organizationId, int limit = 10)
+    {
+        return await _unitOfWork.Hosts.GetHighResourceUsageAsync(organizationId, 90, 90, limit);
+    }
+}
+ServiceMonitorService Implementation
+csharp// src/ERAMonitor.Infrastructure/Services/ServiceMonitorService.cs
+
+using Microsoft.Extensions.Logging;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Services;
+using ERAMonitor.Core.Enums;
+using ERAMonitor.Core.Exceptions;
+using ERAMonitor.Core.Interfaces.Repositories;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.Infrastructure.Services;
+
+public class ServiceMonitorService : IServiceMonitorService
+{
+    private readonly IServiceRepository _serviceRepository;
+    private readonly IServiceStatusHistoryRepository _statusHistoryRepository;
+    private readonly IAuditService _auditService;
+    private readonly ILogger<ServiceMonitorService> _logger;
+    
+    public ServiceMonitorService(
+        IServiceRepository serviceRepository,
+        IServiceStatusHistoryRepository statusHistoryRepository,
+        IAuditService auditService,
+        ILogger<ServiceMonitorService> logger)
+    {
+        _serviceRepository = serviceRepository;
+        _statusHistoryRepository = statusHistoryRepository;
+        _auditService = auditService;
+        _logger = logger;
+    }
+    
+    public async Task<PagedResponse<ServiceListItemDto>> GetPagedAsync(
+        Guid organizationId,
+        PagedRequest request,
+        Guid? hostId = null,
+        Guid? customerId = null,
+        ServiceType? serviceType = null,
+        StatusType? status = null)
+    {
+        return await _serviceRepository.GetPagedAsync(
+            organizationId,
+            request,
+            hostId,
+            customerId,
+            serviceType,
+            status
+        );
+    }
+    
+    public async Task<ServiceDetailDto> GetByIdAsync(Guid id)
+    {
+        var service = await _serviceRepository.GetDetailAsync(id);
+        
+        if (service == null)
+        {
+            throw new NotFoundException($"Service with ID {id} not found");
+        }
+        
+        return service;
+    }
+    
+    public async Task<ServiceDetailDto> UpdateAsync(Guid id, UpdateServiceRequest request)
+    {
+        var service = await _serviceRepository.GetByIdAsync(id);
+        
+        if (service == null)
+        {
+            throw new NotFoundException($"Service with ID {id} not found");
+        }
+        
+        var oldValues = new
+        {
+            service.DisplayName,
+            service.Description,
+            service.MonitoringEnabled,
+            service.AlertOnStop
+        };
+        
+        service.DisplayName = request.DisplayName ?? service.DisplayName;
+        service.Description = request.Description;
+        service.MonitoringEnabled = request.MonitoringEnabled;
+        service.AlertOnStop = request.AlertOnStop;
+        
+        _serviceRepository.Update(service);
+        await _serviceRepository.SaveChangesAsync();
+        
+        await _auditService.LogUpdateAsync(service, oldValues);
+        
+        return await GetByIdAsync(id);
+    }
+    
+    public async Task<bool> ToggleMonitoringAsync(Guid id)
+    {
+        var service = await _serviceRepository.GetByIdAsync(id);
+        
+        if (service == null)
+        {
+            throw new NotFoundException($"Service with ID {id} not found");
+        }
+        
+        service.MonitoringEnabled = !service.MonitoringEnabled;
+        
+        _serviceRepository.Update(service);
+        await _serviceRepository.SaveChangesAsync();
+        
+        await _auditService.LogAsync(
+            "ToggleMonitoring",
+            "Service",
+            service.Id,
+            service.DisplayName ?? service.ServiceName,
+            newValues: new { service.MonitoringEnabled }
+        );
+        
+        return service.MonitoringEnabled;
+    }
+    
+    public async Task<List<ServiceStatusHistoryDto>> GetStatusHistoryAsync(Guid id, DateTime from, DateTime to)
+    {
+        var service = await _serviceRepository.GetByIdAsync(id);
+        
+        if (service == null)
+        {
+            throw new NotFoundException($"Service with ID {id} not found");
+        }
+        
+        var history = await _statusHistoryRepository.GetByServiceAsync(id, from, to);
+        
+        return history.Select(h => new ServiceStatusHistoryDto
+        {
+            Status = h.Status,
+            Message = h.Message,
+            RecordedAt = h.RecordedAt
+        }).ToList();
+    }
+    
+    public async Task<Dictionary<StatusType, int>> GetStatusCountsAsync(Guid organizationId)
+    {
+        return await _serviceRepository.GetStatusCountsAsync(organizationId);
+    }
+    
+    public async Task<Dictionary<ServiceType, int>> GetCountsByTypeAsync(Guid organizationId)
+    {
+        return await _serviceRepository.GetCountsByTypeAsync(organizationId);
+    }
+}
+
+3.7 Controllers
+AgentController
+csharp// src/ERAMonitor.API/Controllers/AgentController.cs
+
+using Microsoft.AspNetCore.Mvc;
+using ERAMonitor.Core.DTOs.Agent;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AgentController : ControllerBase
+{
+    private readonly IHeartbeatService _heartbeatService;
+    private readonly ILogger<AgentController> _logger;
+    
+    private const string API_KEY_HEADER = "X-API-Key";
+    
+    public AgentController(IHeartbeatService heartbeatService, ILogger<AgentController> logger)
+    {
+        _heartbeatService = heartbeatService;
+        _logger = logger;
+    }
+    
+    /// <summary>
+    /// Receive heartbeat from monitoring agent
+    /// </summary>
+    /// <remarks>
+    /// Agents should send heartbeats at regular intervals (default 60 seconds).
+    /// The heartbeat contains system metrics, disk usage, and service status information.
+    /// </remarks>
+    [HttpPost("heartbeat")]
+    [ProducesResponseType(typeof(HeartbeatResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<HeartbeatResponse>> Heartbeat([FromBody] HeartbeatRequest request)
+    {
+        // Get API key from header
+        if (!Request.Headers.TryGetValue(API_KEY_HEADER, out var apiKeyHeader))
+        {
+            return Unauthorized(new ErrorResponse
+            {
+                Code = "MISSING_API_KEY",
+                Message = "X-API-Key header is required"
+            });
+        }
+        
+        var apiKey = apiKeyHeader.ToString();
+        
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            return Unauthorized(new ErrorResponse
+            {
+                Code = "INVALID_API_KEY",
+                Message = "API key cannot be empty"
+            });
+        }
+        
+        try
+        {
+            var response = await _heartbeatService.ProcessHeartbeatAsync(apiKey, request);
+            return Ok(response);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogWarning("Unauthorized heartbeat attempt: {Message}", ex.Message);
+            return Unauthorized(new ErrorResponse
+            {
+                Code = "UNAUTHORIZED",
+                Message = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing heartbeat");
+            return BadRequest(new ErrorResponse
+            {
+                Code = "HEARTBEAT_ERROR",
+                Message = "Error processing heartbeat"
+            });
+        }
+    }
+    
+    /// <summary>
+    /// Get agent configuration and commands
+    /// </summary>
+    [HttpGet("config")]
+    [ProducesResponseType(typeof(AgentConfigResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<AgentConfigResponse>> GetConfig()
+    {
+        if (!Request.Headers.TryGetValue(API_KEY_HEADER, out var apiKeyHeader))
+        {
+            return Unauthorized();
+        }
+        
+        // Return configuration for the agent
+        // This could include check interval, which services to monitor, etc.
+        return Ok(new AgentConfigResponse
+        {
+            CheckIntervalSeconds = 60,
+            // Add other configuration options
+        });
+    }
+}
+
+public class AgentConfigResponse
+{
+    public int CheckIntervalSeconds { get; set; }
+    public bool CollectCpu { get; set; } = true;
+    public bool CollectRam { get; set; } = true;
+    public bool CollectDisk { get; set; } = true;
+    public bool CollectNetwork { get; set; } = false;
+    public bool CollectServices { get; set; } = true;
+    public List<string>? ServicesToMonitor { get; set; }
+}
+HostsController
+csharp// src/ERAMonitor.API/Controllers/HostsController.cs
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Hosts;
+using ERAMonitor.Core.Enums;
+using ERAMonitor.Core.Interfaces.Services;
+using ERAMonitor.API.Extensions;
+
+namespace ERAMonitor.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class HostsController : ControllerBase
+{
+    private readonly IHostService _hostService;
+    private readonly ILogger<HostsController> _logger;
+    
+    public HostsController(IHostService hostService, ILogger<HostsController> logger)
+    {
+        _hostService = hostService;
+        _logger = logger;
+    }
+    
+    /// <summary>
+    /// Get paginated list of hosts
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResponse<HostListItemDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<HostListItemDto>>> GetHosts(
+        [FromQuery] PagedRequest request,
+        [FromQuery] StatusType? status = null,
+        [FromQuery] Guid? customerId = null,
+        [FromQuery] Guid? locationId = null,
+        [FromQuery] OsType? osType = null,
+        [FromQuery] string[]? tags = null)
+    {
+        var organizationId = User.GetOrganizationId();
+        var result = await _hostService.GetPagedAsync(
+            organizationId,
+            request,
+            status,
+            customerId,
+            locationId,
+            osType,
+            tags
+        );
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Get host by ID
+    /// </summary>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(HostDetailDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<HostDetailDto>> GetHost(Guid id)
+    {
+        var organizationId = User.GetOrganizationId();
+        var host = await _hostService.GetByIdAsync(id, organizationId);
+        return Ok(host);
+    }
+    
+    /// <summary>
+    /// Create new host
+    /// </summary>
+    [HttpPost]
+    [Authorize(Policy = "RequireAdminRole")]
+    [ProducesResponseType(typeof(HostDetailDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<HostDetailDto>> CreateHost([FromBody] CreateHostRequest request)
+    {
+        var organizationId = User.GetOrganizationId();
+        var host = await _hostService.CreateAsync(organizationId, request);
+        return CreatedAtAction(nameof(GetHost), new { id = host.Id }, host);
+    }
+    
+    /// <summary>
+    /// Update host
+    /// </summary>
+    [HttpPut("{id}")]
+    [Authorize(Policy = "RequireAdminRole")]
+    [ProducesResponseType(typeof(HostDetailDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<HostDetailDto>> UpdateHost(Guid id, [FromBody] UpdateHostRequest request)
+    {
+        var organizationId = User.GetOrganizationId();RetryRDContinue    var host = await _hostService.UpdateAsync(id, organizationId, request);
+    return Ok(host);
+}
+
+/// <summary>
+/// Delete host
+/// </summary>
+[HttpDelete("{id}")]
+[Authorize(Policy = "RequireAdminRole")]
+[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<ActionResult<ApiResponse>> DeleteHost(Guid id)
+{
+    var organizationId = User.GetOrganizationId();
+    await _hostService.DeleteAsync(id, organizationId);
+    return Ok(ApiResponse.Ok("Host deleted successfully"));
+}
+
+/// <summary>
+/// Regenerate host API key
+/// </summary>
+[HttpPost("{id}/regenerate-api-key")]
+[Authorize(Policy = "RequireAdminRole")]
+[ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+public async Task<ActionResult<ApiResponse<string>>> RegenerateApiKey(Guid id)
+{
+    var organizationId = User.GetOrganizationId();
+    var newApiKey = await _hostService.RegenerateApiKeyAsync(id, organizationId);
+    return Ok(ApiResponse<string>.Ok(newApiKey, "API key regenerated. Please update the agent configuration."));
+}
+
+/// <summary>
+/// Set maintenance mode
+/// </summary>
+[HttpPost("{id}/maintenance")]
+[Authorize(Policy = "RequireOperatorRole")]
+[ProducesResponseType(typeof(HostDetailDto), StatusCodes.Status200OK)]
+public async Task<ActionResult<HostDetailDto>> SetMaintenance(Guid id, [FromBody] SetMaintenanceRequest request)
+{
+    var organizationId = User.GetOrganizationId();
+    var host = await _hostService.SetMaintenanceAsync(id, organizationId, request);
+    return Ok(host);
+}
+
+/// <summary>
+/// Toggle monitoring enabled
+/// </summary>
+[HttpPost("{id}/toggle-monitoring")]
+[Authorize(Policy = "RequireOperatorRole")]
+[ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+public async Task<ActionResult<ApiResponse<bool>>> ToggleMonitoring(Guid id)
+{
+    var organizationId = User.GetOrganizationId();
+    var isEnabled = await _hostService.ToggleMonitoringAsync(id, organizationId);
+    return Ok(ApiResponse<bool>.Ok(isEnabled, isEnabled ? "Monitoring enabled" : "Monitoring disabled"));
+}
+
+/// <summary>
+/// Get host metrics history
+/// </summary>
+[HttpGet("{id}/metrics")]
+[ProducesResponseType(typeof(HostMetricsDto), StatusCodes.Status200OK)]
+public async Task<ActionResult<HostMetricsDto>> GetMetrics(
+    Guid id,
+    [FromQuery] DateTime? from = null,
+    [FromQuery] DateTime? to = null,
+    [FromQuery] string interval = "5m")
+{
+    var organizationId = User.GetOrganizationId();
+    var fromDate = from ?? DateTime.UtcNow.AddHours(-24);
+    var toDate = to ?? DateTime.UtcNow;
+    
+    var metrics = await _hostService.GetMetricsAsync(id, organizationId, fromDate, toDate, interval);
+    return Ok(metrics);
+}
+
+/// <summary>
+/// Get host status counts for dashboard
+/// </summary>
+[HttpGet("status-counts")]
+[ProducesResponseType(typeof(Dictionary<string, int>), StatusCodes.Status200OK)]
+public async Task<ActionResult<Dictionary<string, int>>> GetStatusCounts()
+{
+    var organizationId = User.GetOrganizationId();
+    var counts = await _hostService.GetStatusCountsAsync(organizationId);
+    return Ok(counts.ToDictionary(k => k.Key.ToString(), v => v.Value));
+}
+
+/// <summary>
+/// Get recently down hosts
+/// </summary>
+[HttpGet("recently-down")]
+[ProducesResponseType(typeof(List<HostListItemDto>), StatusCodes.Status200OK)]
+public async Task<ActionResult<List<HostListItemDto>>> GetRecentlyDown([FromQuery] int limit = 10)
+{
+    var organizationId = User.GetOrganizationId();
+    var hosts = await _hostService.GetRecentlyDownAsync(organizationId, limit);
+    return Ok(hosts);
+}
+
+/// <summary>
+/// Get hosts with high resource usage
+/// </summary>
+[HttpGet("high-usage")]
+[ProducesResponseType(typeof(List<HostListItemDto>), StatusCodes.Status200OK)]
+public async Task<ActionResult<List<HostListItemDto>>> GetHighResourceUsage([FromQuery] int limit = 10)
+{
+    var organizationId = User.GetOrganizationId();
+    var hosts = await _hostService.GetHighResourceUsageAsync(organizationId, limit);
+    return Ok(hosts);
+}
+}
+
+### ServicesController
+```csharp
+// src/ERAMonitor.API/Controllers/ServicesController.cs
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ERAMonitor.Core.DTOs.Common;
+using ERAMonitor.Core.DTOs.Services;
+using ERAMonitor.Core.Enums;
+using ERAMonitor.Core.Interfaces.Services;
+using ERAMonitor.API.Extensions;
+
+namespace ERAMonitor.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class ServicesController : ControllerBase
+{
+    private readonly IServiceMonitorService _serviceMonitorService;
+    private readonly ILogger<ServicesController> _logger;
+    
+    public ServicesController(
+        IServiceMonitorService serviceMonitorService, 
+        ILogger<ServicesController> logger)
+    {
+        _serviceMonitorService = serviceMonitorService;
+        _logger = logger;
+    }
+    
+    /// <summary>
+    /// Get paginated list of services
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(PagedResponse<ServiceListItemDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<ServiceListItemDto>>> GetServices(
+        [FromQuery] PagedRequest request,
+        [FromQuery] Guid? hostId = null,
+        [FromQuery] Guid? customerId = null,
+        [FromQuery] ServiceType? serviceType = null,
+        [FromQuery] StatusType? status = null)
+    {
+        var organizationId = User.GetOrganizationId();
+        var result = await _serviceMonitorService.GetPagedAsync(
+            organizationId,
+            request,
+            hostId,
+            customerId,
+            serviceType,
+            status
+        );
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Get service by ID
+    /// </summary>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(ServiceDetailDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ServiceDetailDto>> GetService(Guid id)
+    {
+        var service = await _serviceMonitorService.GetByIdAsync(id);
+        return Ok(service);
+    }
+    
+    /// <summary>
+    /// Update service monitoring settings
+    /// </summary>
+    [HttpPut("{id}")]
+    [Authorize(Policy = "RequireOperatorRole")]
+    [ProducesResponseType(typeof(ServiceDetailDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ServiceDetailDto>> UpdateService(Guid id, [FromBody] UpdateServiceRequest request)
+    {
+        var service = await _serviceMonitorService.UpdateAsync(id, request);
+        return Ok(service);
+    }
+    
+    /// <summary>
+    /// Toggle service monitoring
+    /// </summary>
+    [HttpPost("{id}/toggle-monitoring")]
+    [Authorize(Policy = "RequireOperatorRole")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<bool>>> ToggleMonitoring(Guid id)
+    {
+        var isEnabled = await _serviceMonitorService.ToggleMonitoringAsync(id);
+        return Ok(ApiResponse<bool>.Ok(isEnabled, isEnabled ? "Monitoring enabled" : "Monitoring disabled"));
+    }
+    
+    /// <summary>
+    /// Get service status history
+    /// </summary>
+    [HttpGet("{id}/history")]
+    [ProducesResponseType(typeof(List<ServiceStatusHistoryDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ServiceStatusHistoryDto>>> GetStatusHistory(
+        Guid id,
+        [FromQuery] DateTime? from = null,
+        [FromQuery] DateTime? to = null)
+    {
+        var fromDate = from ?? DateTime.UtcNow.AddDays(-7);
+        var toDate = to ?? DateTime.UtcNow;
+        
+        var history = await _serviceMonitorService.GetStatusHistoryAsync(id, fromDate, toDate);
+        return Ok(history);
+    }
+    
+    /// <summary>
+    /// Get service status counts
+    /// </summary>
+    [HttpGet("status-counts")]
+    [ProducesResponseType(typeof(Dictionary<string, int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Dictionary<string, int>>> GetStatusCounts()
+    {
+        var organizationId = User.GetOrganizationId();
+        var counts = await _serviceMonitorService.GetStatusCountsAsync(organizationId);
+        return Ok(counts.ToDictionary(k => k.Key.ToString(), v => v.Value));
+    }
+    
+    /// <summary>
+    /// Get service counts by type
+    /// </summary>
+    [HttpGet("type-counts")]
+    [ProducesResponseType(typeof(Dictionary<string, int>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Dictionary<string, int>>> GetTypeCounts()
+    {
+        var organizationId = User.GetOrganizationId();
+        var counts = await _serviceMonitorService.GetCountsByTypeAsync(organizationId);
+        return Ok(counts.ToDictionary(k => k.Key.ToString(), v => v.Value));
+    }
+}
+```
+
+---
+
+## 3.8 Background Jobs
+
+### HostDownDetectorJob
+```csharp
+// src/ERAMonitor.BackgroundJobs/Jobs/HostDownDetectorJob.cs
+
+using Hangfire;
+using Microsoft.Extensions.Logging;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.BackgroundJobs.Jobs;
+
+public class HostDownDetectorJob
+{
+    private readonly IHeartbeatService _heartbeatService;
+    private readonly ILogger<HostDownDetectorJob> _logger;
+    
+    public HostDownDetectorJob(
+        IHeartbeatService heartbeatService,
+        ILogger<HostDownDetectorJob> logger)
+    {
+        _heartbeatService = heartbeatService;
+        _logger = logger;
+    }
+    
+    [DisableConcurrentExecution(timeoutInSeconds: 60)]
+    [AutomaticRetry(Attempts = 0)]
+    public async Task ExecuteAsync()
+    {
+        _logger.LogDebug("Running host down detection...");
+        
+        try
+        {
+            await _heartbeatService.ProcessHostDownDetectionAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during host down detection");
+            throw;
+        }
+    }
+}
+```
+
+### MaintenanceExpirationJob
+```csharp
+// src/ERAMonitor.BackgroundJobs/Jobs/MaintenanceExpirationJob.cs
+
+using Hangfire;
+using Microsoft.Extensions.Logging;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.BackgroundJobs.Jobs;
+
+public class MaintenanceExpirationJob
+{
+    private readonly IHeartbeatService _heartbeatService;
+    private readonly ILogger<MaintenanceExpirationJob> _logger;
+    
+    public MaintenanceExpirationJob(
+        IHeartbeatService heartbeatService,
+        ILogger<MaintenanceExpirationJob> logger)
+    {
+        _heartbeatService = heartbeatService;
+        _logger = logger;
+    }
+    
+    [DisableConcurrentExecution(timeoutInSeconds: 60)]
+    [AutomaticRetry(Attempts = 2)]
+    public async Task ExecuteAsync()
+    {
+        _logger.LogDebug("Checking for expired maintenance windows...");
+        
+        try
+        {
+            await _heartbeatService.ProcessMaintenanceExpirationAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing maintenance expiration");
+            throw;
+        }
+    }
+}
+```
+
+### MetricsCleanupJob
+```csharp
+// src/ERAMonitor.BackgroundJobs/Jobs/MetricsCleanupJob.cs
+
+using Hangfire;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ERAMonitor.API.Configuration;
+using ERAMonitor.Core.Interfaces.Repositories;
+
+namespace ERAMonitor.BackgroundJobs.Jobs;
+
+public class MetricsCleanupJob
+{
+    private readonly IHostMetricRepository _metricRepository;
+    private readonly IServiceStatusHistoryRepository _statusHistoryRepository;
+    private readonly MonitoringSettings _settings;
+    private readonly ILogger<MetricsCleanupJob> _logger;
+    
+    public MetricsCleanupJob(
+        IHostMetricRepository metricRepository,
+        IServiceStatusHistoryRepository statusHistoryRepository,
+        IOptions<MonitoringSettings> settings,
+        ILogger<MetricsCleanupJob> logger)
+    {
+        _metricRepository = metricRepository;
+        _statusHistoryRepository = statusHistoryRepository;
+        _settings = settings.Value;
+        _logger = logger;
+    }
+    
+    [DisableConcurrentExecution(timeoutInSeconds: 300)]
+    [AutomaticRetry(Attempts = 1)]
+    public async Task ExecuteAsync()
+    {
+        _logger.LogInformation("Starting metrics cleanup job...");
+        
+        try
+        {
+            // Delete old host metrics
+            var metricsDeleted = await _metricRepository.DeleteOlderThanAsync(_settings.MetricsRetentionDays);
+            _logger.LogInformation("Deleted {Count} old host metrics", metricsDeleted);
+            
+            // Delete old service status history
+            var historyDeleted = await _statusHistoryRepository.DeleteOlderThanAsync(_settings.MetricsRetentionDays);
+            _logger.LogInformation("Deleted {Count} old service status history records", historyDeleted);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during metrics cleanup");
+            throw;
+        }
+    }
+}
+```
+
+### Job Registration
+```csharp
+// src/ERAMonitor.BackgroundJobs/Services/JobRegistrationService.cs
+
+using Hangfire;
+using Microsoft.Extensions.Logging;
+using ERAMonitor.BackgroundJobs.Jobs;
+using ERAMonitor.Core.Interfaces.Services;
+
+namespace ERAMonitor.BackgroundJobs.Services;
+
+public interface IJobRegistrationService
+{
+    void RegisterRecurringJobs();
+}
+
+public class JobRegistrationService : IJobRegistrationService
+{
+    private readonly ILogger<JobRegistrationService> _logger;
+    
+    public JobRegistrationService(ILogger<JobRegistrationService> logger)
+    {
+        _logger = logger;
+    }
+    
+    public void RegisterRecurringJobs()
+    {
+        _logger.LogInformation("Registering recurring background jobs...");
+        
+        // Host down detection - every 30 seconds
+        RecurringJob.AddOrUpdate<HostDownDetectorJob>(
+            "host-down-detector",
+            job => job.ExecuteAsync(),
+            "*/30 * * * * *" // Every 30 seconds
+        );
+        
+        // Maintenance expiration check - every minute
+        RecurringJob.AddOrUpdate<MaintenanceExpirationJob>(
+            "maintenance-expiration",
+            job => job.ExecuteAsync(),
+            "* * * * *" // Every minute
+        );
+        
+        // Metrics cleanup - daily at 3 AM
+        RecurringJob.AddOrUpdate<MetricsCleanupJob>(
+            "metrics-cleanup",
+            job => job.ExecuteAsync(),
+            "0 3 * * *" // Daily at 3:00 AM
+        );
+        
+        // HTTP checks - will be added in Phase 4
+        // RecurringJob.AddOrUpdate<HttpCheckerJob>(...)
+        
+        // Notification retry - every 5 minutes
+        RecurringJob.AddOrUpdate<NotificationRetryJob>(
+            "notification-retry",
+            job => job.ExecuteAsync(),
+            "*/5 * * * *" // Every 5 minutes
+        );
+        
+        _logger.LogInformation("Background jobs registered successfully");
+    }
+}
+```
+
+---
+
+## 3.9 Configuration
+```csharp
+// src/ERAMonitor.API/Configuration/MonitoringSettings.cs
+
+namespace ERAMonitor.API.Configuration;
+
+public class MonitoringSettings
+{
+    public int DefaultCheckIntervalSeconds { get; set; } = 60;
+    public int HostDownThresholdSeconds { get; set; } = 90;
+    public int MetricsRetentionDays { get; set; } = 30;
+    public int CheckResultsRetentionDays { get; set; } = 30;
+    public int MaxMetricsPerHost { get; set; } = 10000;
+}
+```
+
+---
+
+## 3.10 Phase 3 Checklist
+```markdown
+# Phase 3 Completion Checklist
+
+## Entities
+- [ ] Host entity with all properties and helper methods
+- [ ] HostDisk entity for disk monitoring
+- [ ] HostMetric entity for time series metrics
+- [ ] Service entity with type-specific config
+- [ ] ServiceStatusHistory entity
+
+## DTOs
+Host DTOs:
+- [ ] HostDto, HostListItemDto, HostDetailDto
+- [ ] CreateHostRequest, UpdateHostRequest
+- [ ] HostMetricsDto with data points
+- [ ] SetMaintenanceRequest
+- [ ] HostCurrentMetricsDto, HostThresholdsDto, HostStatisticsDto
+
+Agent DTOs:
+- [ ] HeartbeatRequest with SystemInfo, DiskInfo, ServiceInfo
+- [ ] HeartbeatResponse with commands
+- [ ] AgentConfigResponse
+
+Service DTOs:
+- [ ] ServiceDto, ServiceListItemDto, ServiceDetailDto
+- [ ] UpdateServiceRequest
+- [ ] ServiceStatusHistoryDto
+
+## Repositories
+- [ ] IHostRepository with paged queries and status filters
+- [ ] IHostMetricRepository for time series
+- [ ] IHostDiskRepository for disk upserts
+- [ ] IServiceRepository with service filters
+- [ ] IServiceStatusHistoryRepository
+
+## Services
+- [ ] IHostService with full CRUD and metrics
+- [ ] IHeartbeatService for agent communication
+- [ ] IServiceMonitorService for service management
+
+## Controllers
+- [ ] AgentController for heartbeat endpoint
+- [ ] HostsController with CRUD and actions
+- [ ] ServicesController with monitoring settings
+
+## Background Jobs
+- [ ] HostDownDetectorJob (every 30 seconds)
+- [ ] MaintenanceExpirationJob (every minute)
+- [ ] MetricsCleanupJob (daily at 3 AM)
+- [ ] JobRegistrationService
+
+## SignalR Integration
+- [ ] Host status updates broadcast
+- [ ] Service status updates broadcast
+
+## API Endpoints
+
+Agent:
+- [ ] POST /api/agent/heartbeat
+- [ ] GET /api/agent/config
+
+Hosts:
+- [ ] GET /api/hosts
+- [ ] GET /api/hosts/{id}
+- [ ] POST /api/hosts
+- [ ] PUT /api/hosts/{id}
+- [ ] DELETE /api/hosts/{id}
+- [ ] POST /api/hosts/{id}/regenerate-api-key
+- [ ] POST /api/hosts/{id}/maintenance
+- [ ] POST /api/hosts/{id}/toggle-monitoring
+- [ ] GET /api/hosts/{id}/metrics
+- [ ] GET /api/hosts/status-counts
+- [ ] GET /api/hosts/recently-down
+- [ ] GET /api/hosts/high-usage
+
+Services:
+- [ ] GET /api/services
+- [ ] GET /api/services/{id}
+- [ ] PUT /api/services/{id}
+- [ ] POST /api/services/{id}/toggle-monitoring
+- [ ] GET /api/services/{id}/history
+- [ ] GET /api/services/status-counts
+- [ ] GET /api/services/type-counts
+
+## Testing
+- [ ] HeartbeatService unit tests
+- [ ] HostService unit tests
+- [ ] Agent endpoint integration tests
+- [ ] Background job tests
+```

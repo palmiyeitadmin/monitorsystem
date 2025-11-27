@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Notification History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38bdf8", // Sky 400 - Updated from user request
+              "background-light": "#f6f7f8",
+              "background-dark": "#0f172a", // Slate 900
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-row">
+<!-- SideNavBar -->
+<aside class="flex h-screen w-64 flex-col border-r border-slate-800 bg-background-dark p-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<span class="material-symbols-outlined text-primary text-3xl">monitor_heart</span>
+<h2 class="text-slate-50 text-xl font-bold">ERA Monitor</h2>
+</div>
+<div class="mt-8 flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 rounded-md px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-50" href="#">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-md px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-50" href="#">
+<span class="material-symbols-outlined text-2xl">database</span>
+<p class="text-sm font-medium">Services</p>
+</a>
+<a class="flex items-center gap-3 rounded-md px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-50" href="#">
+<span class="material-symbols-outlined text-2xl">warning</span>
+<p class="text-sm font-medium">Incidents</p>
+</a>
+<a class="flex items-center gap-3 rounded-md bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<p class="text-sm font-medium">Notifications</p>
+</a>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-4">
+<div class="flex flex-col gap-2 border-t border-slate-800 pt-4">
+<div class="flex items-center gap-3 rounded-md px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with abstract background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCWZq-tJj2s56gRRwJpvlFaI8cDx60WERspec8ioUQkvzg6_7FX5U3BRKJ36kB5_NMQ0SsnYM5smjVOUkLtNV3I8p0rcdHDnsTSyf0pBLgxbcsEUd_TyNgUTo4aFiZVnLKfM1ekIVR_AHdAygCGfuh0EvXWsu-QdpGV77nYoIsoKOMEiwjWAuhLcdYkUIhYnb1QVUfHJaqJxgZeWaiI7mkCI8lA7wkY7pxyk89Ic76OLd9HSJ6SyJ-tg4BRyYfG21H4OBLOJHK99WM");'></div>
+<div class="flex flex-col">
+<h1 class="text-slate-50 text-sm font-medium">John Doe</h1>
+<p class="text-slate-400 text-xs">john.doe@customer.com</p>
+</div>
+</div>
+<a class="flex items-center gap-3 rounded-md px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-50" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</a>
+<a class="flex items-center gap-3 rounded-md px-3 py-2 text-slate-400 hover:bg-slate-800 hover:text-slate-50" href="#">
+<span class="material-symbols-outlined text-2xl">logout</span>
+<p class="text-sm font-medium">Logout</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto">
+<div class="p-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-slate-50 text-3xl font-bold tracking-tight">My Notification History</p>
+<p class="text-slate-400 text-base">View all alerts and notifications related to your resources and their delivery status</p>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-6">
+<!-- Filters Row (Chips) -->
+<div class="flex flex-wrap items-center gap-3">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-slate-800 pl-3 pr-2 text-sm font-medium text-slate-300 hover:bg-slate-700">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span>Date Range: Last 24 hours</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-slate-800 pl-3 pr-2 text-sm font-medium text-slate-300 hover:bg-slate-700">
+<span class="material-symbols-outlined text-lg">send</span>
+<span>Channel: All</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-slate-800 pl-3 pr-2 text-sm font-medium text-slate-300 hover:bg-slate-700">
+<span class="material-symbols-outlined text-lg">task_alt</span>
+<span>Status: All</span>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<div class="relative flex-1 min-w-[200px]">
+<span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="h-9 w-full rounded-lg border-0 bg-slate-800 pl-10 text-sm text-slate-300 placeholder-slate-500 focus:ring-2 focus:ring-inset focus:ring-primary" placeholder="Search by Incident ID" type="text"/>
+</div>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<div class="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-800/50 p-4">
+<p class="text-sm font-medium text-slate-400">Total Sent (24h)</p>
+<p class="text-3xl font-bold text-slate-50">1,234</p>
+</div>
+<div class="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-800/50 p-4">
+<p class="text-sm font-medium text-slate-400">Delivered</p>
+<p class="text-3xl font-bold text-slate-50 text-green-400">1,200</p>
+</div>
+<div class="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-800/50 p-4">
+<p class="text-sm font-medium text-slate-400">Failed</p>
+<p class="text-3xl font-bold text-slate-50 text-red-400">14</p>
+</div>
+<div class="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-800/50 p-4">
+<p class="text-sm font-medium text-slate-400">Pending</p>
+<p class="text-3xl font-bold text-slate-50 text-amber-400">20</p>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-hidden rounded-lg border border-slate-800 bg-slate-800/50">
+<table class="min-w-full divide-y divide-slate-800">
+<thead class="bg-slate-800/70">
+<tr>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400" scope="col">Time</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400" scope="col">Channel</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400" scope="col">Recipient</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400" scope="col">Subject/Message</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400" scope="col">Related To</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400" scope="col">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800">
+<tr class="hover:bg-slate-800/60 cursor-pointer">
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">2023-10-27 10:05 AM</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Email</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">user@example.com</td>
+<td class="px-4 py-4 text-sm font-medium text-slate-50">CRITICAL: High CPU Usage on Server-01</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Incident #5821</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">
+<div class="inline-flex items-center gap-x-1.5 rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Delivered
+                                        </div>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/60 cursor-pointer">
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">2023-10-27 10:02 AM</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">SMS</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">+15551234567</td>
+<td class="px-4 py-4 text-sm font-medium text-slate-50">CRITICAL: High CPU Usage on Server-01</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Incident #5821</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">
+<div class="inline-flex items-center gap-x-1.5 rounded-full bg-red-500/10 px-2 py-1 text-xs font-medium text-red-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">cancel</span> Failed
+                                        </div>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/60 cursor-pointer">
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">2023-10-27 09:58 AM</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Webhook</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">https://hooks.slack.com/...</td>
+<td class="px-4 py-4 text-sm font-medium text-slate-50">Service 'API-Gateway' is down.</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Incident #5820</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">
+<div class="inline-flex items-center gap-x-1.5 rounded-full bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-400">
+<span class="material-symbols-outlined text-sm">hourglass_top</span> Pending
+                                        </div>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/60 cursor-pointer">
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">2023-10-27 09:45 AM</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Telegram</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">@johndoe</td>
+<td class="px-4 py-4 text-sm font-medium text-slate-50">WARNING: Disk space on DB-03 is at 85%</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">Incident #5819</td>
+<td class="whitespace-nowrap px-4 py-4 text-sm text-slate-400">
+<div class="inline-flex items-center gap-x-1.5 rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Delivered
+                                        </div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Empty State -->
+<!-- 
+                        <div class="flex flex-col items-center justify-center gap-4 py-20 text-center">
+                            <span class="material-symbols-outlined text-6xl text-slate-600">notifications</span>
+                            <h3 class="text-xl font-semibold text-slate-50">No notifications sent to you yet</h3>
+                            <p class="max-w-xs text-slate-400">When an alert is triggered for your resources, you'll see the notification history here.</p>
+                        </div>
+                        -->
+</div>
+</div>
+</div>
+</main>
+<!-- Notification Detail Panel (Slide-over) -->
+<!-- For demonstration, this is visible. In a real app, it would be hidden and toggled with JS -->
+<div class="absolute inset-y-0 right-0 flex max-w-full">
+<div class="relative w-screen max-w-md">
+<div class="flex h-full flex-col overflow-y-scroll border-l border-slate-800 bg-background-dark shadow-xl">
+<div class="p-6">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-2xl text-primary">mail</span>
+<h2 class="text-lg font-medium text-slate-50">Email Notification</h2>
+</div>
+<button class="rounded-md text-slate-400 hover:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary" type="button">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="mt-2 flex items-center gap-4">
+<div class="inline-flex items-center gap-x-1.5 rounded-full bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Delivered
+                            </div>
+<p class="text-sm text-slate-400">2023-10-27 10:05:12 AM</p>
+</div>
+</div>
+<div class="relative mt-2 flex-1 px-6">
+<div class="flex flex-col gap-6">
+<div>
+<h3 class="font-medium text-slate-300">Delivery Information</h3>
+<dl class="mt-2 divide-y divide-slate-800 border-y border-slate-800">
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Recipient</dt>
+<dd class="text-slate-300">user@example.com</dd>
+</div>
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Subject</dt>
+<dd class="text-slate-300">CRITICAL: High CPU Usage</dd>
+</div>
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Sent At</dt>
+<dd class="text-slate-300">10:05:10 AM</dd>
+</div>
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Delivered At</dt>
+<dd class="text-slate-300">10:05:12 AM</dd>
+</div>
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Message ID</dt>
+<dd class="text-slate-300 truncate">f4a2...c3b1</dd>
+</div>
+</dl>
+</div>
+<div>
+<h3 class="font-medium text-slate-300">Content Preview</h3>
+<div class="mt-2 rounded-lg border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-300">
+<p><strong>Alert:</strong> CRITICAL</p>
+<p><strong>Resource:</strong> Server-01</p>
+<p><strong>Metric:</strong> CPU Usage</p>
+<p><strong>Value:</strong> 98.5%</p>
+<p class="mt-2">The CPU usage on Server-01 has exceeded the critical threshold of 95%.</p>
+</div>
+</div>
+<div>
+<h3 class="font-medium text-slate-300">Related Information</h3>
+<dl class="mt-2 divide-y divide-slate-800 border-y border-slate-800">
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Incident</dt>
+<dd><a class="text-primary hover:underline" href="#">#5821</a></dd>
+</div>
+<div class="flex justify-between py-3 text-sm">
+<dt class="text-slate-400">Notification Rule</dt>
+<dd class="text-slate-300">Critical CPU Alerts</dd>
+</div>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

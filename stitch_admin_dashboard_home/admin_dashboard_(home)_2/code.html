@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0F172A", // Updated dark mode background
+                        "surface-dark": "#1E293B",
+                        "border-dark": "#334155",
+                        "text-light": "#1E293B",
+                        "text-dark": "#E2E8F0",
+                        "text-muted-light": "#64748B",
+                        "text-muted-dark": "#94A3B8",
+                        "success": "#10B981",
+                        "danger": "#EF4444",
+                        "warning": "#F59E0B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-light);
+        }
+        .dark body {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-gray-200 dark:border-border-dark px-6 sm:px-10 py-4 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-50">
+<div class="flex items-center gap-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-text-light dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">ERA Monitor</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-center items-center gap-8">
+<a class="text-primary text-sm font-bold leading-normal border-b-2 border-primary pb-1" href="#">Dashboard</a>
+<a class="text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white text-sm font-medium leading-normal" href="#">Hosts</a>
+<a class="text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white text-sm font-medium leading-normal" href="#">Incidents</a>
+<a class="text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-white text-sm font-medium leading-normal" href="#">Settings</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white dark:text-background-dark text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Add New Monitor</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-gray-100 dark:bg-surface-dark text-text-muted-light dark:text-text-muted-dark hover:bg-gray-200 dark:hover:bg-border-dark gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="relative" x-data="{ open: false }">
+<button @click="open = !open" class="flex items-center gap-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvpmsqvYFfWkGljIEqfNXpEIthh45S3OG32Y55vtFCIFd_OTftjps5QbKdgD3Fz-ELDoC-yTuEOojCimS_Jikz_Ig7ToNL9fyZ3-f6hmy_6EYpG7Tn3lBO-RBaoZCQc5JayKH78VEFcrMGYALcvDb6QdKs2TjTMRgxajJ1rRppTuqWsqRE8xE4lpRI_PbUTUPSZ_doEWIJiZ_B26oePToJte9rrQeJ-YBYrClFXMLN1gXSNVhCmpRiuL7Va9sRCEU5XUnUhJ5qxsM");'></div>
+</button>
+</div>
+<button class="flex items-center justify-center size-10 rounded-lg bg-gray-100 dark:bg-surface-dark text-text-muted-light dark:text-text-muted-dark hover:bg-gray-200 dark:hover:bg-border-dark" onclick="toggleTheme()">
+<span class="material-symbols-outlined text-xl block dark:hidden">light_mode</span>
+<span class="material-symbols-outlined text-xl hidden dark:block">dark_mode</span>
+</button>
+</div>
+</header>
+<main class="flex-1 px-4 sm:px-6 md:px-10 py-8">
+<div class="flex flex-wrap justify-between gap-4 items-center mb-8">
+<h1 class="text-text-light dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Admin Dashboard</h1>
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-gray-200 dark:bg-surface-dark hover:bg-gray-300 dark:hover:bg-border-dark text-text-light dark:text-white text-sm font-medium">
+<span class="material-symbols-outlined text-lg">add</span> Add Host
+                    </button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-gray-200 dark:bg-surface-dark hover:bg-gray-300 dark:hover:bg-border-dark text-text-light dark:text-white text-sm font-medium">
+<span class="material-symbols-outlined text-lg">playlist_add_check</span> Add Check
+                    </button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary hover:bg-primary/90 text-white dark:text-background-dark text-sm font-bold">
+                       View All Incidents
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark">
+<p class="text-text-muted-light dark:text-text-muted-dark text-base font-medium leading-normal">Total Hosts</p>
+<p class="text-text-light dark:text-white tracking-light text-3xl font-bold leading-tight">1,254</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark">
+<p class="text-text-muted-light dark:text-text-muted-dark text-base font-medium leading-normal">Services Monitored</p>
+<p class="text-text-light dark:text-white tracking-light text-3xl font-bold leading-tight">8,732</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark">
+<p class="text-text-muted-light dark:text-text-muted-dark text-base font-medium leading-normal">Active Incidents</p>
+<p class="text-danger tracking-light text-3xl font-bold leading-tight">3</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark">
+<p class="text-text-muted-light dark:text-text-muted-dark text-base font-medium leading-normal">Uptime (30d)</p>
+<p class="text-success tracking-light text-3xl font-bold leading-tight">99.98%</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="flex flex-col gap-4 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark p-6">
+<h3 class="text-text-light dark:text-white text-lg font-medium leading-normal">System Health</h3>
+<div class="flex items-baseline gap-4">
+<p class="text-success tracking-light text-[32px] font-bold leading-tight truncate">Normal</p>
+<div class="flex gap-1 items-center">
+<p class="text-text-muted-light dark:text-text-muted-dark text-sm font-normal leading-normal">Last 24 Hours</p>
+<p class="text-success text-sm font-medium leading-normal">+0.2%</p>
+</div>
+</div>
+<div class="flex min-h-[220px] flex-1 flex-col gap-8 py-4">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 500 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 500 25V149H0V109Z" fill="url(#paint0_linear_chart)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 500 25" stroke="#28aae2" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_chart" x1="250" x2="250" y1="1" y2="149">
+<stop stop-color="#28aae2" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="#28aae2" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+<div class="flex justify-between -mt-4">
+<p class="text-text-muted-light dark:text-text-muted-dark text-xs font-bold">24h ago</p>
+<p class="text-text-muted-light dark:text-text-muted-dark text-xs font-bold">18h</p>
+<p class="text-text-muted-light dark:text-text-muted-dark text-xs font-bold">12h</p>
+<p class="text-text-muted-light dark:text-text-muted-dark text-xs font-bold">6h</p>
+<p class="text-text-muted-light dark:text-text-muted-dark text-xs font-bold">Now</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark p-6">
+<h3 class="text-text-light dark:text-white text-lg font-medium leading-normal">Recent Incidents</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-gray-200 dark:border-border-dark">
+<th class="py-3 px-4 text-sm font-semibold text-text-muted-light dark:text-text-muted-dark">ID</th>
+<th class="py-3 px-4 text-sm font-semibold text-text-muted-light dark:text-text-muted-dark">Service</th>
+<th class="py-3 px-4 text-sm font-semibold text-text-muted-light dark:text-text-muted-dark">Status</th>
+<th class="py-3 px-4 text-sm font-semibold text-text-muted-light dark:text-text-muted-dark">Timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-200 dark:border-border-dark hover:bg-gray-50 dark:hover:bg-background-dark">
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">INC-84321</td>
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">API Gateway</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-danger/20 px-2 py-1 text-xs font-medium text-danger"><span class="size-1.5 rounded-full bg-danger"></span>Critical</span></td>
+<td class="py-3 px-4 text-sm text-text-muted-light dark:text-text-muted-dark">2 min ago</td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-border-dark hover:bg-gray-50 dark:hover:bg-background-dark">
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">INC-84320</td>
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">Authentication Service</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-danger/20 px-2 py-1 text-xs font-medium text-danger"><span class="size-1.5 rounded-full bg-danger"></span>Critical</span></td>
+<td class="py-3 px-4 text-sm text-text-muted-light dark:text-text-muted-dark">5 min ago</td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-border-dark hover:bg-gray-50 dark:hover:bg-background-dark">
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">INC-84319</td>
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">Database Cluster #3</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-warning/20 px-2 py-1 text-xs font-medium text-warning"><span class="size-1.5 rounded-full bg-warning"></span>Warning</span></td>
+<td class="py-3 px-4 text-sm text-text-muted-light dark:text-text-muted-dark">45 min ago</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-background-dark">
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">INC-84318</td>
+<td class="py-3 px-4 text-sm text-text-light dark:text-text-dark">Load Balancer EU-West-1</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-success/20 px-2 py-1 text-xs font-medium text-success"><span class="size-1.5 rounded-full bg-success"></span>Resolved</span></td>
+<td class="py-3 px-4 text-sm text-text-muted-light dark:text-text-muted-dark">2 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-4 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark p-6">
+<h3 class="text-text-light dark:text-white text-lg font-medium leading-normal">Datacenter Status</h3>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg object-cover bg-gray-100 dark:bg-background-dark" data-alt="World map showing datacenter locations in North America, Europe, and Asia, with status indicators." data-location="World" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDSWHo00wSGlPmo_dsQMBZlPPOGXyzbhkZKPjT-ruMat7GF6hvetSy2fQiFwr-0oRLHEuX3fE8PH9eKkj0jv5MoZsCG42Xgssk6gmEDRFBTGCuHme05kSbRm7epZPSym6Slpax-pe_scHOMpv7JY2vwsfN-3x_OdMWDWQ24O13XF4TXw8CuVE0IH_6s8Sffr3tdCSEbkTwFPGoZCfF2ePOUmjP_wqk4rWjh_16I13Zd55v_16t3UukNs2YMxeRetT8o2EJCLlj41pI");'></div>
+<div class="flex flex-col gap-2 mt-2 text-text-light dark:text-text-dark">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="size-2 rounded-full bg-success"></span><span>Operational</span></div>
+<span class="font-medium">12</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="size-2 rounded-full bg-warning"></span><span>Degraded</span></div>
+<span class="font-medium">1</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="size-2 rounded-full bg-danger"></span><span>Outage</span></div>
+<span class="font-medium">2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

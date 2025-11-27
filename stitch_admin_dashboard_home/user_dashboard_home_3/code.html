@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Customer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#28aae2",
+                    "background-light": "#f6f7f8",
+                    "background-dark": "#111c21",
+                    "success": "#10B981",
+                    "danger": "#EF4444",
+                    "warning": "#F59E0B"
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+    }
+</style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex min-h-screen">
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-[#121d21] flex flex-col justify-between p-4 border-r border-gray-200 dark:border-[#253c46]">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor logo with abstract shapes" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCYTDVJH1J6f35gYPxP0JpdWMk0f8lQFGnd7jz52D2He_wWtxIgxsqarrOxPNpaZHlAfRMrX4Ea9Md_ot90-g5qisEodOs_zckRkF76ICygboJNeYTtiD9EzhbzXNdH5zJ-uJ3Q0z_CyfLiao8IVsO9G9HBXz9mLwaINOjsZOVI5c2VkCEfwdyjYsxiu0arO5C2ET8AerkXYv__-3MfD_VfNpI1okwse2rZCxcP8zNj1JxbcpqiajLz-sPilgReW4hKKGgDwlHplw");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-gray-500 dark:text-[#95b7c6] text-sm font-normal leading-normal">Customer Portal</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 dark:bg-[#253c46]" href="#">
+<span class="material-symbols-outlined text-primary dark:text-white">dashboard</span>
+<p class="text-primary dark:text-white text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">dns</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Hosts</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">language</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Websites</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">error</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">assessment</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">settings</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">account_circle</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">User Profile</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-gray-200 dark:border-b-[#253c46] px-10 py-3 bg-white dark:bg-[#121d21]">
+<label class="flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-gray-400 dark:text-[#95b7c6] flex border-none bg-background-light dark:bg-[#253c46] items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-background-light dark:bg-[#253c46] focus:border-none h-full placeholder:text-gray-400 dark:placeholder:text-[#95b7c6] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search" value=""/>
+</div>
+</label>
+<div class="flex flex-1 justify-end items-center gap-4">
+<div class="flex gap-2">
+<div class="relative group">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-background-light dark:bg-[#253c46] text-gray-500 dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white dark:bg-[#253c46] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
+<div class="py-1">
+<a class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-base">history</span>
+<span>My Notification History</span>
+</a>
+</div>
+</div>
+</div>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 w-10 bg-background-light dark:bg-[#253c46] text-gray-500 dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with a gradient background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCou7lT8VY6k9QqmaPCZ8cYkAkQ8h1cIJUh__Jr3TuWyfeDPsops-YUfSicw6B4VOTZh-yjy0viALv9Yh8jD0CyT7Qp_LK-teI3LrMBxHDwrb3fGlVK5PT3Uf6IQ7rYnsaLRzo6CVWmfWJxi7gma2dXhcBabHGIae5O0DIQt8cWrn5hrxVmQeXzYysDMIFRPFo2_n9ir3qUXg2PMM4RNVpE0WTTKfCgZ0nsfhtigOLf6dhO4ZjeZjHXLtj__nGGtf-NK7XrnJgWncU");'></div>
+</div>
+</header>
+<div class="flex-1 p-6 lg:p-10 bg-background-light dark:bg-background-dark">
+<div class="flex flex-wrap justify-between gap-3 mb-6">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-3xl font-bold leading-tight tracking-tight">Welcome back, Acme Corp!</p>
+<p class="text-gray-500 dark:text-[#95b7c6] text-base font-normal leading-normal">Here's a summary of your monitored resources.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#121d21] border border-gray-200 dark:border-[#365663]">
+<p class="text-gray-700 dark:text-white text-base font-medium leading-normal">My Hosts</p>
+<p class="text-gray-900 dark:text-white tracking-light text-2xl font-bold leading-tight">10</p>
+<p class="text-sm text-gray-500 dark:text-gray-400"><span class="text-success">9 Up</span> / <span class="text-danger">1 Down</span></p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#121d21] border border-gray-200 dark:border-[#365663]">
+<p class="text-gray-700 dark:text-white text-base font-medium leading-normal">My Websites</p>
+<p class="text-gray-900 dark:text-white tracking-light text-2xl font-bold leading-tight">5</p>
+<p class="text-sm text-gray-500 dark:text-gray-400"><span class="text-success">5 Up</span> / <span class="text-danger">0 Down</span></p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#121d21] border border-gray-200 dark:border-[#365663]">
+<p class="text-gray-700 dark:text-white text-base font-medium leading-normal">Active Incidents</p>
+<p class="text-danger tracking-light text-2xl font-bold leading-tight">1</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">View details</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#121d21] border border-gray-200 dark:border-[#365663]">
+<p class="text-gray-700 dark:text-white text-base font-medium leading-normal">Overall Uptime (30d)</p>
+<p class="text-gray-900 dark:text-white tracking-light text-2xl font-bold leading-tight">99.98%</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">Excellent performance</p>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<div class="xl:col-span-2">
+<h2 class="text-gray-800 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">Resource Status</h2>
+<div class="overflow-x-auto bg-white dark:bg-[#121d21] rounded-xl border border-gray-200 dark:border-[#365663]">
+<table class="w-full text-left">
+<thead class="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50 dark:bg-gray-700/20">
+<tr>
+<th class="px-6 py-3 font-medium" scope="col">Status</th>
+<th class="px-6 py-3 font-medium" scope="col">Resource Name</th>
+<th class="px-6 py-3 font-medium" scope="col">Type</th>
+<th class="px-6 py-3 font-medium" scope="col">Uptime</th>
+<th class="px-6 py-3 font-medium" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-[#365663]">
+<tr class="hover:bg-gray-50 dark:hover:bg-primary/10">
+<td class="px-6 py-4"><span class="flex items-center gap-2 text-success text-sm"><div class="h-2.5 w-2.5 rounded-full bg-success"></div> Up</span></td>
+<td class="px-6 py-4 text-gray-900 dark:text-white font-medium">Production Web Server</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Server</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">99.99%</td>
+<td class="px-6 py-4"><a class="font-medium text-primary hover:underline" href="#">Details</a></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-primary/10">
+<td class="px-6 py-4"><span class="flex items-center gap-2 text-danger text-sm"><div class="h-2.5 w-2.5 rounded-full bg-danger"></div> Down</span></td>
+<td class="px-6 py-4 text-gray-900 dark:text-white font-medium">Database Cluster A</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Server</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">98.21%</td>
+<td class="px-6 py-4"><a class="font-medium text-primary hover:underline" href="#">Details</a></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-primary/10">
+<td class="px-6 py-4"><span class="flex items-center gap-2 text-success text-sm"><div class="h-2.5 w-2.5 rounded-full bg-success"></div> Up</span></td>
+<td class="px-6 py-4 text-gray-900 dark:text-white font-medium">api.eramonitor.com</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Website</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">100%</td>
+<td class="px-6 py-4"><a class="font-medium text-primary hover:underline" href="#">Details</a></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-primary/10">
+<td class="px-6 py-4"><span class="flex items-center gap-2 text-warning text-sm"><div class="h-2.5 w-2.5 rounded-full bg-warning"></div> Degraded</span></td>
+<td class="px-6 py-4 text-gray-900 dark:text-white font-medium">CDN Asset Delivery</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">Service</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">99.91%</td>
+<td class="px-6 py-4"><a class="font-medium text-primary hover:underline" href="#">Details</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="xl:col-span-1">
+<h2 class="text-gray-800 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">Recent Incidents</h2>
+<div class="space-y-4">
+<div class="p-4 bg-white dark:bg-[#121d21] rounded-xl border border-gray-200 dark:border-[#365663]">
+<div class="flex justify-between items-start">
+<p class="font-semibold text-gray-800 dark:text-white">Database Latency Issue</p>
+<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-danger/20 text-danger">Critical</span>
+</div>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Status: <span class="font-medium text-gray-700 dark:text-gray-300">Investigating</span></p>
+<p class="text-xs text-gray-400 dark:text-gray-500 mt-2">15 minutes ago</p>
+</div>
+<div class="p-4 bg-white dark:bg-[#121d21] rounded-xl border border-gray-200 dark:border-[#365663]">
+<div class="flex justify-between items-start">
+<p class="font-semibold text-gray-800 dark:text-white">API Endpoint 5xx Errors</p>
+<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-warning/20 text-warning">Warning</span>
+</div>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Status: <span class="font-medium text-gray-700 dark:text-gray-300">Monitoring</span></p>
+<p class="text-xs text-gray-400 dark:text-gray-500 mt-2">2 hours ago</p>
+</div>
+<div class="p-4 bg-white dark:bg-[#121d21] rounded-xl border border-gray-200 dark:border-[#365663]">
+<div class="flex justify-between items-start">
+<p class="font-semibold text-gray-800 dark:text-white">Login Service Outage</p>
+<span class="text-xs font-medium px-2 py-0.5 rounded-full bg-success/20 text-success">Resolved</span>
+</div>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Status: <span class="font-medium text-gray-700 dark:text-gray-300">Complete</span></p>
+<p class="text-xs text-gray-400 dark:text-gray-500 mt-2">1 day ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

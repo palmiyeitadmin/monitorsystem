@@ -1,0 +1,50 @@
+agent:
+    checkforupdates: true
+    minimizetotray: true
+    runasservice: true
+    startwithos: true
+collectors:
+    intervalseconds: 60
+    system:
+        cpu: true
+        disk: true
+        enabled: true
+        network: false
+        ram: true
+gui:
+    enabled: true
+    shownotifications: true
+    startminimized: true
+host:
+    displayname: DESKTOP-H4POJ3T
+    location: New York
+    tags:
+        - production
+        - web-server
+logging:
+    level: info
+    logpath: logs/agent.log
+    logtofile: true
+    maxagedays: 7
+    maxbackups: 3
+    maxsizemb: 10
+server:
+    apiendpoint: http://localhost:5000/api
+    apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyMjIyMjIyMi0yMjIyLTIyMjItMjIyMi0yMjIyMjIyMjIyMjIiLCJlbWFpbCI6ImFkbWluQGVyYW1vbml0b3IubG9jYWwiLCJ1bmlxdWVfbmFtZSI6IlN5c3RlbSBBZG1pbmlzdHJhdG9yIiwicm9sZSI6Ik9wZXJhdG9yIiwib3JnYW5pemF0aW9uSWQiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJuYmYiOjE3NjQyMzA2MjEsImV4cCI6MTc2NDIzNDIyMSwiaWF0IjoxNzY0MjMwNjIxfQ.jEWpOj_L3B09m80NVXUgRMFmL7ktA0EUJgyrdPP0VlI
+    retrycount: 3
+    retrydelay: 5
+    timeout: 30
+services:
+    docker:
+        containers: []
+        enabled: true
+    iis:
+        apppools: []
+        enabled: true
+        sites: []
+    systemd:
+        enabled: false
+        units: []
+    windows:
+        enabled: true
+        services: []

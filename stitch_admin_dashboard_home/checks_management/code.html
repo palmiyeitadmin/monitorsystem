@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Checks Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#28aae2",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111c21",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex h-screen flex-col bg-white dark:bg-[#121d21] border-r border-gray-200 dark:border-[#365663] w-64 sticky top-0">
+<div class="flex flex-col gap-4 p-4 flex-grow">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf7H7oSteqJ2p9OoWpDfNB8Iw9Z61tkk-5zaQ2fD-043crxDyfaCa8RyFjeQR8cWTEMlClEkA8HWWDEP8bMKADiw2ExEuXOxJ_VQm32Q6nmzNh9y2rcR__k0U6dxE2vDhKZq6SY8U7WdhYIGPPF3LYb_wZpRGJciNHMGFxAA0vmbb8iuGasWn3Oam0JPP2TUaJWsJnXplxCLbe6dQ138N01-MIa9GOgH1aTRT1-z4m_8U5sNH6h_5H87iVHt2RfksJg44luOLEh7Y");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-gray-500 dark:text-[#95b7c6] text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<p class="text-sm font-medium leading-normal">Checks Management</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">warning</span>
+<p class="text-sm font-medium leading-normal">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1 p-4 border-t border-gray-200 dark:border-[#365663]">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">help</span>
+<p class="text-sm font-medium leading-normal">Support</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-4 items-center mb-6">
+<div class="flex flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Checks Management</p>
+<p class="text-gray-500 dark:text-[#95b7c6] text-base font-normal leading-normal">Monitor and manage all HTTP, TCP, and Custom health checks.</p>
+</div>
+<button class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">add_circle</span>
+<span class="truncate">Add New Check</span>
+</button>
+</div>
+<!-- Tabs -->
+<div class="border-b border-gray-200 dark:border-[#365663]">
+<div class="flex gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">HTTP Checks</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#95b7c6] hover:text-gray-700 dark:hover:text-white pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">TCP Checks</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#95b7c6] hover:text-gray-700 dark:hover:text-white pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Custom Health Checks</p>
+</a>
+</div>
+</div>
+<!-- SearchBar -->
+<div class="py-4">
+<label class="flex flex-col w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-12">
+<div class="text-gray-500 dark:text-[#95b7c6] flex bg-white dark:bg-[#253c46] items-center justify-center pl-4 rounded-l-lg border border-gray-300 dark:border-[#365663] border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary focus:ring-inset border border-gray-300 dark:border-[#365663] bg-white dark:bg-[#253c46] h-full placeholder:text-gray-500 dark:placeholder:text-[#95b7c6] px-4 text-base font-normal leading-normal" placeholder="Search checks by name or URL..." value=""/>
+</div>
+</label>
+</div>
+<!-- Table -->
+<div class="py-3 @container">
+<div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-[#365663] bg-white dark:bg-[#121d21]">
+<table class="w-full text-left">
+<thead class="bg-gray-50 dark:bg-[#1b2b32]">
+<tr>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal w-1/12"><input class="form-checkbox rounded bg-gray-200 dark:bg-[#365663] border-gray-300 dark:border-[#53727e] text-primary focus:ring-primary/50" type="checkbox"/></th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal w-2/12">Name</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal w-3/12">URL</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Expected Status</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Last Status</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">SSL Expiry</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Interval</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal w-1/12">Customer</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-[#365663]">
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2"><input class="form-checkbox rounded bg-gray-200 dark:bg-[#365663] border-gray-300 dark:border-[#53727e] text-primary focus:ring-primary/50" type="checkbox"/></td>
+<td class="h-[72px] px-4 py-2 text-gray-800 dark:text-white text-sm font-normal leading-normal">Main API Endpoint</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-normal leading-normal">api.eramonitor.com</td>
+<td class="h-[72px] px-4 py-2"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">200</span></td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span>OK (24ms)</span>
+</div>
+</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+<span>85 days</span>
+</div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-normal leading-normal">60s</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-medium leading-normal">CloudCorp</td>
+<td class="h-[72px] px-4 py-2"><button class="text-gray-500 dark:text-[#95b7c6] hover:text-gray-800 dark:hover:text-white"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2"><input class="form-checkbox rounded bg-gray-200 dark:bg-[#365663] border-gray-300 dark:border-[#53727e] text-primary focus:ring-primary/50" type="checkbox"/></td>
+<td class="h-[72px] px-4 py-2 text-gray-800 dark:text-white text-sm font-normal leading-normal">Website Frontend</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-normal leading-normal">www.client-site.com</td>
+<td class="h-[72px] px-4 py-2"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">200</span></td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+<span>Down (Timeout)</span>
+</div>
+</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300">
+<span>21 days</span>
+</div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-normal leading-normal">30s</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-medium leading-normal">Innovate Inc.</td>
+<td class="h-[72px] px-4 py-2"><button class="text-gray-500 dark:text-[#95b7c6] hover:text-gray-800 dark:hover:text-white"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2"><input class="form-checkbox rounded bg-gray-200 dark:bg-[#365663] border-gray-300 dark:border-[#53727e] text-primary focus:ring-primary/50" type="checkbox"/></td>
+<td class="h-[72px] px-4 py-2 text-gray-800 dark:text-white text-sm font-normal leading-normal">Billing Service</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-normal leading-normal">billing.eramonitor.com</td>
+<td class="h-[72px] px-4 py-2"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300">200</span></td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span>OK (112ms)</span>
+</div>
+</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">
+<span>5 days</span>
+</div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-normal leading-normal">120s</td>
+<td class="h-[72px] px-4 py-2 text-gray-600 dark:text-[#95b7c6] text-sm font-medium leading-normal">CloudCorp</td>
+<td class="h-[72px] px-4 py-2"><button class="text-gray-500 dark:text-[#95b7c6] hover:text-gray-800 dark:hover:text-white"><span class="material-symbols-outlined">more_vert</span></button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Modal Dialog -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden">
+<div class="bg-white dark:bg-[#1b2b32] rounded-xl shadow-2xl w-full max-w-2xl transform transition-all">
+<div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#365663]">
+<h3 class="text-xl font-bold text-gray-900 dark:text-white">Add New HTTP Check</h3>
+<button class="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-6 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="check-name">Check Name</label>
+<input class="form-input w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="check-name" placeholder="e.g., Main API Endpoint" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="target-url">Target URL</label>
+<input class="form-input w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="target-url" placeholder="https://api.example.com" type="url"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="request-method">Request Method</label>
+<select class="form-select w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="request-method">
+<option>GET</option>
+<option>HEAD</option>
+<option>POST</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="status-code">Expected Status Code</label>
+<input class="form-input w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="status-code" placeholder="200" type="number"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="response-keyword">Response Keyword (Optional)</label>
+<input class="form-input w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="response-keyword" placeholder="e.g., success" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="timeout">Timeout (in seconds)</label>
+<input class="form-input w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="timeout" placeholder="30" type="number"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="check-interval">Check Interval (in seconds)</label>
+<select class="form-select w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="check-interval">
+<option>30</option>
+<option selected="">60</option>
+<option>120</option>
+<option>300</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="customer">Assign to Customer</label>
+<select class="form-select w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="customer">
+<option>CloudCorp</option>
+<option>Innovate Inc.</option>
+<option>Nexus Systems</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="location">Monitoring Location (Optional)</label>
+<select class="form-select w-full rounded-lg bg-gray-50 dark:bg-[#253c46] border-gray-300 dark:border-[#365663] focus:ring-primary focus:border-primary text-gray-900 dark:text-white" id="location">
+<option>Global (Default)</option>
+<option>US-East-1</option>
+<option>EU-West-2</option>
+<option>AP-South-1</option>
+</select>
+</div>
+</div>
+<div class="pt-2">
+<label class="flex items-center" for="notification-override">
+<input class="form-checkbox h-4 w-4 rounded bg-gray-50 dark:bg-[#365663] border-gray-300 dark:border-[#53727e] text-primary focus:ring-primary/50" id="notification-override" type="checkbox"/>
+<span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Override default notification settings</span>
+</label>
+</div>
+</div>
+<div class="flex items-center justify-end p-6 border-t border-gray-200 dark:border-[#365663] space-x-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-[#253c46] text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Cancel</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Save Check</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: era-monitor-db
+    environment:
+      POSTGRES_DB: eramonitor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - era-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: era-monitor-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=eramonitor;Username=postgres;Password=postgres123
+      - JwtSettings__Secret=YourSuperSecretKeyForJWTTokenGenerationMinimum32Characters!
+      - JwtSettings__Issuer=ERAMonitor
+      - JwtSettings__Audience=ERAMonitorUsers
+      - JwtSettings__ExpiryMinutes=60
+      - Hangfire__DashboardPath=/hangfire
+      - CORS__AllowedOrigins=http://localhost:3000,http://dashboard:3000
+      - Hangfire__ServerName=era-monitor-api
+      - Hangfire__WorkerCount=10
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - era-network
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: era-monitor-dashboard
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - NODE_ENV=production
+    ports:
+      - "3008:3000"
+    depends_on:
+      - api
+    networks:
+      - era-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+
+networks:
+  era-network:
+    driver: bridge

@@ -1,0 +1,22 @@
+﻿  Determining projects to restore...
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ├Ânem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g├╝venlik a├ğ─▒─ş─▒ var
+  All projects are up-to-date for restore.
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ├Ânem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g├╝venlik a├ğ─▒─ş─▒ var
+  ERAMonitor.Core -> D:\era_monitor\monitorsystem\src\ERAMonitor.Core\bin\Debug\net8.0\ERAMonitor.Core.dll
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(19,22): error CS0246: The type or namespace name 'IIncidentService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(20,22): error CS0246: The type or namespace name 'INotificationService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(34,9): error CS0246: The type or namespace name 'IIncidentService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(35,9): error CS0246: The type or namespace name 'INotificationService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+
+Build FAILED.
+
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ├Ânem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g├╝venlik a├ğ─▒─ş─▒ var
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj : warning NU1902: 'System.IdentityModel.Tokens.Jwt' 7.0.0 paketinde ├Ânem derecesi orta olan bilinen bir https://github.com/advisories/GHSA-59j7-ghrg-fj52 g├╝venlik a├ğ─▒─ş─▒ var
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(19,22): error CS0246: The type or namespace name 'IIncidentService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(20,22): error CS0246: The type or namespace name 'INotificationService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(34,9): error CS0246: The type or namespace name 'IIncidentService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(35,9): error CS0246: The type or namespace name 'INotificationService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+    2 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:01.82

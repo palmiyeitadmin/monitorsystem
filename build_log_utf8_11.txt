@@ -1,0 +1,8 @@
+﻿D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\NotificationService.cs(13,22): error CS0246: The type or namespace name 'IEmailService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\NotificationService.cs(15,62): error CS0246: The type or namespace name 'IEmailService' could not be found (are you missing a using directive or an assembly reference?) [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+
+Build FAILED.
+    2 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:01.62

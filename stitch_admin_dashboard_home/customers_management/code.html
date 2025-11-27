@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Customers Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111c21",
+                        "container-light": "#ffffff",
+                        "container-dark": "#1a282d",
+                        "border-light": "#e5e7eb",
+                        "border-dark": "#253c46",
+                        "text-light-primary": "#111827",
+                        "text-dark-primary": "#ffffff",
+                        "text-light-secondary": "#6b7280",
+                        "text-dark-secondary": "#95b7c6",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="flex flex-col w-64 bg-container-light dark:bg-container-dark border-r border-border-light dark:border-border-dark">
+<div class="flex flex-col flex-grow p-4">
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor company logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4DQMkuEFlAi4NqbDzcjQtbmdAonXH_njmlc3PDRSWUIGTdgiXy2pdG4g8C7bEGYEtjK9znrv7crHPcuIXcPHCThz4rEMZWCyyyh0ZutuioZhWnWjrNSZfSDH1Z52BpVdkkZHJ9ZIwwIAC-xWbzNmP5jnOLZvQRuytdIq-i4_2xQsxY64D-z429FqQZIlO0EZA_wRQ3_cgEuVjbWbeXGI0gt5pb0zd2Ayb0d8g8JXyf6Lq1VmjXValtnHm3bqpPxPInrkN3UvuQlc");'></div>
+<div class="flex flex-col">
+<h1 class="text-base font-medium leading-normal text-text-light-primary dark:text-text-dark-primary">ERA Monitor</h1>
+<p class="text-sm font-normal leading-normal text-text-light-secondary dark:text-text-dark-secondary">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">dashboard</span>
+<p class="text-sm font-medium leading-normal text-text-light-secondary dark:text-text-dark-secondary">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">dns</span>
+<p class="text-sm font-medium leading-normal text-text-light-secondary dark:text-text-dark-secondary">Servers</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">notifications_active</span>
+<p class="text-sm font-medium leading-normal text-text-light-secondary dark:text-text-dark-secondary">Incidents</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 dark:bg-primary/30" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">group</span>
+<p class="text-sm font-medium leading-normal text-primary">Customers</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">settings</span>
+<p class="text-sm font-medium leading-normal text-text-light-secondary dark:text-text-dark-secondary">Settings</p>
+</a>
+</nav>
+</div>
+<div class="p-4 border-t border-border-light dark:border-border-dark">
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">help_center</span>
+<p class="text-sm font-medium leading-normal text-text-light-secondary dark:text-text-dark-secondary">Help Center</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5" href="#">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">logout</span>
+<p class="text-sm font-medium leading-normal text-text-light-secondary dark:text-text-dark-secondary">Logout</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="w-full max-w-7xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<h1 class="text-3xl font-bold tracking-tight text-text-light-primary dark:text-text-dark-primary">Customers Management</h1>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary text-white text-sm font-bold leading-normal tracking-wide hover:opacity-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="truncate">Add New Customer</span>
+</button>
+</div>
+<!-- Toolbar & Filters -->
+<div class="flex flex-col gap-4 p-4 mb-6 rounded-xl bg-container-light dark:bg-container-dark border border-border-light dark:border-border-dark">
+<div class="flex flex-wrap items-center gap-4">
+<!-- SearchBar -->
+<div class="flex-grow">
+<label class="flex flex-col min-w-40 h-10 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-text-light-secondary dark:text-text-dark-secondary flex border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark items-center justify-center pl-3 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light-primary dark:text-text-dark-primary focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark h-full placeholder:text-text-light-secondary dark:placeholder:text-text-dark-secondary px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search by name or email..." value=""/>
+</div>
+</label>
+</div>
+<!-- Chips / Filters -->
+<div class="flex items-center gap-3">
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark px-3 hover:bg-black/5 dark:hover:bg-white/5">
+<p class="text-sm font-medium leading-normal text-text-light-primary dark:text-text-dark-primary">Status: All</p>
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">expand_more</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark px-3 hover:bg-black/5 dark:hover:bg-white/5">
+<p class="text-sm font-medium leading-normal text-text-light-primary dark:text-text-dark-primary">Has Incidents: All</p>
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">expand_more</span>
+</button>
+<button class="p-2 text-text-light-secondary dark:text-text-dark-secondary rounded-lg hover:bg-black/5 dark:hover:bg-white/5">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Customer Table -->
+<div class="overflow-x-auto bg-container-light dark:bg-container-dark rounded-xl border border-border-light dark:border-border-dark">
+<table class="w-full text-sm text-left">
+<thead class="border-b border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark">
+<tr>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Customer Name</th>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Contact Email</th>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Phone</th>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Total Hosts</th>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Active Incidents</th>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Status</th>
+<th class="px-6 py-3 font-semibold text-text-light-secondary dark:text-text-dark-secondary whitespace-nowrap" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="px-6 py-4 font-medium whitespace-nowrap">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="Innovate Inc. company logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk-vg7zqt5syo7E8VxVT5AgVz3rK7tvgcGSDtb88QVlNoDHoJR5Zw1UXPiBQnMifAmXuD_WCua8HPoAYe9riE8fOyIiH4S8v2NnvE6J66NaDGW8SNJyBls5ItOEPZhwgvYjxcY5951Kta_CZba7Z5kkoPdB7w409AFmSIGTpk-TJzwBM4F3uY9OtgVDBmOYqKxoUk8PCmaRpwDGEO93u5_YdwhqsjI5E4SNaVwLctsje8WmRxoYWYobgZ3TVjSjc6H07pZ4TAaXFg"/>
+                                        Innovate Inc.
+                                    </div>
+</td>
+<td class="px-6 py-4">contact@innovate.com</td>
+<td class="px-6 py-4">(555) 123-4567</td>
+<td class="px-6 py-4">25</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1 text-red-500">
+<span class="material-symbols-outlined text-base">warning</span> 2
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="px-6 py-4 font-medium whitespace-nowrap">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="Quantum Solutions company logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD16pY_iYj-0bgX1kTQBIdmAbmnkcX531CRYU4KVJ9H6Fjnc8-lCi70pSi9-qlSwLuHMYibJBDtf5EsG4uGe2xiluTc2EHiEHJO3KyuycEFCly3-bmBGwwHqR3e48zosWpMh1k7mpHwBmYjFGjb7q0jQtwmwqCxuEpk7GEwnj6KMay8ybdMeRW5zi5KDZ4yqC0uoIgWGPtqJfqtPWaKYf48CarfW6VQ6iQ9TMT-9Oma1_TH1uq-cIturw1D_stxZXDk6d49ytFcRQA"/>
+                                        Quantum Solutions
+                                    </div>
+</td>
+<td class="px-6 py-4">support@quantum.io</td>
+<td class="px-6 py-4">(555) 987-6543</td>
+<td class="px-6 py-4">52</td>
+<td class="px-6 py-4">0</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="px-6 py-4 font-medium whitespace-nowrap">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="Apex Enterprises company logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCaMom8SZ9_xul-UYw-RABipZDY81z-U8ZGACXx5sthZ10kIGk-Rh3_QC_qzpFz3zoDbdjiNmiYPnXfeA1HYfG2tYjf9rW0B5jisFQjPqkrYXI7hnnUNP2-LCcyE2YXg2i1ficB-lRooo9cft51k9Ksj3McDvOeQk7I7LaFQOzEir2UAfX-3n-1SCDbKdJrOOr7bh5E0VYaOvSM19uwN3Msd0twEx-9bOoKBbzgucL6Pio46mnKFmwSLwAWS-7rccJeoydvKdLMjo"/>
+                                        Apex Enterprises
+                                    </div>
+</td>
+<td class="px-6 py-4">admin@apexent.com</td>
+<td class="px-6 py-4">(555) 222-3333</td>
+<td class="px-6 py-4">15</td>
+<td class="px-6 py-4">0</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="px-6 py-4 font-medium whitespace-nowrap">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full" data-alt="Nexus Dynamics company logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjpYQsaNADuyj_dAL3SpHqAoMnF6S-jd7E1BnmeF7h3lQPg4WIqngsg_6omgWOQwa72bIzYlp8OqZe7eVFC-dZuoXIbXuE6L6V-OULhzzhpsZoITSgvVA1VqSE8RHa4Bnrd6C1_u3Jk_Txe5ixOXr5e1WMqj4kl_a6N80smDho5kAo04rdJCeCg6HjOFHn6zgxwGFMm5qCN3g92q2GUtIpg8LX4X2Bfx89B1Ob04eJIkL__Nrc7MYXCyP1x9vJJ_ed9ehLeJ5RaXE"/>
+                                        Nexus Dynamics
+                                    </div>
+</td>
+<td class="px-6 py-4">ops@nexus.tech</td>
+<td class="px-6 py-4">(555) 555-5555</td>
+<td class="px-6 py-4">120</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1 text-red-500">
+<span class="material-symbols-outlined text-base">warning</span> 1
+                                    </div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between mt-6">
+<span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Showing 1 to 4 of 20 results</span>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center h-8 px-3 rounded-lg border border-border-light dark:border-border-dark text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5">Previous</button>
+<button class="flex items-center justify-center h-8 px-3 rounded-lg border border-border-light dark:border-border-dark text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5">Next</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

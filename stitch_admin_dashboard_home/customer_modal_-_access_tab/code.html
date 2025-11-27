@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Add/Edit Customer Access</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#29abe2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0f172a",
+                        "card-dark": "#1e293b",
+                        "border-dark": "#334155",
+                        "text-primary-dark": "#e2e8f0",
+                        "text-secondary-dark": "#94a3b8"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-text-primary-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col items-center justify-center p-4 sm:p-6 md:p-10">
+<!-- Modal Container -->
+<div class="layout-content-container flex w-full max-w-4xl flex-col rounded-lg bg-background-dark shadow-2xl">
+<!-- Tabs -->
+<div class="border-b border-border-dark px-4 sm:px-6">
+<div class="flex gap-8">
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent py-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-wide text-text-secondary-dark">Details</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-primary py-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-wide text-white">Access</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent py-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-wide text-text-secondary-dark">Billing</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent py-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-wide text-text-secondary-dark">Settings</p>
+</a>
+</div>
+</div>
+<!-- Tab Content -->
+<div class="p-4 sm:p-6 md:p-8">
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+<!-- Portal Access Card -->
+<div class="flex flex-col gap-4 rounded-lg border border-border-dark bg-card-dark p-5">
+<div class="flex flex-col gap-1">
+<h3 class="text-lg font-bold leading-tight tracking-[-0.015em] text-white">Portal Access</h3>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-base font-normal leading-normal text-text-primary-dark">Enable Portal</p>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-border-dark p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+<div class="h-full w-[27px] rounded-full bg-white shadow-lg"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<div class="pl-3">
+<label class="flex items-center gap-x-3">
+<input checked="" class="h-5 w-5 rounded border-2 border-border-dark bg-transparent text-primary checked:border-primary checked:bg-primary focus:ring-0 focus:ring-offset-0 disabled:opacity-50" type="checkbox"/>
+<p class="text-base font-normal leading-normal text-text-primary-dark">Auto-create user on save</p>
+</label>
+</div>
+</div>
+<!-- Resource Summary Card -->
+<div class="flex flex-col gap-4 rounded-lg border border-border-dark bg-card-dark p-5">
+<h3 class="text-lg font-bold leading-tight tracking-[-0.015em] text-white">Resource Summary</h3>
+<div class="flex flex-1 items-center justify-between">
+<div class="flex gap-4 sm:gap-6">
+<div class="text-center">
+<p class="text-2xl font-bold text-white">12</p>
+<p class="text-xs text-text-secondary-dark">Hosts</p>
+</div>
+<div class="text-center">
+<p class="text-2xl font-bold text-white">5</p>
+<p class="text-xs text-text-secondary-dark">Websites</p>
+</div>
+<div class="text-center">
+<p class="text-2xl font-bold text-primary">3</p>
+<p class="text-xs text-text-secondary-dark">Incidents</p>
+</div>
+</div>
+<a class="whitespace-nowrap text-sm font-medium text-primary hover:underline" href="#">Manage resources →</a>
+</div>
+</div>
+<!-- Assigned Administrator Card -->
+<div class="flex flex-col gap-4 rounded-lg border border-border-dark bg-card-dark p-5">
+<h3 class="text-lg font-bold leading-tight tracking-[-0.015em] text-white">Assigned Administrator</h3>
+<label class="flex flex-col">
+<p class="pb-2 text-sm font-medium leading-normal text-text-secondary-dark">Select an internal administrator for this customer</p>
+<select class="h-12 w-full rounded-lg border border-border-dark bg-background-dark p-3 text-base font-normal leading-normal text-text-primary-dark placeholder:text-text-secondary-dark focus:border-primary focus:outline-0 focus:ring-0">
+<option>Olivia Rhye</option>
+<option>Liam Smith</option>
+<option>Ava Johnson</option>
+</select>
+</label>
+</div>
+<!-- API Access Card -->
+<div class="flex flex-col gap-4 rounded-lg border border-border-dark bg-card-dark p-5">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold leading-tight tracking-[-0.015em] text-white">API Access</h3>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full bg-border-dark p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+<div class="h-full w-[27px] rounded-full bg-white shadow-lg"></div>
+<input class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+<div class="flex flex-col gap-4 opacity-40">
+<label class="flex flex-col">
+<p class="pb-2 text-sm font-medium leading-normal text-text-secondary-dark">API Key</p>
+<div class="relative flex items-center">
+<input class="h-12 w-full rounded-lg border border-border-dark bg-background-dark p-3 pr-12 font-mono text-sm text-text-primary-dark placeholder:text-text-secondary-dark focus:outline-none" readonly="" type="text" value="acct_ab123cde4567fg89h"/>
+<button class="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-secondary-dark hover:text-white" disabled="">
+<span class="material-symbols-outlined">content_copy</span>
+</button>
+</div>
+</label>
+<label class="flex flex-col">
+<p class="pb-2 text-sm font-medium leading-normal text-text-secondary-dark">Rate Limit (requests/hour)</p>
+<input class="h-12 w-full rounded-lg border border-border-dark bg-background-dark p-3 text-base font-normal leading-normal text-text-primary-dark placeholder:text-text-secondary-dark focus:border-primary focus:outline-0 focus:ring-0" disabled="" placeholder="1000" type="number"/>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

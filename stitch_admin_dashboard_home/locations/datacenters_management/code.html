@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Locations / Datacenters</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111c21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a282e",
+                        "text-light": "#343A40",
+                        "text-dark": "#e1eaf0",
+                        "text-secondary-light": "#6c757d",
+                        "text-secondary-dark": "#95b7c6",
+                        "border-light": "#dee2e6",
+                        "border-dark": "#365663",
+                        "status-green": "#28A745",
+                        "status-red": "#DC3545",
+                        "status-orange": "#FD7E14",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex h-screen flex-col bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark w-64 sticky top-0">
+<div class="flex flex-col gap-4 p-4 flex-grow">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="ERA Monitor Logo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgTGdASvrqvae1jj4kcgub9wNH0HsLfRxuglAhyVAEAhbx6ET6KQoNrtZJ_67YdCcfwKwGO40TI0Ky2IcH-8PswPH2es3NZ5LugqPjhjz5xg55NrXyBUemTMs01n_JIFLiHWxve951AfHvp7uWY7MhsIsQOPdCQM_34aXNws5JkZSxrh8GaaiOwXkKfCVZEsAf010QFnYx5_Zo6wNAWW14Ual0hLIjaoNu6nu9hWGj-88kKnuoSw7ckbdbzITiCGneVOv7R4zto_Q');"></div>
+<div class="flex flex-col">
+<h1 class="text-text-light dark:text-text-dark text-base font-medium leading-normal">ERA Monitor</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-primary/10 hover:text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-primary/10 hover:text-primary" href="#">
+<span class="material-symbols-outlined">dns</span>
+<p class="text-sm font-medium leading-normal">Servers</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-primary/10 hover:text-primary" href="#">
+<span class="material-symbols-outlined">cloud_queue</span>
+<p class="text-sm font-medium leading-normal">Services</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<p class="text-sm font-medium leading-normal">Locations</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-primary/10 hover:text-primary" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4 p-4 border-t border-border-light dark:border-border-dark">
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="truncate">New Alert</span>
+</button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-primary/10 hover:text-primary" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-primary/10 hover:text-primary" href="#">
+<span class="material-symbols-outlined">help</span>
+<p class="text-sm font-medium leading-normal">Support</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-7xl mx-auto">
+<!-- PageHeading -->
+<header class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<h1 class="text-text-light dark:text-text-dark text-4xl font-black leading-tight tracking-[-0.033em]">Locations / Datacenters</h1>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="material-symbols-outlined">add</span>
+<span class="truncate">Add New Location</span>
+</button>
+</header>
+<!-- Filter Controls -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<!-- Tabs -->
+<div class="border-b border-border-light dark:border-border-dark">
+<div class="flex gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">All</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Colocation</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Cloud Provider</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Hosting Provider</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">On-Premise</p>
+</a>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="relative min-w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Search by name, provider..." type="text"/>
+</div>
+</div>
+<!-- Content Grid (ImageGrid modified) -->
+<div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6">
+<!-- Location Card 1 -->
+<div class="flex flex-col gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-lg transition-shadow duration-200">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-status-green" data-alt="Operational status indicator"></div>
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">US-East-1 (N. Virginia)</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Provider: Amazon Web Services</p>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-status-red rounded-md hover:bg-status-red/10">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+</div>
+<div class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">
+<p>Ashburn, USA • 2,150 Hosts</p>
+</div>
+</div>
+<!-- Location Card 2 -->
+<div class="flex flex-col gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-lg transition-shadow duration-200">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-status-green" data-alt="Operational status indicator"></div>
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">EU-Central-1 (Frankfurt)</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Provider: Amazon Web Services</p>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-status-red rounded-md hover:bg-status-red/10">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+</div>
+<div class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">
+<p>Frankfurt, Germany • 1,820 Hosts</p>
+</div>
+</div>
+<!-- Location Card 3 -->
+<div class="flex flex-col gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-lg transition-shadow duration-200">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-status-orange" data-alt="Warning status indicator"></div>
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">Hetzner-FSN1</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Provider: Hetzner Online GmbH</p>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-status-red rounded-md hover:bg-status-red/10">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+</div>
+<div class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">
+<p>Falkenstein, Germany • 980 Hosts</p>
+</div>
+</div>
+<!-- Location Card 4 -->
+<div class="flex flex-col gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-lg transition-shadow duration-200">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-status-green" data-alt="Operational status indicator"></div>
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">Equinix DC11</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Provider: Equinix</p>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-status-red rounded-md hover:bg-status-red/10">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+</div>
+<div class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">
+<p>Ashburn, USA • 1,200 Hosts</p>
+</div>
+</div>
+<!-- Location Card 5 -->
+<div class="flex flex-col gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-lg transition-shadow duration-200">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-status-red" data-alt="Error status indicator"></div>
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">Azure West US 2</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Provider: Microsoft Azure</p>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-status-red rounded-md hover:bg-status-red/10">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+</div>
+<div class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">
+<p>Washington, USA • 1,560 Hosts</p>
+</div>
+</div>
+<!-- Location Card 6 -->
+<div class="flex flex-col gap-4 p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm hover:shadow-lg transition-shadow duration-200">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-status-green" data-alt="Operational status indicator"></div>
+<p class="text-text-light dark:text-text-dark text-base font-medium leading-normal">On-Premise HQ</p>
+</div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Provider: Self-Hosted</p>
+</div>
+<div class="flex gap-2">
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined text-base">edit</span>
+</button>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-status-red rounded-md hover:bg-status-red/10">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</div>
+</div>
+<div class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">
+<p>New York, USA • 120 Hosts</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Add/Edit Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden" id="add-edit-modal">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-2xl w-full max-w-2xl border border-border-light dark:border-border-dark m-4">
+<div class="flex items-center justify-between p-6 border-b border-border-light dark:border-border-dark">
+<h2 class="text-xl font-bold text-text-light dark:text-text-dark">Add New Location</h2>
+<button class="p-1.5 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary rounded-md hover:bg-primary/10">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="p-6 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2" for="location-name">Location Name</label>
+<input class="w-full rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" id="location-name" placeholder="e.g., US-East-1" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2" for="category">Category</label>
+<select class="w-full rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" id="category">
+<option>Cloud Provider</option>
+<option>Colocation</option>
+<option>Hosting Provider</option>
+<option>On-Premise</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2" for="provider-name">Provider Name</label>
+<input class="w-full rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" id="provider-name" placeholder="e.g., Amazon Web Services" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2" for="address">Address</label>
+<input class="w-full rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" id="address" placeholder="City, Country" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2" for="contact-info">Contact Info (Optional)</label>
+<input class="w-full rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" id="contact-info" placeholder="Phone or Email" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2" for="notes">Notes</label>
+<textarea class="w-full rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary" id="notes" placeholder="Add any relevant notes here..." rows="4"></textarea>
+</div>
+</form>
+<div class="flex items-center justify-end gap-4 p-6 border-t border-border-light dark:border-border-dark">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-text-light dark:text-text-dark text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-gray-600">
+<span class="truncate">Cancel</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="truncate">Save Changes</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#28aae2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0F172A",
+                        "surface": "#1E293B",
+                        "success": "#10B981",
+                        "danger": "#EF4444",
+                        "warning": "#F59E0B",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display text-white group/design-root overflow-x-hidden" x-data="{ sidebarOpen: true }">
+<div class="flex h-full grow flex-row">
+<aside :class="sidebarOpen ? 'w-64' : 'w-20'" class="sticky top-0 h-screen flex-shrink-0 bg-[#1E293B]/30 backdrop-blur-lg border-r border-white/10 transition-all duration-300">
+<div class="flex h-full flex-col">
+<div :class="sidebarOpen ? 'justify-between' : 'justify-center'" class="flex h-[68px] items-center border-b border-white/10 px-6">
+<div :class="{ 'hidden': !sidebarOpen }" class="flex items-center gap-3">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">ERA Monitor</h2>
+</div>
+<button @click="sidebarOpen = !sidebarOpen" class="rounded-lg p-2 hover:bg-white/10">
+<span class="material-symbols-outlined">menu_open</span>
+</button>
+</div>
+<nav class="flex-1 space-y-2 p-4">
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-4 py-2.5 text-sm font-semibold text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span :class="{ 'hidden': !sidebarOpen }">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/10 hover:text-white" href="#">
+<span class="material-symbols-outlined">dns</span>
+<span :class="{ 'hidden': !sidebarOpen }">Hosts</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/10 hover:text-white" href="#">
+<span class="material-symbols-outlined">error</span>
+<span :class="{ 'hidden': !sidebarOpen }">Incidents</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/10 hover:text-white" href="#">
+<span class="material-symbols-outlined">history</span>
+<span :class="{ 'hidden': !sidebarOpen }">Notification History</span>
+</a>
+</nav>
+<div class="mt-auto p-4">
+<nav class="space-y-2">
+<a class="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/10 hover:text-white" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span :class="{ 'hidden': !sidebarOpen }">Settings</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/10 hover:text-white" href="#">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-6" data-alt="User avatar image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvpmsqvYFfWkGljIEqfNXpEIthh45S3OG32Y55vtFCIFd_OTftjps5QbKdgD3Fz-ELDoC-yTuEOojCimS_Jikz_Ig7ToNL9fyZ3-f6hmy_6EYpG7Tn3lBO-RBaoZCQc5JayKH78VEFcrMGYALcvDb6QdKs2TjTMRgxajJ1rRppTuqWsqRE8xE4lpRI_PbUTUPSZ_doEWIJiZ_B26oePToJte9rrQeJ-YBYrClFXMLN1gXSNVhCmpRiuL7Va9sRCEU5XUnUhJ5qxsM");'></div>
+<span :class="{ 'hidden': !sidebarOpen }">Admin User</span>
+</a>
+</nav>
+</div>
+</div>
+</aside>
+<div class="flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 px-6 sm:px-10 py-4 sticky top-0 bg-background-dark/80 backdrop-blur-sm z-50">
+<div></div>
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-background-dark text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Add New Monitor</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-white/10 text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvpmsqvYFfWkGljIEqfNXpEIthh45S3OG32Y55vtFCIFd_OTftjps5QbKdgD3Fz-ELDoC-yTuEOojCimS_Jikz_Ig7ToNL9fyZ3-f6hmy_6EYpG7Tn3lBO-RBaoZCQc5JayKH78VEFcrMGYALcvDb6QdKs2TjTMRgxajJ1rRppTuqWsqRE8xE4lpRI_PbUTUPSZ_doEWIJiZ_B26oePToJte9rrQeJ-YBYrClFXMLN1gXSNVhCmpRiuL7Va9sRCEU5XUnUhJ5qxsM");'></div>
+</div>
+</header>
+<main class="flex-1 px-4 sm:px-6 md:px-10 py-8">
+<div class="flex flex-wrap justify-between gap-4 items-center mb-8">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Admin Dashboard</h1>
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium">
+<span class="material-symbols-outlined text-lg">add</span> Add Host
+                        </button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium">
+<span class="material-symbols-outlined text-lg">playlist_add_check</span> Add Check
+                        </button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary hover:bg-primary/90 text-background-dark text-sm font-bold">
+                           View All Incidents
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-white/10 bg-surface">
+<p class="text-gray-300 text-base font-medium leading-normal">Total Hosts</p>
+<p class="text-white tracking-light text-3xl font-bold leading-tight">1,254</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-white/10 bg-surface">
+<p class="text-gray-300 text-base font-medium leading-normal">Services Monitored</p>
+<p class="text-white tracking-light text-3xl font-bold leading-tight">8,732</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-white/10 bg-surface">
+<p class="text-gray-300 text-base font-medium leading-normal">Active Incidents</p>
+<p class="text-danger tracking-light text-3xl font-bold leading-tight">3</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-white/10 bg-surface">
+<p class="text-gray-300 text-base font-medium leading-normal">Uptime (30d)</p>
+<p class="text-success tracking-light text-3xl font-bold leading-tight">99.98%</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="flex flex-col gap-4 rounded-lg border border-white/10 bg-surface p-6">
+<h3 class="text-white text-lg font-medium leading-normal">System Health</h3>
+<div class="flex items-baseline gap-4">
+<p class="text-success tracking-light text-[32px] font-bold leading-tight truncate">Normal</p>
+<div class="flex gap-1 items-center">
+<p class="text-gray-400 text-sm font-normal leading-normal">Last 24 Hours</p>
+<p class="text-success text-sm font-medium leading-normal">+0.2%</p>
+</div>
+</div>
+<div class="flex min-h-[220px] flex-1 flex-col gap-8 py-4">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 500 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 500 25V149H0V109Z" fill="url(#paint0_linear_chart)"></path>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 500 25" stroke="#28aae2" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_chart" x1="250" x2="250" y1="1" y2="149">
+<stop stop-color="#28aae2" stop-opacity="0.3"></stop>
+<stop offset="1" stop-color="#28aae2" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+<div class="flex justify-between -mt-4">
+<p class="text-gray-400 text-xs font-bold">24h ago</p>
+<p class="text-gray-400 text-xs font-bold">18h</p>
+<p class="text-gray-400 text-xs font-bold">12h</p>
+<p class="text-gray-400 text-xs font-bold">6h</p>
+<p class="text-gray-400 text-xs font-bold">Now</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-lg border border-white/10 bg-surface p-6">
+<h3 class="text-white text-lg font-medium leading-normal">Recent Incidents</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-white/10">
+<th class="py-3 px-4 text-sm font-semibold text-gray-300">ID</th>
+<th class="py-3 px-4 text-sm font-semibold text-gray-300">Service</th>
+<th class="py-3 px-4 text-sm font-semibold text-gray-300">Status</th>
+<th class="py-3 px-4 text-sm font-semibold text-gray-300">Timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-white/10 hover:bg-white/5">
+<td class="py-3 px-4 text-sm text-gray-200">INC-84321</td>
+<td class="py-3 px-4 text-sm text-gray-200">API Gateway</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-danger/20 px-2 py-1 text-xs font-medium text-danger"><span class="size-1.5 rounded-full bg-danger"></span>Critical</span></td>
+<td class="py-3 px-4 text-sm text-gray-400">2 min ago</td>
+</tr>
+<tr class="border-b border-white/10 hover:bg-white/5">
+<td class="py-3 px-4 text-sm text-gray-200">INC-84320</td>
+<td class="py-3 px-4 text-sm text-gray-200">Authentication Service</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-danger/20 px-2 py-1 text-xs font-medium text-danger"><span class="size-1.5 rounded-full bg-danger"></span>Critical</span></td>
+<td class="py-3 px-4 text-sm text-gray-400">5 min ago</td>
+</tr>
+<tr class="border-b border-white/10 hover:bg-white/5">
+<td class="py-3 px-4 text-sm text-gray-200">INC-84319</td>
+<td class="py-3 px-4 text-sm text-gray-200">Database Cluster #3</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-warning/20 px-2 py-1 text-xs font-medium text-warning"><span class="size-1.5 rounded-full bg-warning"></span>Warning</span></td>
+<td class="py-3 px-4 text-sm text-gray-400">45 min ago</td>
+</tr>
+<tr class="hover:bg-white/5">
+<td class="py-3 px-4 text-sm text-gray-200">INC-84318</td>
+<td class="py-3 px-4 text-sm text-gray-200">Load Balancer EU-West-1</td>
+<td class="py-3 px-4 text-sm"><span class="inline-flex items-center gap-1.5 rounded-full bg-success/20 px-2 py-1 text-xs font-medium text-success"><span class="size-1.5 rounded-full bg-success"></span>Resolved</span></td>
+<td class="py-3 px-4 text-sm text-gray-400">2 hours ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-4 rounded-lg border border-white/10 bg-surface p-6">
+<h3 class="text-white text-lg font-medium leading-normal">Datacenter Status</h3>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg object-cover" data-alt="World map showing datacenter locations in North America, Europe, and Asia, with status indicators." data-location="World" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAWoYjoPTtZWKyewb9K4xMKkQ3skzcLVcSN30Y7yETuH04Rk3wChxHTwj6fXmXdm1KWGGkGWS2lfuf8bpKyz74qZjGb7ICMU-S10daeW9yck77714VOyXq8Vpng4mGuHrk_nPrxyO25GkCIZWUiQsxl5ejR5adboy4CHq8f9qzfMlAPpyig5_Rc_pWk3LyMl62ZHPEzwm2_reXs5U_5m98wnQlSimeUGrFiZSOEUMpyseSSLKi0nHdR2bUgpMDJAcQmd1cP-kJ9Z2Q");'></div>
+<div class="flex flex-col gap-2 mt-2">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="size-2 rounded-full bg-success"></span><span>Operational</span></div>
+<span class="font-medium">12</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="size-2 rounded-full bg-warning"></span><span>Degraded</span></div>
+<span class="font-medium">1</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2"><span class="size-2 rounded-full bg-danger"></span><span>Outage</span></div>
+<span class="font-medium">2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+<script defer="" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+
+</body></html>

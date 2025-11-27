@@ -1,0 +1,11 @@
+﻿services:
+  dashboard:
+    image: era-monitor-dashboard:local
+    build:
+      context: .
+    ports:
+      - "3008:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    restart: unless-stopped

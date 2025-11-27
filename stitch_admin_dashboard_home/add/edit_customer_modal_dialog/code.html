@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ERA Monitor - Add New Customer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38BDF8", // Bright Blue/Teal
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#0F172A", // Main App BG
+                        "card": {
+                            "DEFAULT": "#1E293B" // Modal BG
+                        },
+                        "input": {
+                            "DEFAULT": "#334155"
+                        },
+                        "muted": {
+                            "DEFAULT": "#94A3B8"
+                        },
+                        "destructive": "#F87171"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white antialiased">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-background-dark/80 p-4">
+<div class="flex h-full max-h-[90vh] w-full max-w-[650px] flex-col overflow-hidden rounded-xl bg-card">
+<!-- Modal Header -->
+<div class="flex flex-shrink-0 items-center justify-between gap-4 border-b border-input p-4 sm:p-6">
+<p class="text-xl font-bold leading-tight text-white">Add New Customer</p>
+<button class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-input/50 text-muted transition-colors hover:bg-input hover:text-white">
+<span class="material-symbols-outlined text-xl" data-icon="close">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="flex-grow overflow-y-auto">
+<!-- Tabs -->
+<div class="sticky top-0 z-10 border-b border-input bg-card/80 backdrop-blur-sm">
+<div class="flex gap-2 px-4 sm:px-6">
+<a class="flex items-center justify-center border-b-[3px] border-primary px-2 py-3" href="#">
+<p class="text-sm font-bold tracking-wide text-primary">General</p>
+</a>
+<a class="flex items-center justify-center border-b-[3px] border-transparent px-2 py-3" href="#">
+<p class="text-sm font-bold tracking-wide text-muted hover:text-white">Contacts</p>
+</a>
+<a class="flex items-center justify-center border-b-[3px] border-transparent px-2 py-3" href="#">
+<p class="text-sm font-bold tracking-wide text-muted hover:text-white">Notifications</p>
+</a>
+<a class="flex items-center justify-center border-b-[3px] border-transparent px-2 py-3" href="#">
+<p class="text-sm font-bold tracking-wide text-muted hover:text-white">Access</p>
+</a>
+</div>
+</div>
+<!-- Tab Content: General -->
+<div class="space-y-6 p-4 sm:p-6">
+<!-- Section: Company Details -->
+<div class="space-y-4">
+<h3 class="text-lg font-bold tracking-tight text-white">Company Details</h3>
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+<label class="flex flex-col sm:col-span-2">
+<p class="pb-2 text-sm font-medium text-muted">Company Name*</p>
+<input class="form-input w-full rounded-lg border border-input bg-input p-3 text-sm text-white placeholder:text-muted/70 focus:border-primary focus:ring-primary" placeholder="Enter company name" type="text" value=""/>
+<p class="mt-1 text-xs text-destructive">This field is required.</p>
+</label>
+<div class="flex flex-col sm:col-span-2">
+<p class="pb-2 text-sm font-medium text-muted">Company Logo</p>
+<div class="flex flex-col items-center gap-4 rounded-lg border-2 border-dashed border-input p-6 text-center">
+<span class="material-symbols-outlined text-4xl text-muted" data-icon="upload_file">upload_file</span>
+<div class="flex flex-col items-center gap-1">
+<p class="text-sm font-bold text-white">Drag &amp; drop an image here</p>
+<p class="text-xs text-muted">or <span class="font-semibold text-primary">click to browse</span> (PNG, JPG up to 2MB)</p>
+</div>
+</div>
+</div>
+<label class="flex flex-col">
+<p class="pb-2 text-sm font-medium text-muted">Industry</p>
+<select class="form-select w-full rounded-lg border border-input bg-input p-3 text-sm text-white focus:border-primary focus:ring-primary">
+<option>Technology</option>
+<option>Finance</option>
+<option>Healthcare</option>
+</select>
+</label>
+<div class="flex flex-col">
+<p class="pb-2 text-sm font-medium text-muted">Status</p>
+<div class="flex items-center gap-4 rounded-lg border border-input bg-input p-3">
+<p class="flex-grow text-sm text-white">Active</p>
+<label class="relative inline-flex cursor-pointer items-center">
+<input checked="" class="peer sr-only" type="checkbox" value=""/>
+<div class="peer h-6 w-11 rounded-full bg-muted/50 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none dark:border-gray-600 dark:bg-gray-700"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Address -->
+<div class="space-y-4">
+<h3 class="text-lg font-bold tracking-tight text-white">Address</h3>
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+<label class="flex flex-col sm:col-span-2">
+<p class="pb-2 text-sm font-medium text-muted">Address Line 1</p>
+<input class="form-input w-full rounded-lg border border-input bg-input p-3 text-sm text-white placeholder:text-muted/70 focus:border-primary focus:ring-primary" placeholder="e.g., 123 Main Street" type="text" value=""/>
+</label>
+<label class="flex flex-col sm:col-span-2">
+<p class="pb-2 text-sm font-medium text-muted">Address Line 2</p>
+<input class="form-input w-full rounded-lg border border-input bg-input p-3 text-sm text-white placeholder:text-muted/70 focus:border-primary focus:ring-primary" placeholder="e.g., Suite 400" type="text" value=""/>
+</label>
+<label class="flex flex-col">
+<p class="pb-2 text-sm font-medium text-muted">City</p>
+<input class="form-input w-full rounded-lg border border-input bg-input p-3 text-sm text-white placeholder:text-muted/70 focus:border-primary focus:ring-primary" placeholder="e.g., New York" type="text" value=""/>
+</label>
+<label class="flex flex-col">
+<p class="pb-2 text-sm font-medium text-muted">Country</p>
+<select class="form-select w-full rounded-lg border border-input bg-input p-3 text-sm text-white focus:border-primary focus:ring-primary">
+<option>United States</option>
+<option>Canada</option>
+<option>United Kingdom</option>
+</select>
+</label>
+<label class="flex flex-col sm:col-span-2">
+<p class="pb-2 text-sm font-medium text-muted">Postal Code</p>
+<input class="form-input w-full rounded-lg border border-input bg-input p-3 text-sm text-white placeholder:text-muted/70 focus:border-primary focus:ring-primary" placeholder="e.g., 10001" type="text" value=""/>
+</label>
+</div>
+</div>
+<!-- Section: Notes -->
+<div class="space-y-4">
+<h3 class="text-lg font-bold tracking-tight text-white">Internal Notes</h3>
+<label class="flex flex-col">
+<textarea class="form-textarea w-full rounded-lg border border-input bg-input p-3 text-sm text-white placeholder:text-muted/70 focus:border-primary focus:ring-primary" placeholder="Add any internal notes about this customer..." rows="4"></textarea>
+</label>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="flex flex-shrink-0 flex-wrap items-center justify-end gap-3 border-t border-input p-4 sm:p-6">
+<button class="flex h-10 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-input px-4 text-sm font-bold text-white transition-colors hover:bg-input/80">
+<span class="truncate">Cancel</span>
+</button>
+<button class="flex h-10 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary px-4 text-sm font-bold text-white transition-colors hover:bg-primary/80">
+<span class="truncate">Save Customer</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

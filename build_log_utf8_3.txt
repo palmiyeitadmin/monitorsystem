@@ -1,0 +1,7 @@
+﻿D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Services\HeartbeatService.cs(13,33): error CS0104: 'IHeartbeatService' is an ambiguous reference between 'ERAMonitor.Core.Interfaces.IHeartbeatService' and 'ERAMonitor.Core.Interfaces.Services.IHeartbeatService' [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
+
+Build FAILED.
+    2 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:01.89
