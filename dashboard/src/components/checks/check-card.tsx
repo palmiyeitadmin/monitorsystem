@@ -31,10 +31,10 @@ interface CheckCardProps {
 export function CheckCard({ check, onEdit, onDelete, onToggle }: CheckCardProps) {
     const getStatusColor = (status: string) => {
         switch (status) {
-            case "Up": return "bg-emerald-500 text-emerald-500 border-emerald-500/20";
-            case "Down": return "bg-rose-500 text-rose-500 border-rose-500/20";
-            case "Degraded": return "bg-amber-500 text-amber-500 border-amber-500/20";
-            default: return "bg-slate-500 text-slate-500 border-slate-500/20";
+            case "Up": return "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
+            case "Down": return "bg-rose-500/10 text-rose-500 border-rose-500/20";
+            case "Degraded": return "bg-amber-500/10 text-amber-500 border-amber-500/20";
+            default: return "bg-slate-500/10 text-slate-500 border-slate-500/20";
         }
     };
 
