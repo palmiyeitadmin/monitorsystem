@@ -1,8 +1,0 @@
-﻿D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Repositories\HostRepository.cs(93,10): error CS1513: } expected [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
-D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\Repositories\HostRepository.cs(195,6): error CS1513: } expected [D:\era_monitor\monitorsystem\src\ERAMonitor.Infrastructure\ERAMonitor.Infrastructure.csproj]
-
-Build FAILED.
-    2 Warning(s)
-    2 Error(s)
-
-Time Elapsed 00:00:02.27

@@ -9,6 +9,7 @@ collectors:
         cpu: true
         disk: true
         enabled: true
+        eventlog: true
         network: false
         ram: true
 gui:

@@ -74,7 +74,8 @@ public class AgentController : ControllerBase
             return BadRequest(new ErrorResponse
             {
                 Code = "HEARTBEAT_ERROR",
-                Message = "Error processing heartbeat"
+                Message = $"Error processing heartbeat: {ex.Message}",
+                StackTrace = ex.ToString()
             });
         }
     }

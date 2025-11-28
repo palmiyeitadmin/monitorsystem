@@ -121,17 +121,32 @@ public class HeartbeatService : IHeartbeatService
         // 5. Update/Insert services
         await UpdateHostServicesAsync(host.Id, request.Services);
         
-        // 5.5. Process event logs (if present)
-        if (request.EventLogs != null && request.EventLogs.Any())
-        {
-            await UpdateHostEventLogsAsync(host.Id, request.EventLogs);
-        }
-        
         // 6. Store metrics (time series)
         await StoreMetricsAsync(host.Id, request);
         
-        // 7. Save all changes
+        // 7. Save all changes (metrics, services, disks)
         await _unitOfWork.SaveChangesAsync();
+
+        // 5.5. Process event logs (if present) - Process AFTER saving other data to isolate failures
+        if (request.EventLogs != null && request.EventLogs.Any())
+        {
+            try
+            {
+                await UpdateHostEventLogsAsync(host.Id, request.EventLogs);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "DbUpdateException processing event logs for host {HostId}. Inner: {InnerMessage}", 
+                    host.Id, dbEx.InnerException?.Message);
+                // Continue processing heartbeat even if logs fail
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to process event logs for host {HostId}", host.Id);
+                // Continue processing heartbeat even if logs fail
+            }
+        }
         
         // 8. Handle status change events (after save)
         if (previousStatus != newStatus)
@@ -452,7 +467,7 @@ public class HeartbeatService : IHeartbeatService
         
         await _statusHistoryRepository.SaveChangesAsync();
     }
-    
+
     private async Task UpdateHostEventLogsAsync(Guid hostId, List<EventLogInfoDto> eventLogs)
     {
         // Apply retention policy first - keep last 30 days
@@ -470,16 +485,19 @@ public class HeartbeatService : IHeartbeatService
                 Source = el.Source,
                 Category = el.Category,
                 Message = el.Message,
-                TimeCreated = el.TimeCreated,
-                RecordedAt = DateTime.UtcNow
+                TimeCreated = el.TimeCreated.ToUniversalTime(), // Ensure UTC for Postgres
+                RecordedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
             
             await _eventLogRepository.AddAsync(eventLogEntity);
         }
         
         _logger.LogDebug("Stored {Count} event logs for host {HostId}", eventLogs.Count, hostId);
+
     }
-    
+
     private async Task StoreMetricsAsync(Guid hostId, HeartbeatRequest request)
     {
         var metric = new HostMetric

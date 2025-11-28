@@ -4,32 +4,12 @@
 package eventlog
 
 import (
+	"encoding/json"
 	"fmt"
+	"os/exec"
+	"strconv"
 	"strings"
-	"syscall"
 	"time"
-	"unsafe"
-)
-
-var (
-	wevtapi                    = syscall.NewLazyDLL("wevtapi.dll")
-	procEvtQuery               = wevtapi.NewProc("EvtQuery")
-	procEvtNext                = wevtapi.NewProc("EvtNext")
-	procEvtClose               = wevtapi.NewProc("EvtClose")
-	procEvtRender              = wevtapi.NewProc("EvtRender")
-	procEvtFormatMessage       = wevtapi.NewProc("EvtFormatMessage")
-	procEvtCreateRenderContext = wevtapi.NewProc("EvtCreateRenderContext")
-)
-
-const (
-	EvtQueryChannelPath      = 0x1
-	EvtQueryReverseDirection = 0x200
-	EvtRenderEventValues     = 1
-	EvtRenderEventXml        = 2
-	EvtSystemTimeCreated     = 8
-	EvtSystemLevel           = 2
-	EvtSystemEventID         = 10
-	EvtSystemProviderName    = 1
 )
 
 // EventInfo represents a single event log entry
@@ -41,6 +21,16 @@ type EventInfo struct {
 	Message     string    `json:"message"`
 	TimeCreated time.Time `json:"timeCreated"`
 	Category    string    `json:"category"`
+}
+
+// PowerShell event structure
+type psEvent struct {
+	LogName     string `json:"LogName"`
+	Id          int    `json:"Id"`
+	LevelText   string `json:"LevelDisplayName"`
+	Source      string `json:"ProviderName"`
+	Message     string `json:"Message"`
+	TimeCreated string `json:"TimeCreated"`
 }
 
 // Collector collects Windows Event Logs
@@ -94,97 +84,73 @@ func (c *Collector) Collect() ([]EventInfo, error) {
 }
 
 func (c *Collector) queryEvents(channelPath, category string, eventIDs []int, maxEvents int) ([]EventInfo, error) {
-	// Build XPath query for specific event IDs
-	var eventIDQuery string
+	// Build PowerShell command to get events
+	eventIDFilter := ""
 	for i, id := range eventIDs {
 		if i > 0 {
-			eventIDQuery += " or "
+			eventIDFilter += ","
 		}
-		eventIDQuery += fmt.Sprintf("EventID=%d", id)
+		eventIDFilter += strconv.Itoa(id)
 	}
 
-	// Query last 24 hours only
-	query := fmt.Sprintf("*[System[(%s) and TimeCreated[timediff(@SystemTime) <= 86400000]]]", eventIDQuery)
-
-	channelPathPtr, _ := syscall.UTF16PtrFromString(channelPath)
-	queryPtr, _ := syscall.UTF16PtrFromString(query)
-
-	// EvtQuery
-	hResults, _, _ := procEvtQuery.Call(
-		0, // Session
-		uintptr(unsafe.Pointer(channelPathPtr)),
-		uintptr(unsafe.Pointer(queryPtr)),
-		EvtQueryChannelPath|EvtQueryReverseDirection,
-	)
-
-	if hResults == 0 {
-		return nil, fmt.Errorf("EvtQuery failed for %s", channelPath)
-	}
-	defer procEvtClose.Call(hResults)
-
-	var events []EventInfo
-	eventHandles := make([]uintptr, 10)
-	var returned uint32
-
-	for len(events) < maxEvents {
-		// EvtNext - Get next batch of events
-		ret, _, _ := procEvtNext.Call(
-			hResults,
-			uintptr(len(eventHandles)),
-			uintptr(unsafe.Pointer(&eventHandles[0])),
-			0, // Timeout (0 = return immediately)
-			0, // Flags
-			uintptr(unsafe.Pointer(&returned)),
-		)
-
-		if ret == 0 || returned == 0 {
-			break
-		}
-
-		// Process each event
-		for i := uint32(0); i < returned && len(events) < maxEvents; i++ {
-			eventInfo := c.extractEventInfo(eventHandles[i], channelPath, category)
-			if eventInfo != nil {
-				events = append(events, *eventInfo)
+	// PowerShell command to get events as JSON
+	psCmd := fmt.Sprintf(`
+		[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+		$events = Get-WinEvent -FilterHashtable @{
+			LogName='%s'
+			ID=%s
+		} -MaxEvents %d -ErrorAction SilentlyContinue | Select-Object -First %d
+		
+		$events | ForEach-Object {
+			[PSCustomObject]@{
+				LogName = $_.LogName
+				Id = $_.Id
+				LevelDisplayName = $_.LevelDisplayName
+				ProviderName = $_.ProviderName
+				Message = $_.Message
+				TimeCreated = $_.TimeCreated.ToString('o')
 			}
-			procEvtClose.Call(eventHandles[i])
+		} | ConvertTo-Json -Depth 2
+	`, channelPath, eventIDFilter, maxEvents, maxEvents)
+
+	// Execute PowerShell
+	cmd := exec.Command("powershell", "-NoProfile", "-NonInteractive", "-Command", psCmd)
+	output, err := cmd.Output()
+	if err != nil {
+		// No events found is not an error
+		return []EventInfo{}, nil
+	}
+
+	// Parse JSON output
+	var psEvents []psEvent
+	if err := json.Unmarshal(output, &psEvents); err != nil {
+		// Try single event (PowerShell returns object instead of array for single result)
+		var singleEvent psEvent
+		if err2 := json.Unmarshal(output, &singleEvent); err2 == nil {
+			psEvents = []psEvent{singleEvent}
+		} else {
+			return nil, fmt.Errorf("failed to parse PowerShell output: %v", err)
 		}
 	}
 
+	// Convert to EventInfo
+	var events []EventInfo
+	for _, pse := range psEvents {
+		timeCreated, _ := time.Parse(time.RFC3339, pse.TimeCreated)
+
+		events = append(events, EventInfo{
+			LogName:     pse.LogName,
+			EventID:     pse.Id,
+			Level:       pse.LevelText,
+			Source:      pse.Source,
+			Message:     pse.Message,
+			TimeCreated: timeCreated,
+			Category:    category,
+		})
+	}
+
+	fmt.Printf("Collected %d events from %s\n", len(events), channelPath)
 	return events, nil
-}
-
-func (c *Collector) extractEventInfo(hEvent uintptr, logName, category string) *EventInfo {
-	// Simplified extraction - in production, use EvtRender to get all fields
-	// For now, return a basic structure
-
-	event := &EventInfo{
-		LogName:     logName,
-		Category:    category,
-		TimeCreated: time.Now(),        // Should extract from event
-		Level:       "Error",           // Should extract from event
-		EventID:     0,                 // Should extract from event
-		Source:      "Unknown",         // Should extract from event
-		Message:     "Event log entry", // Should extract from event
-	}
-
-	return event
-}
-
-// mapEventLevel maps Windows event level to string
-func mapEventLevel(level uint32) string {
-	switch level {
-	case 1:
-		return "Critical"
-	case 2:
-		return "Error"
-	case 3:
-		return "Warning"
-	case 4:
-		return "Information"
-	default:
-		return "Unknown"
-	}
 }
 
 // DetermineCategoryFromSource determines category from source and event ID

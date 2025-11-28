@@ -1,7 +1,0 @@
-﻿D:\era_monitor\monitorsystem\src\ERAMonitor.BackgroundJobs\Services\CheckSchedulerService.cs(42,20): error CS1501: No overload for method 'Execute' takes 0 arguments [D:\era_monitor\monitorsystem\src\ERAMonitor.BackgroundJobs\ERAMonitor.BackgroundJobs.csproj]
-
-Build FAILED.
-    2 Warning(s)
-    1 Error(s)
-
-Time Elapsed 00:00:01.84

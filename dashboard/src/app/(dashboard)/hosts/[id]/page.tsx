@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useHostSignalR } from '@/hooks/use-signalr';
-import { notFound } from 'next/navigation';
+import { notFound, useSearchParams } from 'next/navigation';
 
 interface HostPageProps {
     params: Promise<{
@@ -24,6 +24,8 @@ interface HostPageProps {
 
 export default function HostPage({ params }: HostPageProps) {
     const { id } = use(params);
+    const searchParams = useSearchParams();
+    const defaultTab = searchParams.get('tab') || 'overview';
 
     // Validate id exists
     if (!id) {
@@ -51,7 +53,7 @@ export default function HostPage({ params }: HostPageProps) {
         <div className="space-y-6">
             <HostHeader host={host} />
 
-            <Tabs defaultValue="overview" className="space-y-4">
+            <Tabs defaultValue={defaultTab} className="space-y-4">
                 <TabsList>
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="metrics">Metrics</TabsTrigger>

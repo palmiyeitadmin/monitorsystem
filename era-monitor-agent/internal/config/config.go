@@ -110,11 +110,12 @@ func GetDefaultConfig() *Config {
 		Collectors: CollectorsConfig{
 			IntervalSeconds: 60,
 			System: SystemCollectorConfig{
-				Enabled: true,
-				CPU:     true,
-				RAM:     true,
-				Disk:    true,
-				Network: true,
+				Enabled:  true,
+				CPU:      true,
+				RAM:      true,
+				Disk:     true,
+				Network:  true,
+				EventLog: true,
 			},
 		},
 		Services: ServicesConfig{
@@ -205,6 +206,7 @@ func (c *Config) Save(path string) error {
 	v.Set("collectors.system.ram", c.Collectors.System.RAM)
 	v.Set("collectors.system.disk", c.Collectors.System.Disk)
 	v.Set("collectors.system.network", c.Collectors.System.Network)
+	v.Set("collectors.system.eventLog", c.Collectors.System.EventLog)
 
 	v.Set("services.windows.enabled", c.Services.Windows.Enabled)
 	v.Set("services.windows.services", c.Services.Windows.Services)
