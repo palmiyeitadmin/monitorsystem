@@ -69,6 +69,25 @@ public class ChecksController : ControllerBase
             })
             .ToListAsync();
 
+        // Populate history for each check (N+1 query, acceptable for small lists)
+        foreach (var check in checks)
+        {
+            check.History = await _context.CheckResults
+                .Where(r => r.CheckId == check.Id)
+                .OrderByDescending(r => r.CheckedAt)
+                .Take(20)
+                .Select(r => new CheckResultDto
+                {
+                    Id = r.Id,
+                    Status = r.Status.ToString(),
+                    ResponseTimeMs = r.ResponseTimeMs,
+                    StatusCode = r.StatusCode,
+                    ErrorMessage = r.ErrorMessage,
+                    CheckedAt = r.CheckedAt
+                })
+                .ToListAsync();
+        }
+
         return Ok(checks);
     }
 

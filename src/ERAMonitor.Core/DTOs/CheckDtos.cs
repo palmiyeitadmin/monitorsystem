@@ -21,6 +21,7 @@ public class CheckDto
     public int? SslDaysRemaining { get; set; }
     public Guid? HostId { get; set; }
     public Guid? CustomerId { get; set; }
+    public List<CheckResultDto> History { get; set; } = new();
 }
 
 public class CreateCheckRequest

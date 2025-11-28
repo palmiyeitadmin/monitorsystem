@@ -23,6 +23,7 @@ export interface Check {
     keywordShouldExist?: boolean;
     sslExpiryWarningDays?: number;
     tcpPort?: number;
+    history?: CheckResult[];
 }
 
 export interface CreateCheckRequest {
