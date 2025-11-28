@@ -1,127 +1,62 @@
-import { StatusType } from './common';
-export type CheckType = 'HTTP' | 'TCP' | 'Ping' | 'DNS';
-
 export interface Check {
     id: string;
     name: string;
-    checkType: CheckType;
+    checkType: 'HTTP' | 'TCP' | 'Ping' | 'DNS';
     target: string;
-    currentStatus: StatusType;
-    lastCheckTime?: string;
-    lastResponseTimeMs?: number;
-    lastError?: string;
-    monitoringEnabled: boolean;
     intervalSeconds: number;
-    sslExpiresAt?: string;
-    sslDaysUntilExpiry?: number;
-    customerId?: string;
-    customerName?: string;
-    tags: string[];
-    uptime24h?: number;
-    uptime7d?: number;
-    createdAt: string;
-}
-
-export interface CheckDetail extends Check {
-    description?: string;
-    httpSettings?: HttpCheckSettings;
-    tcpSettings?: TcpCheckSettings;
-    dnsSettings?: DnsCheckSettings;
-    sslSettings?: SslCheckSettings;
     timeoutSeconds: number;
-    retryCount: number;
-    retryDelaySeconds: number;
-    failureThreshold: number;
-    currentFailureCount: number;
-    sslInfo?: SslInfo;
-    statistics: CheckStatistics;
-}
+    monitoringEnabled: boolean;
+    currentStatus: 'Up' | 'Down' | 'Degraded' | 'Unknown';
+    lastCheckAt?: string;
+    lastResponseTimeMs?: number;
+    lastStatusCode?: number;
+    lastErrorMessage?: string;
+    monitorSsl: boolean;
+    sslDaysRemaining?: number;
+    hostId?: string;
+    customerId?: string;
 
-export interface HttpCheckSettings {
-    method: string;
-    headers?: Record<string, string>;
-    body?: string;
-    expectedStatusCodes: number[];
+    // Extended properties
+    httpMethod?: string;
+    expectedStatusCode?: number;
     expectedKeyword?: string;
-    keywordShouldExist: boolean;
-}
-
-export interface TcpCheckSettings {
-    port: number;
-}
-
-export interface DnsCheckSettings {
-    recordType: string;
-    expectedResult?: string;
-}
-
-export interface SslCheckSettings {
-    enabled: boolean;
-    warningDays: number;
-    criticalDays: number;
-}
-
-export interface SslInfo {
-    expiresAt?: string;
-    daysUntilExpiry?: number;
-    issuer?: string;
-    subject?: string;
-    status: string;
-}
-
-export interface CheckStatistics {
-    uptime24h: number;
-    uptime7d: number;
-    uptime30d: number;
-    avgResponseTimeMs: number;
-    minResponseTimeMs: number;
-    maxResponseTimeMs: number;
-    checksLast24h: number;
-    failuresLast24h: number;
-    uptimePercentage24h: number;
-    uptimePercentage7d: number;
-    uptimePercentage30d: number;
-}
-
-export interface CheckResult {
-    id: number;
-    success: boolean;
-    status: StatusType;
-    responseTimeMs: number;
-    checkedAt: string;
-    httpStatusCode?: number;
-    httpStatusMessage?: string;
-    keywordFound?: boolean;
-    sslValid?: boolean;
-    sslDaysUntilExpiry?: number;
-    dnsResult?: string;
-    errorMessage?: string;
-    errorType?: string;
+    keywordShouldExist?: boolean;
+    sslExpiryWarningDays?: number;
+    tcpPort?: number;
 }
 
 export interface CreateCheckRequest {
     name: string;
-    type: CheckType;
+    checkType: 'HTTP' | 'TCP' | 'Ping' | 'DNS';
     target: string;
-    description?: string;
-    customerId?: string;
-    hostId?: string;
-    tags?: string[];
+    intervalSeconds: number;
+    timeoutSeconds: number;
+    monitoringEnabled: boolean;
+
+    // HTTP
     httpMethod?: string;
-    httpHeaders?: Record<string, string>;
-    expectedStatusCodes?: number[];
+    requestBody?: string;
+    requestHeaders?: Record<string, string>;
+    expectedStatusCode?: number;
     expectedKeyword?: string;
-    checkSsl?: boolean;
+    keywordShouldExist?: boolean;
+    monitorSsl?: boolean;
     sslExpiryWarningDays?: number;
-    sslExpiryCriticalDays?: number;
+
+    // TCP
     tcpPort?: number;
-    dnsRecordType?: string;
-    expectedDnsResult?: string;
-    intervalSeconds?: number;
-    timeoutSeconds?: number;
-    retryCount?: number;
-    failureThreshold?: number;
-    monitoringEnabled?: boolean;
-    alertOnFailure?: boolean;
-    alertOnSslExpiry?: boolean;
+
+    hostId?: string;
+    customerId?: string;
+}
+
+export interface UpdateCheckRequest extends Partial<CreateCheckRequest> { }
+
+export interface CheckResult {
+    id: string;
+    status: string;
+    responseTimeMs?: number;
+    statusCode?: number;
+    errorMessage?: string;
+    checkedAt: string;
 }

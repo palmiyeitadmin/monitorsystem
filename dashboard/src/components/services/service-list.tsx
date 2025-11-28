@@ -20,9 +20,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { StatusBadge } from '@/components/common/status-badge';
 import { servicesApi, type Service } from '@/lib/api/services';
-import { MoreVertical, Play, Square, RotateCw, Search } from 'lucide-react';
+import { MoreVertical, Play, Square, RotateCw, Search, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { useDebounce } from '@/hooks/use-debounce';
+import { ServiceDetailsModal } from './service-details-modal';
 
 interface ServiceListProps {
     hostId?: string;
@@ -30,6 +31,7 @@ interface ServiceListProps {
 
 export function ServiceList({ hostId }: ServiceListProps) {
     const [search, setSearch] = useState('');
+    const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
     const [page, setPage] = useState(1);
     const pageSize = 25;
     const debouncedSearch = useDebounce(search, 500);
@@ -110,6 +112,9 @@ export function ServiceList({ hostId }: ServiceListProps) {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
+                                            <DropdownMenuItem onClick={() => setSelectedServiceId(service.id)}>
+                                                <Info className="mr-2 h-4 w-4" /> Details
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => actionMutation.mutate({ id: service.id, action: 'Start' })}>
                                                 <Play className="mr-2 h-4 w-4" /> Start
                                             </DropdownMenuItem>
@@ -164,6 +169,12 @@ export function ServiceList({ hostId }: ServiceListProps) {
                     </div>
                 </div>
             )}
+
+            <ServiceDetailsModal
+                serviceId={selectedServiceId}
+                open={!!selectedServiceId}
+                onOpenChange={(open) => !open && setSelectedServiceId(null)}
+            />
         </div>
     );
 }

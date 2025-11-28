@@ -11,6 +11,7 @@ namespace ERAMonitor.Infrastructure.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            /*
             migrationBuilder.AddColumn<bool>(
                 name: "EmailSubscribed",
                 table: "StatusPageSubscribers",
@@ -114,6 +115,7 @@ namespace ERAMonitor.Infrastructure.Data.Migrations
                 name: "IX_EventLogs_HostId",
                 table: "EventLogs",
                 column: "HostId");
+            */
         }
 
         /// <inheritdoc />

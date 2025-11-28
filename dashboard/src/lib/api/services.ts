@@ -14,6 +14,14 @@ export interface Service {
     monitoringEnabled: boolean;
 }
 
+export interface ServiceDetail extends Service {
+    description?: string;
+    config?: Record<string, any>;
+    restartCount?: number;
+    lastRestartAt?: string;
+    lastHealthyAt?: string;
+}
+
 export interface ServiceActionRequest {
     action: 'Start' | 'Stop' | 'Restart';
 }
@@ -24,7 +32,7 @@ export const servicesApi = {
     },
 
     getById: async (id: string) => {
-        return apiClient.get<Service>(`/api/services/${id}`);
+        return apiClient.get<ServiceDetail>(`/api/services/${id}`);
     },
 
     performAction: async (id: string, action: ServiceActionRequest['action']) => {

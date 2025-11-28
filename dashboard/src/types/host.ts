@@ -44,6 +44,8 @@ export interface HostCurrentMetrics {
     ramTotalMb?: number;
     uptimeSeconds?: number;
     processCount?: number;
+    networkInBytes?: number;
+    networkOutBytes?: number;
     uptimeDisplay?: string;
 }
 

@@ -3,7 +3,7 @@
 *.dll
 *.so
 *.dylib
-agent
+/agent
 era-agent
 era-agent-gui
 

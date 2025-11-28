@@ -202,7 +202,17 @@ public class HostRepository : Repository<Host>, IHostRepository
                 RamUsedMb = host.RamUsedMb,
                 RamTotalMb = host.RamTotalMb,
                 UptimeSeconds = host.UptimeSeconds,
-                ProcessCount = host.ProcessCount
+                ProcessCount = host.ProcessCount,
+                NetworkInBytes = (await _context.HostMetrics
+                    .Where(m => m.HostId == id)
+                    .OrderByDescending(m => m.RecordedAt)
+                    .Select(m => m.NetworkInBytes)
+                    .FirstOrDefaultAsync()),
+                NetworkOutBytes = (await _context.HostMetrics
+                    .Where(m => m.HostId == id)
+                    .OrderByDescending(m => m.RecordedAt)
+                    .Select(m => m.NetworkOutBytes)
+                    .FirstOrDefaultAsync())
             },
             Disks = host.Disks.Select(d => new HostDiskDto
             {

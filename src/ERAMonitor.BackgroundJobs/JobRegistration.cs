@@ -1,4 +1,5 @@
 using ERAMonitor.BackgroundJobs.Jobs;
+using ERAMonitor.Infrastructure.Jobs;
 using Hangfire;
 
 namespace ERAMonitor.BackgroundJobs;
@@ -24,5 +25,11 @@ public static class JobRegistration
             "metrics-cleanup",
             job => job.ExecuteAsync(),
             Cron.Daily(2));
+
+        // External Checks - run every minute
+        RecurringJob.AddOrUpdate<CheckJob>(
+            "external-checks",
+            job => job.ExecuteAsync(),
+            Cron.Minutely);
     }
 }

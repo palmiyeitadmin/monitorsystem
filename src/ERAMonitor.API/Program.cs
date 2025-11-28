@@ -13,6 +13,7 @@ using ERAMonitor.Infrastructure.Repositories;
 using ERAMonitor.BackgroundJobs.Jobs;
 using ERAMonitor.BackgroundJobs;
 using ERAMonitor.BackgroundJobs.Services;
+using ERAMonitor.Infrastructure.Jobs;
 using ERAMonitor.API.Services;
 using ERAMonitor.API.Hubs;
 using Hangfire;
@@ -145,6 +146,8 @@ builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<IHostService, HostService>();
 builder.Services.AddScoped<IServiceMonitorService, ServiceMonitorService>();
 builder.Services.AddScoped<IRealTimeService, SignalRRealTimeService>();
+builder.Services.AddScoped<ICheckExecutorService, CheckExecutorService>();
+builder.Services.AddScoped<CheckJob>();
 builder.Services.AddHttpContextAccessor();
 
 // Authentication

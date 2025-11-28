@@ -71,6 +71,8 @@ public class HostCurrentMetricsDto
     public long? RamTotalMb { get; set; }
     public long? UptimeSeconds { get; set; }
     public int? ProcessCount { get; set; }
+    public long? NetworkInBytes { get; set; }
+    public long? NetworkOutBytes { get; set; }
     
     public string UptimeDisplay => FormatUptime(UptimeSeconds);
     

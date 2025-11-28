@@ -112,6 +112,28 @@ export default function HostPage({ params }: HostPageProps) {
                                 <p className="text-xs text-muted-foreground">Last 30 days</p>
                             </CardContent>
                         </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Network (In/Out)</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {host.metrics?.networkInBytes ? (host.metrics.networkInBytes / 1024 / 1024).toFixed(2) : '0.00'} / {host.metrics?.networkOutBytes ? (host.metrics.networkOutBytes / 1024 / 1024).toFixed(2) : '0.00'} MB
+                                </div>
+                                <p className="text-xs text-muted-foreground">Total transferred</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Processes</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">
+                                    {host.metrics?.processCount || 0}
+                                </div>
+                                <p className="text-xs text-muted-foreground">Running processes</p>
+                            </CardContent>
+                        </Card>
                     </div>
 
                     <HostMetrics hostId={host.id} />

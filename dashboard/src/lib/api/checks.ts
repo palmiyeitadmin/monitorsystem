@@ -1,38 +1,34 @@
 import apiClient from './client';
-import type { PagedResponse, PagedRequest } from '@/types/api';
-import type { Check, CheckType } from '@/types/check';
-
-export interface CreateCheckRequest {
-    name: string;
-    target: string;
-    checkType: CheckType;
-    intervalSeconds: number;
-    timeoutSeconds: number;
-    locations?: string[];
-}
-
-export interface UpdateCheckRequest extends Partial<CreateCheckRequest> {
-    enabled?: boolean;
-}
+import { Check, CreateCheckRequest, UpdateCheckRequest, CheckResult } from '@/types/check';
 
 export const checksApi = {
-    getAll: async (params: PagedRequest & { type?: CheckType }) => {
-        return apiClient.get<PagedResponse<Check>>('/api/checks', params);
+    getAll: async (params?: {
+        customerId?: string;
+        hostId?: string;
+        type?: string;
+        status?: string;
+        search?: string;
+    }) => {
+        return apiClient.get<Check[]>('/api/checks', params);
     },
 
     getById: async (id: string) => {
         return apiClient.get<Check>(`/api/checks/${id}`);
     },
 
-    create: async (data: CreateCheckRequest) => {
-        return apiClient.post<Check>('/api/checks', data);
+    create: async (check: CreateCheckRequest) => {
+        return apiClient.post<Check>('/api/checks', check);
     },
 
-    update: async (id: string, data: UpdateCheckRequest) => {
-        return apiClient.put<Check>(`/api/checks/${id}`, data);
+    update: async (id: string, check: UpdateCheckRequest) => {
+        return apiClient.put<void>(`/api/checks/${id}`, check);
     },
 
     delete: async (id: string) => {
-        return apiClient.delete(`/api/checks/${id}`);
+        return apiClient.delete<void>(`/api/checks/${id}`);
     },
+
+    getResults: async (id: string, limit: number = 50) => {
+        return apiClient.get<CheckResult[]>(`/api/checks/${id}/results`, { limit });
+    }
 };

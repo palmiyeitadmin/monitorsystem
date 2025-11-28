@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/eracloud/era-monitor-agent/internal/api"
+	"github.com/eracloud/era-monitor-agent/internal/collectors/eventlog"
 	"github.com/eracloud/era-monitor-agent/internal/collectors/service"
 	"github.com/eracloud/era-monitor-agent/internal/collectors/system"
 	"github.com/eracloud/era-monitor-agent/internal/config"
@@ -18,11 +19,12 @@ import (
 )
 
 type Agent struct {
-	cfg             *config.Config
-	logger          *zap.Logger
-	systemCollector *system.SystemCollector
-	serviceMonitors []service.Monitor
-	client          *resty.Client
+	cfg               *config.Config
+	logger            *zap.Logger
+	systemCollector   *system.SystemCollector
+	eventLogCollector *eventlog.Collector
+	serviceMonitors   []service.Monitor
+	client            *resty.Client
 
 	// State
 	mu          sync.RWMutex
@@ -56,6 +58,11 @@ func NewAgent(cfg *config.Config, logger *zap.Logger) *Agent {
 		logger:          logger,
 		systemCollector: system.NewSystemCollector(cfg.Collectors.System),
 		client:          client,
+	}
+
+	// Initialize Event Log Collector (Windows only)
+	if runtime.GOOS == "windows" {
+		a.eventLogCollector = eventlog.NewCollector(cfg.Collectors.System.EventLog)
 	}
 
 	// Initialize Service Monitors
@@ -197,6 +204,30 @@ func (a *Agent) collectAndSend(ctx context.Context) error {
 			PublicIP:  sysResult.Network.PublicIP,
 			InBytes:   sysResult.Network.InBytes,
 			OutBytes:  sysResult.Network.OutBytes,
+		}
+	}
+
+	// Collect Event Logs (Windows only)
+	if a.eventLogCollector != nil {
+		eventLogs, err := a.eventLogCollector.Collect()
+		if err == nil && len(eventLogs) > 0 {
+			// Convert eventlog.EventInfo to api.EventLogInfo
+			apiEventLogs := make([]api.EventLogInfo, len(eventLogs))
+			for i, log := range eventLogs {
+				apiEventLogs[i] = api.EventLogInfo{
+					LogName:     log.LogName,
+					EventID:     log.EventID,
+					Level:       log.Level,
+					Source:      log.Source,
+					Message:     log.Message,
+					TimeCreated: log.TimeCreated,
+					Category:    log.Category,
+				}
+			}
+			request.EventLogs = apiEventLogs
+			a.logger.Debug("Collected event logs", zap.Int("count", len(eventLogs)))
+		} else if err != nil {
+			a.logger.Warn("Failed to collect event logs", zap.Error(err))
 		}
 	}
 

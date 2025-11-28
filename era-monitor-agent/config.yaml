@@ -10,7 +10,7 @@ collectors:
         disk: true
         enabled: true
         eventlog: true
-        network: false
+        network: true
         ram: true
 gui:
     enabled: true
